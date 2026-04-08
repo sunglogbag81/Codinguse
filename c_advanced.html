@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C 프로그래밍 심화 완벽 가이드 - DEV. 동아리</title>
+  <style>
+    :root {
+      --bg-dark: #0a0510;
+      --bg-card: rgba(25, 15, 35, 0.6);
+      --text-main: #f8fafc;
+      --text-muted: #a1a1aa;
+      --accent: #8b5cf6; /* C Purple */
+      --accent-soft: rgba(139, 92, 246, 0.15);
+      --line: rgba(255, 255, 255, 0.08);
+      --code-bg: #121214;
+      --preview-bg: #000000;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: "Pretendard Variable", "SUIT Variable", "Noto Sans KR", sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    .bg-glow {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; pointer-events: none;
+    }
+    .bg-glow::before {
+      content: ''; position: absolute; top: -20%; left: -10%; width: 60vw; height: 60vw;
+      max-width: 800px; max-height: 800px;
+      background: var(--accent); filter: blur(180px); opacity: 0.15; border-radius: 50%;
+    }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; height: 50px;
+      background: rgba(10, 5, 15, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line); z-index: 100;
+      display: flex; align-items: center; padding: 0 20px;
+    }
+    .nav-logo { font-weight: 800; font-size: 1.1rem; color: var(--text-main); text-decoration: none; }
+    .nav-logo span { color: var(--accent); }
+
+    .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+
+    header { padding: 100px 0 40px; text-align: center; }
+    .kicker {
+      display: inline-block; padding: 4px 12px; background: var(--accent-soft);
+      color: var(--accent); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 999px;
+      font-size: 0.85rem; font-weight: 700; margin-bottom: 16px; letter-spacing: 0.05em;
+    }
+    h1 { font-size: 3rem; font-weight: 900; line-height: 1.2; margin-bottom: 16px; word-break: keep-all; }
+    header p { font-size: 1.1rem; color: var(--text-muted); word-break: keep-all; max-width: 700px; margin: 0 auto; }
+
+    main { padding-bottom: 100px; }
+
+    section { margin-bottom: 60px; scroll-margin-top: 70px; }
+    
+    .section-title {
+      font-size: 1.7rem; font-weight: 800; margin-bottom: 16px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-title::before { content: ''; display: block; width: 5px; height: 24px; background: var(--accent); border-radius: 4px; }
+    
+    .text-content { font-size: 1.05rem; color: #d4d4d8; margin-bottom: 20px; word-break: keep-all; line-height: 1.6; }
+
+    .card {
+      background: var(--bg-card); border: 1px solid var(--line); border-radius: 16px;
+      padding: 24px; margin-bottom: 20px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    }
+    .card h3 { font-size: 1.2rem; margin-bottom: 10px; color: var(--accent); }
+    
+    .demo-grid { display: grid; gap: 20px; margin-top: 16px; grid-template-columns: 1fr 1fr; }
+    .demo-grid.full { grid-template-columns: 1fr; }
+
+    .code-box, .preview-box {
+      border-radius: 12px; padding: 20px; font-size: 0.95rem; overflow-x: auto;
+    }
+    .code-box {
+      background: var(--code-bg); border: 1px solid #27272a; font-family: "D2Coding", monospace;
+      color: #e4e4e7; line-height: 1.5; white-space: pre-wrap; word-break: break-all;
+    }
+    /* C Syntax Highlighting */
+    .dir { color: #ff7b72; } /* directives (#include, #define) */
+    .kw { color: #ff7b72; } /* keyword (int, return, void, struct, typedef) */
+    .fn { color: #d2a8ff; } /* function (printf, malloc, free) */
+    .st { color: #a5d6ff; } /* string */
+    .nm { color: #79c0ff; } /* number */
+    .cm { color: #71717a; } /* comment */
+    .op { color: #c9d1d9; } /* operator */
+    .type { color: #f2cc60; } /* custom types */
+
+    /* 터미널(콘솔) 화면용 스타일 */
+    .preview-box {
+      background: var(--preview-bg); color: #a855f7; border: 1px solid #333;
+      display: flex; flex-direction: column; font-family: "D2Coding", monospace;
+    }
+    .console-header { color: #666; font-size: 0.8rem; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 8px; }
+    .console-warn { color: #facc15; }
+    .console-error { color: #ef4444; }
+
+    .tip-box {
+      background: rgba(139, 92, 246, 0.08); border-left: 4px solid var(--accent);
+      padding: 16px; border-radius: 0 8px 8px 0; margin-top: 16px; font-size: 0.95rem; color: #cbd5e1;
+    }
+    .tip-box strong { color: var(--accent); display: block; margin-bottom: 6px; font-size: 1rem; }
+
+    .next-btn {
+      display: block; width: 100%; text-align: center; padding: 20px;
+      background: linear-gradient(to right, #8b5cf6, #6d28d9); color: #fff;
+      text-decoration: none; font-size: 1.2rem; font-weight: 800; border-radius: 12px;
+      transition: transform 0.2s, box-shadow 0.2s; margin-top: 50px;
+    }
+    .next-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(139, 92, 246, 0.4); }
+
+    @media (max-width: 768px) {
+      header { padding: 80px 0 24px; }
+      h1 { font-size: 1.6rem; margin-bottom: 12px; }
+      header p { font-size: 0.85rem; }
+      section { margin-bottom: 40px; }
+      .section-title { font-size: 1.25rem; margin-bottom: 12px; }
+      .card { padding: 16px; margin-bottom: 16px; }
+      .demo-grid { grid-template-columns: 1fr; gap: 10px; }
+      .code-box, .preview-box { padding: 12px; font-size: 0.8rem; border-radius: 8px; }
+      .tip-box { padding: 12px; font-size: 0.8rem; }
+      .next-btn { padding: 16px; font-size: 1rem; margin-top: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-glow"></div>
+
+  <nav>
+    <a href="index.html" class="nav-logo">DEV. <span>동아리</span></a>
+  </nav>
+
+  <div class="container">
+    <header>
+      <div class="kicker">Chapter 7-2. 하드웨어의 지배자</div>
+      <h1>C 프로그래밍 심화 (Advanced)</h1>
+      <p>포인터의 공포를 이겨냈다면, 이제 메모리의 완벽한 통제권을 쥘 차례입니다. 동적 할당, 이중 포인터, 자료구조의 근간을 직접 설계하며 C언어의 진정한 힘을 깨워봅시다.</p>
+    </header>
+
+    <main>
+      <section>
+        <h2 class="section-title">1. 동적 메모리 할당 (Heap 영역의 지배자)</h2>
+        <p class="text-content">일반적인 변수나 배열은 크기가 고정되어 있고 함수가 끝나면 사라집니다(Stack 영역). 실행 중에 사용자가 입력한 크기만큼 자유롭게 메모리를 할당받고 해제하려면 <strong>Heap 영역과 <code>malloc</code></strong>을 사용해야 합니다.</p>
+        
+        <div class="card">
+          <h3>malloc, calloc, realloc 그리고 free</h3>
+          <p class="text-content">메모리를 빌렸으면(할당), 다 쓴 뒤에는 <strong>반드시 운영체제에 반납(free)</strong>해야 합니다. 안 그러면 <strong>메모리 누수(Memory Leak)</strong>로 컴퓨터가 뻗어버립니다.</p>
+          <div class="demo-grid full">
+            <div class="code-box">
+<span class="dir">#include &lt;stdio.h&gt;</span>
+<span class="dir">#include &lt;stdlib.h&gt;</span> <span class="cm">// 메모리 동적 할당을 위한 헤더</span>
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    <span class="kw">int</span> size;
+    <span class="fn">printf</span>(<span class="st">"몇 명의 점수를 입력할까요? "</span>);
+    <span class="fn">scanf</span>(<span class="st">"%d"</span>, &amp;size);
+
+    <span class="cm">// 1. 입력받은 size만큼 메모리(Heap) 할당</span>
+    <span class="cm">// malloc은 void* 를 반환하므로 int* 로 형변환 해줍니다.</span>
+    <span class="kw">int</span> *scores = (<span class="kw">int</span>*)<span class="fn">malloc</span>(size * <span class="kw">sizeof</span>(<span class="kw">int</span>));
+
+    <span class="kw">if</span> (scores == <span class="kw">NULL</span>) {
+        <span class="fn">printf</span>(<span class="st">"메모리 할당 실패!\n"</span>);
+        <span class="kw">return</span> <span class="nm">1</span>;
+    }
+
+    <span class="cm">// 2. 일반 배열처럼 자유롭게 사용</span>
+    <span class="kw">for</span>(<span class="kw">int</span> i = <span class="nm">0</span>; i &lt; size; i++) {
+        scores[i] = (i + <span class="nm">1</span>) * <span class="nm">10</span>; 
+    }
+
+    <span class="cm">// 3. ★가장 중요★ 다 쓴 메모리 반납</span>
+    <span class="fn">free</span>(scores);
+    
+    <span class="cm">// 4. Dangling Pointer(허공을 가리키는 포인터) 방지를 위해 NULL 처리</span>
+    scores = <span class="kw">NULL</span>;
+
+    <span class="kw">return</span> <span class="nm">0</span>;
+}
+            </div>
+          </div>
+          <div class="tip-box">
+            <strong>💡 calloc vs malloc</strong>
+            <code>malloc</code>은 메모리를 할당만 하고 안의 쓰레기값(Garbage)을 비워주지 않습니다. 반면 <code>calloc</code>은 할당과 동시에 모든 메모리 공간을 <strong>0으로 초기화</strong>해주는 차이가 있습니다.
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">2. 심연의 포인터: 이중 포인터와 함수 포인터</h2>
+        <p class="text-content">포인터가 변수의 주소를 담는다면, <strong>이중 포인터(`**`)는 포인터 변수의 주소</strong>를 담습니다. 함수 포인터는 변수가 아닌 <strong>'함수 자체'의 주소</strong>를 담아 콜백(Callback)을 구현할 때 씁니다.</p>
+
+        <div class="card">
+          <h3>함수 포인터 (Function Pointer)</h3>
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="dir">#include &lt;stdio.h&gt;</span>
+
+<span class="cm">// 덧셈과 뺄셈을 하는 일반 함수 두 개</span>
+<span class="kw">int</span> <span class="fn">add</span>(<span class="kw">int</span> a, <span class="kw">int</span> b) { <span class="kw">return</span> a + b; }
+<span class="kw">int</span> <span class="fn">sub</span>(<span class="kw">int</span> a, <span class="kw">int</span> b) { <span class="kw">return</span> a - b; }
+
+<span class="cm">// 함수 포인터를 매개변수로 받는 '계산기' 함수</span>
+<span class="cm">// "int 두 개를 받고 int를 반환하는 함수면 아무거나 다 들어와!"</span>
+<span class="kw">void</span> <span class="fn">calculator</span>(<span class="kw">int</span> x, <span class="kw">int</span> y, <span class="kw">int</span> (*func_ptr)(<span class="kw">int</span>, <span class="kw">int</span>)) {
+    <span class="kw">int</span> result = <span class="fn">func_ptr</span>(x, y);
+    <span class="fn">printf</span>(<span class="st">"결과: %d\n"</span>, result);
+}
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    <span class="cm">// 함수 자체를 매개변수(인자)로 넘깁니다. (자바스크립트의 콜백과 동일)</span>
+    <span class="fn">calculator</span>(<span class="nm">10</span>, <span class="nm">5</span>, add); <span class="cm">// 15 출력</span>
+    <span class="fn">calculator</span>(<span class="nm">10</span>, <span class="nm">5</span>, sub); <span class="cm">// 5 출력</span>
+    
+    <span class="kw">return</span> <span class="nm">0</span>;
+}
+            </div>
+            <div class="preview-box">
+              <div class="console-header">> Terminal - ./a.out</div>
+              <div>결과: 15</div>
+              <div>결과: 5</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">3. 자료구조의 시작: 구조체와 연결 리스트(Linked List)</h2>
+        <p class="text-content">C언어에는 자바나 파이썬처럼 크기가 맘대로 변하는 List 객체가 없습니다. 우리가 <strong>구조체(struct)와 포인터</strong>를 이용해 데이터와 다음 데이터의 주소를 기차처럼 연결해 직접 만들어야 합니다.</p>
+
+        <div class="card">
+          <div class="demo-grid full">
+            <div class="code-box">
+<span class="dir">#include &lt;stdio.h&gt;</span>
+<span class="dir">#include &lt;stdlib.h&gt;</span>
+
+<span class="cm">// 자기 자신과 똑같은 구조체를 가리키는 포인터를 가짐 (자기 참조 구조체)</span>
+<span class="kw">typedef struct</span> <span class="type">Node</span> {
+    <span class="kw">int</span> data;
+    <span class="kw">struct</span> <span class="type">Node</span>* next; <span class="cm">// 다음 기차칸의 주소를 저장</span>
+} <span class="type">Node</span>;
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    <span class="cm">// 1. 노드(기차칸) 2개 동적 할당</span>
+    <span class="type">Node</span>* head = (<span class="type">Node</span>*)<span class="fn">malloc</span>(<span class="kw">sizeof</span>(<span class="type">Node</span>));
+    <span class="type">Node</span>* second = (<span class="type">Node</span>*)<span class="fn">malloc</span>(<span class="kw">sizeof</span>(<span class="type">Node</span>));
+
+    <span class="cm">// 2. 데이터 넣기</span>
+    head-&gt;data = <span class="nm">10</span>;
+    second-&gt;data = <span class="nm">20</span>;
+
+    <span class="cm">// 3. 기차칸 연결하기 (head의 다음은 second)</span>
+    head-&gt;next = second;
+    second-&gt;next = <span class="kw">NULL</span>; <span class="cm">// 마지막 꼬리칸은 NULL을 가리킴</span>
+
+    <span class="cm">// 4. 리스트 순회하며 출력하기</span>
+    <span class="type">Node</span>* curr = head;
+    <span class="kw">while</span>(curr != <span class="kw">NULL</span>) {
+        <span class="fn">printf</span>(<span class="st">"%d -&gt; "</span>, curr-&gt;data);
+        curr = curr-&gt;next; <span class="cm">// 다음 칸으로 이동</span>
+    }
+    <span class="fn">printf</span>(<span class="st">"NULL\n"</span>);
+
+    <span class="fn">free</span>(head); <span class="fn">free</span>(second);
+    <span class="kw">return</span> <span class="nm">0</span>;
+}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">4. 비트 연산 (Bitwise Operations)</h2>
+        <p class="text-content">메모리를 극한으로 아끼고, CPU가 가장 좋아하는 연산을 하려면 0과 1 단위로 쪼개서 조작하는 <strong>비트 연산</strong>을 알아야 합니다. 아두이노 같은 임베디드, 하드웨어 제어에서 필수입니다.</p>
+
+        <div class="card">
+          <h3>비트 마스크 (Bit Masking)</h3>
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="dir">#include &lt;stdio.h&gt;</span>
+
+<span class="cm">// 권한을 비트 자리수로 정의 (1, 2, 4, 8 ...)</span>
+<span class="dir">#define</span> READ_PERM  <span class="nm">0x01</span>  <span class="cm">// 0001</span>
+<span class="dir">#define</span> WRITE_PERM <span class="nm">0x02</span>  <span class="cm">// 0010</span>
+<span class="dir">#define</span> EXEC_PERM  <span class="nm">0x04</span>  <span class="cm">// 0100</span>
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    <span class="kw">unsigned char</span> my_perm = <span class="nm">0</span>; <span class="cm">// 처음엔 아무 권한도 없음 (0000)</span>
+
+    <span class="cm">// 1. 권한 추가: 비트 OR (|) 연산 사용</span>
+    my_perm = my_perm | READ_PERM;  <span class="cm">// 0001 이 됨</span>
+    my_perm |= WRITE_PERM;          <span class="cm">// 0011 이 됨 (읽기, 쓰기 권한 부여)</span>
+
+    <span class="cm">// 2. 권한 확인: 비트 AND (&amp;) 연산 사용</span>
+    <span class="kw">if</span> (my_perm &amp; WRITE_PERM) {
+        <span class="fn">printf</span>(<span class="st">"쓰기 권한이 있습니다.\n"</span>);
+    }
+
+    <span class="cm">// 3. 권한 제거: 비트 반전(~)과 AND(&amp;) 사용</span>
+    my_perm &amp;= ~WRITE_PERM;         <span class="cm">// 0001 로 돌아감</span>
+
+    <span class="kw">return</span> <span class="nm">0</span>;
+}
+            </div>
+            <div class="preview-box">
+              <div class="console-header">> Terminal - ./a.out</div>
+              <div>쓰기 권한이 있습니다.</div>
+            </div>
+          </div>
+          <div class="tip-box">
+            <strong>💡 왜 비트로 권한을 관리하나요?</strong>
+            읽기, 쓰기, 실행 권한을 관리하려면 원래 `bool` 변수 3개가 필요합니다. 하지만 비트 연산을 쓰면 단 **1바이트의 변수 하나**만으로 8가지의 권한 상태를 동시에 조작하고 저장할 수 있어 메모리를 극적으로 아낍니다.
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">5. 파일 입출력 (File I/O)과 바이너리(Binary)</h2>
+        <p class="text-content">단순한 텍스트 파일(<code>.txt</code>)을 넘어, 이미지나 게임 세이브 데이터처럼 컴퓨터만 알아볼 수 있는 <strong>바이너리 파일(<code>.bin</code>, <code>.dat</code>)</strong>을 그대로 메모리(구조체)에 붓거나 빼는 기술입니다.</p>
+
+        <div class="card">
+          <div class="demo-grid full">
+            <div class="code-box">
+<span class="dir">#include &lt;stdio.h&gt;</span>
+
+<span class="kw">typedef struct</span> {
+    <span class="kw">int</span> level;
+    <span class="kw">float</span> hp;
+} <span class="type">SaveData</span>;
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    <span class="type">SaveData</span> player1 = {<span class="nm">50</span>, <span class="nm">1200.5f</span>};
+    <span class="type">SaveData</span> loaded_player;
+
+    <span class="cm">// 1. 바이너리 쓰기 모드(wb)로 파일 열기</span>
+    <span class="type">FILE</span> *fp = <span class="fn">fopen</span>(<span class="st">"save.dat"</span>, <span class="st">"wb"</span>);
+    <span class="kw">if</span> (fp) {
+        <span class="cm">// 메모리 구조 그대로 하드디스크에 통째로 찍어냄 (fwrite)</span>
+        <span class="fn">fwrite</span>(&amp;player1, <span class="kw">sizeof</span>(<span class="type">SaveData</span>), <span class="nm">1</span>, fp);
+        <span class="fn">fclose</span>(fp);
+    }
+
+    <span class="cm">// 2. 바이너리 읽기 모드(rb)로 파일 열기</span>
+    fp = <span class="fn">fopen</span>(<span class="st">"save.dat"</span>, <span class="st">"rb"</span>);
+    <span class="kw">if</span> (fp) {
+        <span class="cm">// 하드디스크의 데이터를 그대로 구조체 메모리에 부어넣음 (fread)</span>
+        <span class="fn">fread</span>(&amp;loaded_player, <span class="kw">sizeof</span>(<span class="type">SaveData</span>), <span class="nm">1</span>, fp);
+        <span class="fn">printf</span>(<span class="st">"불러온 데이터 - 레벨: %d, 체력: %.1f\n"</span>, loaded_player.level, loaded_player.hp);
+        <span class="fn">fclose</span>(fp);
+    }
+
+    <span class="kw">return</span> <span class="nm">0</span>;
+}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <a href="cpp_advanced.html" class="next-btn">
+        하드웨어를 완벽하게 지배하셨군요! ⚡ 다음 장 C++ 성능 심화 배우러 가기 →
+      </a>
+
+    </main>
+  </div>
+</body>
+</html>
