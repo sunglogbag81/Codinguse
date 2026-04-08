@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C++ 심화 완벽 가이드 - DEV. 동아리</title>
+  <style>
+    :root {
+      --bg-dark: #050a15;
+      --bg-card: rgba(15, 20, 35, 0.6);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #2563eb; /* C++ Royal Blue */
+      --accent-soft: rgba(37, 99, 235, 0.15);
+      --line: rgba(255, 255, 255, 0.08);
+      --code-bg: #121214;
+      --preview-bg: #000000;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: "Pretendard Variable", "SUIT Variable", "Noto Sans KR", sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    .bg-glow {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; pointer-events: none;
+    }
+    .bg-glow::before {
+      content: ''; position: absolute; top: -20%; left: -10%; width: 60vw; height: 60vw;
+      max-width: 800px; max-height: 800px;
+      background: var(--accent); filter: blur(180px); opacity: 0.15; border-radius: 50%;
+    }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; height: 50px;
+      background: rgba(5, 10, 20, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line); z-index: 100;
+      display: flex; align-items: center; padding: 0 20px;
+    }
+    .nav-logo { font-weight: 800; font-size: 1.1rem; color: var(--text-main); text-decoration: none; }
+    .nav-logo span { color: var(--accent); }
+
+    .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+
+    header { padding: 100px 0 40px; text-align: center; }
+    .kicker {
+      display: inline-block; padding: 4px 12px; background: var(--accent-soft);
+      color: var(--accent); border: 1px solid rgba(37, 99, 235, 0.3); border-radius: 999px;
+      font-size: 0.85rem; font-weight: 700; margin-bottom: 16px; letter-spacing: 0.05em;
+    }
+    h1 { font-size: 3rem; font-weight: 900; line-height: 1.2; margin-bottom: 16px; word-break: keep-all; }
+    header p { font-size: 1.1rem; color: var(--text-muted); word-break: keep-all; max-width: 700px; margin: 0 auto; }
+
+    main { padding-bottom: 100px; }
+
+    section { margin-bottom: 60px; scroll-margin-top: 70px; }
+    
+    .section-title {
+      font-size: 1.7rem; font-weight: 800; margin-bottom: 16px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-title::before { content: ''; display: block; width: 5px; height: 24px; background: var(--accent); border-radius: 4px; }
+    
+    .text-content { font-size: 1.05rem; color: #d4d4d8; margin-bottom: 20px; word-break: keep-all; line-height: 1.6; }
+
+    .card {
+      background: var(--bg-card); border: 1px solid var(--line); border-radius: 16px;
+      padding: 24px; margin-bottom: 20px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    }
+    .card h3 { font-size: 1.2rem; margin-bottom: 10px; color: #60a5fa; }
+    
+    .demo-grid { display: grid; gap: 20px; margin-top: 16px; grid-template-columns: 1fr 1fr; }
+    .demo-grid.full { grid-template-columns: 1fr; }
+
+    .code-box, .preview-box {
+      border-radius: 12px; padding: 20px; font-size: 0.95rem; overflow-x: auto;
+    }
+    .code-box {
+      background: var(--code-bg); border: 1px solid #27272a; font-family: "D2Coding", monospace;
+      color: #e4e4e7; line-height: 1.5; white-space: pre-wrap; word-break: break-all;
+    }
+    
+    /* C++ Syntax Highlighting */
+    .dir { color: #ff7b72; } /* directives (#include) */
+    .kw { color: #ff7b72; } /* keyword (auto, return, class, public, template, typename) */
+    .type { color: #f2cc60; } /* types (std::unique_ptr, string, thread, mutex) */
+    .fn { color: #d2a8ff; } /* function/object (cout, make_unique, move, lock) */
+    .st { color: #a5d6ff; } /* string */
+    .nm { color: #79c0ff; } /* number */
+    .cm { color: #71717a; } /* comment */
+
+    /* 터미널(콘솔) 화면용 스타일 */
+    .preview-box {
+      background: var(--preview-bg); color: #60a5fa; border: 1px solid #333;
+      display: flex; flex-direction: column; font-family: "D2Coding", monospace;
+    }
+    .console-header { color: #666; font-size: 0.8rem; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 8px; }
+    .console-sys { color: #cbd5e1; font-style: italic; }
+
+    .tip-box {
+      background: rgba(37, 99, 235, 0.08); border-left: 4px solid var(--accent);
+      padding: 16px; border-radius: 0 8px 8px 0; margin-top: 16px; font-size: 0.95rem; color: #cbd5e1;
+    }
+    .tip-box strong { color: #60a5fa; display: block; margin-bottom: 6px; font-size: 1rem; }
+
+    .next-btn {
+      display: block; width: 100%; text-align: center; padding: 20px;
+      background: linear-gradient(to right, #1d4ed8, #1e3a8a); color: #fff;
+      text-decoration: none; font-size: 1.2rem; font-weight: 800; border-radius: 12px;
+      transition: transform 0.2s, box-shadow 0.2s; margin-top: 50px;
+    }
+    .next-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(37, 99, 235, 0.4); }
+
+    @media (max-width: 768px) {
+      header { padding: 80px 0 24px; }
+      h1 { font-size: 1.6rem; margin-bottom: 12px; }
+      header p { font-size: 0.85rem; }
+      section { margin-bottom: 40px; }
+      .section-title { font-size: 1.25rem; margin-bottom: 12px; }
+      .card { padding: 16px; margin-bottom: 16px; }
+      .demo-grid { grid-template-columns: 1fr; gap: 10px; }
+      .code-box, .preview-box { padding: 12px; font-size: 0.8rem; border-radius: 8px; }
+      .tip-box { padding: 12px; font-size: 0.8rem; }
+      .next-btn { padding: 16px; font-size: 1rem; margin-top: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-glow"></div>
+
+  <nav>
+    <a href="index.html" class="nav-logo">DEV. <span>동아리</span></a>
+  </nav>
+
+  <div class="container">
+    <header>
+      <div class="kicker">Chapter 7-3. 한계 없는 성능 최적화</div>
+      <h1>C++ 심화 (Advanced)</h1>
+      <p>C언어의 포인터 지옥에서 벗어나 모던 C++의 세계로 진입합니다. 메모리 누수를 원천 차단하는 스마트 포인터부터 멀티스레딩까지, 하드웨어 성능을 극한으로 끌어올리는 기술을 마스터합니다.</p>
+    </header>
+
+    <main>
+      <section>
+        <h2 class="section-title">1. 스마트 포인터 (Smart Pointers)</h2>
+        <p class="text-content">C언어에서 <code>malloc/free</code>를, 구버전 C++에서 <code>new/delete</code>를 쓰며 발생하던 메모리 누수(Memory Leak)를 완벽하게 해결한 <strong>모던 C++의 핵심 기술</strong>입니다. 객체가 사용되지 않으면 <strong>자동으로 메모리를 해제</strong>합니다.</p>
+        
+        <div class="card">
+          <h3>std::unique_ptr (독점 소유권)</h3>
+          <p class="text-content">오직 단 하나의 포인터만이 객체를 가리킬 수 있게 강제하여 가장 안전하고 빠릅니다.</p>
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="dir">#include &lt;iostream&gt;</span>
+<span class="dir">#include &lt;memory&gt;</span> <span class="cm">// 스마트 포인터를 위한 헤더</span>
+
+<span class="kw">class</span> <span class="type">Player</span> {
+<span class="kw">public</span>:
+    <span class="fn">Player</span>() { std::<span class="fn">cout</span> &lt;&lt; <span class="st">"Player 생성됨!\n"</span>; }
+    ~<span class="fn">Player</span>() { std::<span class="fn">cout</span> &lt;&lt; <span class="st">"Player 소멸됨! (메모리 자동 해제)\n"</span>; }
+    <span class="kw">void</span> <span class="fn">Attack</span>() { std::<span class="fn">cout</span> &lt;&lt; <span class="st">"공격!\n"</span>; }
+};
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    {
+        <span class="cm">// new 대신 std::make_unique를 사용합니다.</span>
+        std::<span class="type">unique_ptr</span>&lt;<span class="type">Player</span>&gt; p1 = std::<span class="fn">make_unique</span>&lt;<span class="type">Player</span>&gt;();
+        p1-&gt;<span class="fn">Attack</span>();
+        
+        <span class="cm">// std::unique_ptr&lt;Player&gt; p2 = p1; // ❌ 컴파일 에러! (복사 불가)</span>
+    } <span class="cm">// 블록이 끝나는 순간 p1이 자동으로 소멸(delete)됩니다!</span>
+    
+    std::<span class="fn">cout</span> &lt;&lt; <span class="st">"메인 함수 종료\n"</span>;
+    <span class="kw">return</span> <span class="nm">0</span>;
+}
+            </div>
+            <div class="preview-box">
+              <div class="console-header">> Terminal - ./main</div>
+              <div class="console-sys">Player 생성됨!</div>
+              <div>공격!</div>
+              <div class="console-sys">Player 소멸됨! (메모리 자동 해제)</div>
+              <div>메인 함수 종료</div>
+            </div>
+          </div>
+          <div class="tip-box">
+            <strong>💡 std::shared_ptr 이란?</strong>
+            만약 여러 포인터가 하나의 객체를 공유해야 한다면 <code>std::shared_ptr</code>를 사용합니다. 내부적으로 <strong>참조 카운트(Reference Count)</strong>를 세어, 나를 가리키는 포인터가 0개가 되는 순간 객체를 파괴합니다.
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">2. 이동 의미론과 우측값 참조 (Move Semantics)</h2>
+        <p class="text-content">엄청나게 큰 데이터를 다른 변수에 넘겨줄 때, 데이터 전체를 '복사(Copy)'하면 성능이 뚝 떨어집니다. C++11부터는 원본 데이터의 <strong>소유권만 훔쳐오는 '이동(Move)'</strong>이 가능해졌습니다.</p>
+
+        <div class="card">
+          <h3>std::move</h3>
+          <div class="demo-grid full">
+            <div class="code-box">
+<span class="dir">#include &lt;iostream&gt;</span>
+<span class="dir">#include &lt;string&gt;</span>
+<span class="dir">#include &lt;vector&gt;</span>
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    std::<span class="type">string</span> str1 = <span class="st">"엄청나게 긴 텍스트 데이터라고 가정합시다."</span>;
+    
+    <span class="cm">// 1. 복사 (Copy) - 메모리가 두 배로 들고 느림</span>
+    std::<span class="type">string</span> str2 = str1; 
+    
+    <span class="cm">// 2. 이동 (Move) - str1의 메모리 주소만 str3로 쓱싹 가져옴!</span>
+    <span class="cm">// 이제 str1은 텅 빈 껍데기가 됩니다.</span>
+    std::<span class="type">string</span> str3 = std::<span class="fn">move</span>(str1);
+    
+    std::<span class="fn">cout</span> &lt;&lt; <span class="st">"str1: ["</span> &lt;&lt; str1 &lt;&lt; <span class="st">"]\n"</span>; <span class="cm">// 비어있음</span>
+    std::<span class="fn">cout</span> &lt;&lt; <span class="st">"str3: ["</span> &lt;&lt; str3 &lt;&lt; <span class="st">"]\n"</span>; <span class="cm">// 데이터가 완벽히 넘어옴</span>
+
+    <span class="kw">return</span> <span class="nm">0</span>;
+}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">3. 템플릿 (Templates) 메타프로그래밍</h2>
+        <p class="text-content">자바(Java)의 제네릭(Generic)과 비슷하지만 훨씬 강력합니다. <strong>"타입(자료형)을 변수처럼 취급하여, 코드를 찍어내는 코드를 작성"</strong>하는 기법으로, STL(표준 템플릿 라이브러리)의 근간입니다.</p>
+
+        <div class="card">
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="dir">#include &lt;iostream&gt;</span>
+
+<span class="cm">// 템플릿 선언: T 라는 임의의 타입을 사용하겠다!</span>
+<span class="kw">template</span> &lt;<span class="kw">typename</span> <span class="type">T</span>&gt;
+<span class="type">T</span> <span class="fn">GetMax</span>(<span class="type">T</span> a, <span class="type">T</span> b) {
+    <span class="kw">return</span> (a &gt; b) ? a : b;
+}
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    <span class="cm">// int를 넣으면 int 전용 GetMax가 컴파일 타임에 생성됨</span>
+    <span class="kw">int</span> i = <span class="fn">GetMax</span>&lt;<span class="kw">int</span>&gt;(<span class="nm">10</span>, <span class="nm">20</span>);
+    
+    <span class="cm">// double을 넣으면 double 전용 GetMax가 생성됨</span>
+    <span class="kw">double</span> d = <span class="fn">GetMax</span>&lt;<span class="kw">double</span>&gt;(<span class="nm">3.14</span>, <span class="nm">5.55</span>);
+    
+    std::<span class="fn">cout</span> &lt;&lt; <span class="st">"정수 최대값: "</span> &lt;&lt; i &lt;&lt; <span class="st">"\n"</span>;
+    std::<span class="fn">cout</span> &lt;&lt; <span class="st">"실수 최대값: "</span> &lt;&lt; d &lt;&lt; <span class="st">"\n"</span>;
+    <span class="kw">return</span> <span class="nm">0</span>;
+}
+            </div>
+            <div class="preview-box">
+              <div class="console-header">> Terminal - ./main</div>
+              <div>정수 최대값: 20</div>
+              <div>실수 최대값: 5.55</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">4. 람다 표현식 (Lambda Expressions)</h2>
+        <p class="text-content">C++11에서 도입된 <strong>이름 없는 함수(익명 함수)</strong>입니다. <code>std::sort</code> 나 <code>std::find_if</code> 같은 알고리즘 함수에 비교 조건을 넘겨줄 때 코드를 극적으로 간결하게 만들어줍니다.</p>
+
+        <div class="card">
+          <h3>[캡처](매개변수) -> 반환타입 { 본문 }</h3>
+          <div class="demo-grid full">
+            <div class="code-box">
+<span class="dir">#include &lt;iostream&gt;</span>
+<span class="dir">#include &lt;vector&gt;</span>
+<span class="dir">#include &lt;algorithm&gt;</span>
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    std::<span class="type">vector</span>&lt;<span class="kw">int</span>&gt; numbers = {<span class="nm">5</span>, <span class="nm">2</span>, <span class="nm">8</span>, <span class="nm">1</span>, <span class="nm">9</span>};
+    <span class="kw">int</span> limit = <span class="nm">4</span>;
+
+    <span class="cm">// 1. 람다를 이용한 커스텀 정렬 (내림차순)</span>
+    <span class="cm">// [](캡처 없음), (int a, int b) 매개변수</span>
+    std::<span class="fn">sort</span>(numbers.<span class="fn">begin</span>(), numbers.<span class="fn">end</span>(), [](<span class="kw">int</span> a, <span class="kw">int</span> b) {
+        <span class="kw">return</span> a &gt; b; 
+    });
+
+    <span class="cm">// 2. 외부 변수(limit) 캡처하기</span>
+    <span class="cm">// [limit] 처럼 대괄호 안에 쓰면 외부 변수를 람다 안에서 쓸 수 있습니다.</span>
+    <span class="kw">auto</span> it = std::<span class="fn">find_if</span>(numbers.<span class="fn">begin</span>(), numbers.<span class="fn">end</span>(), [limit](<span class="kw">int</span> n) {
+        <span class="kw">return</span> n &lt; limit;
+    });
+
+    <span class="kw">if</span> (it != numbers.<span class="fn">end</span>()) {
+        std::<span class="fn">cout</span> &lt;&lt; limit &lt;&lt; <span class="st">"보다 작은 첫 번째 숫자: "</span> &lt;&lt; *it &lt;&lt; <span class="st">"\n"</span>;
+    }
+    <span class="kw">return</span> <span class="nm">0</span>;
+}
+            </div>
+          </div>
+          <div class="tip-box">
+            <strong>💡 캡처(Capture) 블록의 비밀</strong>
+            <code>[&]</code>를 쓰면 외부의 모든 변수를 참조(Reference)로 가져와 내부에서 값을 수정할 수 있고, <code>[=]</code>를 쓰면 복사(Value)해서 가져옵니다. 
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">5. 모던 멀티스레딩 (Concurrency)</h2>
+        <p class="text-content">C언어 시절의 복잡한 운영체제 API(pthread)를 몰라도, C++11부터는 표준 라이브러리(<code>&lt;thread&gt;</code>)를 통해 쉽게 멀티 코어 프로그래밍을 할 수 있습니다.</p>
+
+        <div class="card">
+          <h3>std::thread 와 std::mutex</h3>
+          <p class="text-content">여러 스레드가 동시에 변수에 접근하여 데이터가 꼬이는 <strong>Race Condition(경쟁 상태)</strong>을 막기 위해 <code>mutex</code>(자물쇠)를 사용합니다.</p>
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="dir">#include &lt;iostream&gt;</span>
+<span class="dir">#include &lt;thread&gt;</span>
+<span class="dir">#include &lt;mutex&gt;</span>
+
+<span class="kw">int</span> shared_counter = <span class="nm">0</span>;
+std::<span class="type">mutex</span> mtx; <span class="cm">// 자물쇠 객체</span>
+
+<span class="kw">void</span> <span class="fn">IncreaseCounter</span>() {
+    <span class="kw">for</span>(<span class="kw">int</span> i = <span class="nm">0</span>; i &lt; <span class="nm">10000</span>; i++) {
+        <span class="cm">// lock_guard: 블록을 벗어나면 자동으로 자물쇠가 풀림 (안전함)</span>
+        std::<span class="type">lock_guard</span>&lt;std::<span class="type">mutex</span>&gt; <span class="fn">lock</span>(mtx);
+        shared_counter++; 
+    }
+}
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    <span class="cm">// 두 개의 스레드(일꾼)를 동시에 출격시킴</span>
+    std::<span class="type">thread</span> t1(IncreaseCounter);
+    std::<span class="type">thread</span> t2(IncreaseCounter);
+
+    <span class="cm">// join(): 스레드들이 일을 다 마칠 때까지 메인 함수가 기다려줌</span>
+    t1.<span class="fn">join</span>();
+    t2.<span class="fn">join</span>();
+
+    std::<span class="fn">cout</span> &lt;&lt; <span class="st">"최종 카운트: "</span> &lt;&lt; shared_counter &lt;&lt; <span class="st">"\n"</span>;
+    <span class="kw">return</span> <span class="nm">0</span>;
+}
+            </div>
+            <div class="preview-box">
+              <div class="console-header">> Terminal - ./main</div>
+              <div class="console-sys">스레드 1, 2 동시 실행 중...</div>
+              <div>최종 카운트: 20000</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <a href="csharp_class.html" class="next-btn">
+        C++의 극한 성능을 체감하셨군요! 🎮 다음 장 C# 유니티 기초 가기 →
+      </a>
+
+    </main>
+  </div>
+</body>
+</html>
