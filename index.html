@@ -13,16 +13,18 @@
       --text-muted: #94a3b8;
       --line: rgba(255, 255, 255, 0.1);
       
-      /* 언어별 브랜드 컬러 */
-      --color-python: #f59e0b; /* Yellow */
+      /* 12개 언어별 브랜드 시그니처 컬러 */
       --color-html: #f97316;   /* Orange */
       --color-css: #3b82f6;    /* Blue */
       --color-js: #eab308;     /* Yellow */
       --color-react: #06b6d4;  /* Cyan */
-      --color-node: #22c55e;   /* Green */
+      
       --color-java: #ef4444;   /* Red */
-      --color-spring: #84cc16; /* Lime */
+      --color-spring: #84cc16; /* Lime Green */
+      --color-node: #22c55e;   /* Green */
       --color-sql: #10b981;    /* Emerald */
+      
+      --color-python: #f59e0b; /* Golden Yellow */
       --color-c: #8b5cf6;      /* Purple */
       --color-cpp: #2563eb;    /* Royal Blue */
       --color-csharp: #d946ef; /* Magenta */
@@ -171,7 +173,7 @@
   <header>
     <div class="badge">DEV. 동아리 커리큘럼</div>
     <h1>성장을 위한 로드맵,<br><span>원하는 스택을 선택하세요</span></h1>
-    <p class="subtitle">모든 강좌는 혼자서도 꼼꼼히 읽어볼 수 있는 스크롤 형태(기초/심화)로 제공됩니다. 원하는 분야의 학습 트랙을 선택해 보세요.</p>
+    <p class="subtitle">모든 강좌는 혼자서도 꼼꼼히 읽어볼 수 있는 스크롤 형태(기초/심화)로 제공됩니다. 12개의 핵심 로드맵을 통해 개발자의 길을 열어보세요.</p>
   </header>
 
   <main>
@@ -185,7 +187,7 @@
             <div class="course-icon">🏗️</div>
             <div class="course-info">
               <h3>HTML</h3>
-              <p>웹의 뼈대를 세우는 마크업 언어. 태그의 개념부터 시맨틱 웹까지 배웁니다.</p>
+              <p>웹의 뼈대를 세우는 마크업 언어. 태그의 개념부터 폼 제어, 시맨틱 웹과 SEO 최적화까지 완벽하게 정복합니다.</p>
             </div>
           </div>
           <div class="course-tracks">
@@ -199,12 +201,12 @@
             <div class="course-icon">🖌️</div>
             <div class="course-info">
               <h3>CSS</h3>
-              <p>뼈대에 옷을 입히는 스타일링. 박스 모델과 Flexbox 등 핵심 레이아웃을 다룹니다.</p>
+              <p>뼈대에 옷을 입히는 스타일링. 박스 모델과 Flexbox를 넘어 Grid 레이아웃과 3D 애니메이션의 마법을 배웁니다.</p>
             </div>
           </div>
           <div class="course-tracks">
             <a href="css_class.html" class="track-btn basic">기초 가이드</a>
-            <a href="#" class="track-btn advanced disabled">애니메이션 심화</a>
+            <a href="css_advanced.html" class="track-btn advanced">심화 가이드</a>
           </div>
         </div>
 
@@ -213,12 +215,12 @@
             <div class="course-icon">⚡</div>
             <div class="course-info">
               <h3>JavaScript</h3>
-              <p>웹페이지에 생명을 불어넣는 스크립트. 변수, 이벤트, DOM 조작의 모든 것.</p>
+              <p>웹페이지에 생명을 불어넣는 스크립트. 변수, 이벤트, DOM 조작을 통해 사용자와 상호작용하는 법을 배웁니다.</p>
             </div>
           </div>
           <div class="course-tracks">
             <a href="javascript_class.html" class="track-btn basic">기초 가이드</a>
-            <a href="#" class="track-btn advanced disabled">ES6+ 문법 심화</a>
+            <a href="#" class="track-btn advanced disabled">심화 (준비중)</a>
           </div>
         </div>
 
@@ -227,12 +229,12 @@
             <div class="course-icon">⚛️</div>
             <div class="course-info">
               <h3>React</h3>
-              <p>모던 프론트엔드의 핵심. 컴포넌트 단위 조립과 State(상태) 관리를 마스터합니다.</p>
+              <p>모던 프론트엔드의 핵심 라이브러리. UI를 레고 블록처럼 조립하고 State(상태)를 통해 화면을 동적으로 그립니다.</p>
             </div>
           </div>
           <div class="course-tracks">
             <a href="react_class.html" class="track-btn basic">기초 가이드</a>
-            <a href="#" class="track-btn advanced disabled">Hooks 심화</a>
+            <a href="#" class="track-btn advanced disabled">심화 (준비중)</a>
           </div>
         </div>
 
@@ -248,12 +250,12 @@
             <div class="course-icon">☕</div>
             <div class="course-info">
               <h3>Java</h3>
-              <p>전 세계에서 가장 많이 쓰이는 언어. 객체지향(OOP)의 철학과 클래스 구조를 배웁니다.</p>
+              <p>전 세계에서 가장 많이 쓰이는 백엔드 표준 언어. 캡슐화, 상속, 다형성 등 객체지향(OOP)의 철학을 깊이 있게 이해합니다.</p>
             </div>
           </div>
           <div class="course-tracks">
             <a href="java_class.html" class="track-btn basic">기초 가이드</a>
-            <a href="#" class="track-btn advanced disabled">OOP 심화</a>
+            <a href="#" class="track-btn advanced disabled">심화 (준비중)</a>
           </div>
         </div>
 
@@ -262,12 +264,12 @@
             <div class="course-icon">🌱</div>
             <div class="course-info">
               <h3>Spring Boot</h3>
-              <p>한국 IT 대기업 백엔드의 표준. 의존성 주입(DI)과 REST API 구축의 핵심을 다룹니다.</p>
+              <p>한국 IT 대기업 백엔드의 절대적 기준. 의존성 주입(DI)과 어노테이션의 마법을 통해 강력한 REST API를 구축합니다.</p>
             </div>
           </div>
           <div class="course-tracks">
             <a href="springboot_class.html" class="track-btn basic">기초 가이드</a>
-            <a href="#" class="track-btn advanced disabled">JPA/보안 심화</a>
+            <a href="#" class="track-btn advanced disabled">심화 (준비중)</a>
           </div>
         </div>
 
@@ -276,12 +278,12 @@
             <div class="course-icon">🟩</div>
             <div class="course-info">
               <h3>Node.js & Express</h3>
-              <p>자바스크립트 하나로 서버까지 정복. 비동기 처리와 가장 빠른 API 구축 방법을 배웁니다.</p>
+              <p>자바스크립트 하나로 서버까지 정복하는 혁명. 비동기 처리와 가장 직관적이고 빠른 웹 서버 띄우는 방법을 배웁니다.</p>
             </div>
           </div>
           <div class="course-tracks">
             <a href="nodejs_class.html" class="track-btn basic">기초 가이드</a>
-            <a href="#" class="track-btn advanced disabled">로그인 심화</a>
+            <a href="#" class="track-btn advanced disabled">심화 (준비중)</a>
           </div>
         </div>
 
@@ -290,12 +292,12 @@
             <div class="course-icon">🗄️</div>
             <div class="course-info">
               <h3>SQL (Database)</h3>
-              <p>데이터베이스의 심장. 데이터 검색, 삽입, 수정 및 테이블 연결(JOIN)을 마스터합니다.</p>
+              <p>데이터베이스의 심장. 엑셀의 초진화 버전을 다루며 데이터 검색, 삽입, 테이블 간의 강력한 연결(JOIN)을 마스터합니다.</p>
             </div>
           </div>
           <div class="course-tracks">
             <a href="sql_class.html" class="track-btn basic">기초 가이드</a>
-            <a href="#" class="track-btn advanced disabled">서브쿼리 심화</a>
+            <a href="#" class="track-btn advanced disabled">심화 (준비중)</a>
           </div>
         </div>
 
@@ -311,13 +313,12 @@
             <div class="course-icon">🐍</div>
             <div class="course-info">
               <h3>Python</h3>
-              <p>가장 쉽고 직관적인 프로그래밍 입문. 동아리 발표용 PPT 자료도 함께 제공됩니다.</p>
+              <p>가장 쉽고 직관적인 프로그래밍 입문 언어. 오프라인 동아리 발표 시간에 사용할 수 있는 프레젠테이션 모드를 제공합니다.</p>
             </div>
           </div>
           <div class="course-tracks">
             <a href="python_basic_class.html" class="track-btn ppt">동아리용 PPT</a>
-            <a href="#" class="track-btn basic disabled">스크롤 기초</a>
-            <a href="#" class="track-btn advanced disabled">AI/크롤링 심화</a>
+            <a href="#" class="track-btn advanced disabled">심화 (준비중)</a>
           </div>
         </div>
 
@@ -326,12 +327,12 @@
             <div class="course-icon">💻</div>
             <div class="course-info">
               <h3>C 프로그래밍</h3>
-              <p>소프트웨어의 뿌리. 포인터와 메모리 주소 개념을 통해 컴퓨터의 작동 원리를 파악합니다.</p>
+              <p>소프트웨어의 뿌리가 되는 언어. 모두를 좌절시키는 포인터와 메모리 주소의 개념을 가장 확실하게 짚고 넘어갑니다.</p>
             </div>
           </div>
           <div class="course-tracks">
             <a href="c_class.html" class="track-btn basic">기초 가이드</a>
-            <a href="#" class="track-btn advanced disabled">메모리 심화</a>
+            <a href="#" class="track-btn advanced disabled">심화 (준비중)</a>
           </div>
         </div>
 
@@ -340,12 +341,12 @@
             <div class="course-icon">⚡</div>
             <div class="course-info">
               <h3>C++</h3>
-              <p>압도적인 속도와 객체지향의 결합. STL(Vector, String)과 레퍼런스 개념을 배웁니다.</p>
+              <p>압도적인 속도에 객체지향을 결합한 언어. STL(Vector, String)의 편리함과 레퍼런스를 통해 고성능 프로그램을 만듭니다.</p>
             </div>
           </div>
           <div class="course-tracks">
             <a href="cpp_class.html" class="track-btn basic">기초 가이드</a>
-            <a href="#" class="track-btn advanced disabled">알고리즘 심화</a>
+            <a href="#" class="track-btn advanced disabled">심화 (준비중)</a>
           </div>
         </div>
 
@@ -354,12 +355,12 @@
             <div class="course-icon">🎮</div>
             <div class="course-info">
               <h3>C# (Unity)</h3>
-              <p>유니티(Unity) 게임 개발을 위한 필수 언어. 프로퍼티와 프레임(Update) 제어를 다룹니다.</p>
+              <p>유니티(Unity) 게임 개발을 지배하는 필수 언어. 프로퍼티의 마법과 매 프레임(Update) 캐릭터를 움직이는 원리를 배웁니다.</p>
             </div>
           </div>
           <div class="course-tracks">
             <a href="csharp_class.html" class="track-btn basic">기초 가이드</a>
-            <a href="#" class="track-btn advanced disabled">유니티 응용 심화</a>
+            <a href="#" class="track-btn advanced disabled">심화 (준비중)</a>
           </div>
         </div>
 
