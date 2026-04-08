@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>React 기초 완벽 가이드 - DEV. 동아리</title>
+  <style>
+    :root {
+      --bg-dark: #050f14;
+      --bg-card: rgba(15, 30, 35, 0.6);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #06b6d4; /* React Cyan */
+      --accent-soft: rgba(6, 182, 212, 0.15);
+      --line: rgba(255, 255, 255, 0.08);
+      --code-bg: #0d1117;
+      --preview-bg: #ffffff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: "Pretendard Variable", "SUIT Variable", "Noto Sans KR", sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    .bg-glow {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; pointer-events: none;
+    }
+    .bg-glow::before {
+      content: ''; position: absolute; top: -20%; right: -10%; width: 60vw; height: 60vw;
+      max-width: 800px; max-height: 800px;
+      background: var(--accent); filter: blur(180px); opacity: 0.12; border-radius: 50%;
+    }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; height: 50px;
+      background: rgba(5, 15, 20, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line); z-index: 100;
+      display: flex; align-items: center; padding: 0 20px;
+    }
+    .nav-logo { font-weight: 800; font-size: 1.1rem; color: var(--text-main); text-decoration: none; }
+    .nav-logo span { color: var(--accent); }
+
+    .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+
+    header {
+      padding: 100px 0 40px; text-align: center;
+    }
+    .kicker {
+      display: inline-block; padding: 4px 12px; background: var(--accent-soft);
+      color: var(--accent); border: 1px solid rgba(6, 182, 212, 0.3); border-radius: 999px;
+      font-size: 0.85rem; font-weight: 700; margin-bottom: 16px; letter-spacing: 0.05em;
+    }
+    h1 { font-size: 3rem; font-weight: 900; line-height: 1.2; margin-bottom: 16px; word-break: keep-all; }
+    header p { font-size: 1.1rem; color: var(--text-muted); word-break: keep-all; max-width: 700px; margin: 0 auto; }
+
+    main { padding-bottom: 100px; }
+
+    section { margin-bottom: 60px; scroll-margin-top: 70px; }
+    
+    .section-title {
+      font-size: 1.7rem; font-weight: 800; margin-bottom: 16px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-title::before { content: ''; display: block; width: 5px; height: 24px; background: var(--accent); border-radius: 4px; }
+    
+    .text-content { font-size: 1.05rem; color: #cbd5e1; margin-bottom: 20px; word-break: keep-all; line-height: 1.6; }
+
+    .card {
+      background: var(--bg-card); border: 1px solid var(--line); border-radius: 16px;
+      padding: 24px; margin-bottom: 20px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    }
+    .card h3 { font-size: 1.2rem; margin-bottom: 10px; color: var(--accent); }
+    
+    .demo-grid { display: grid; gap: 20px; margin-top: 16px; grid-template-columns: 1fr 1fr; }
+
+    .code-box, .preview-box {
+      border-radius: 12px; padding: 20px; font-size: 0.95rem; overflow-x: auto;
+    }
+    .code-box {
+      background: var(--code-bg); border: 1px solid #30363d; font-family: "D2Coding", monospace;
+      color: #e6edf3; line-height: 1.5; white-space: pre-wrap; word-break: break-all;
+    }
+    /* React Syntax Highlighting */
+    .kw { color: #ff7b72; } /* keyword (function, const, return, import) */
+    .fn { color: #d2a8ff; } /* function name / hook */
+    .tag { color: #7ee787; } /* JSX tag */
+    .attr { color: #79c0ff; } /* JSX attribute */
+    .st { color: #a5d6ff; } /* string */
+    .cm { color: #8b949e; } /* comment */
+    .vr { color: #f2cc60; } /* variable/prop in {} */
+
+    .preview-box {
+      background: var(--preview-bg); color: #111; border: 1px solid #e4e4e7;
+      display: flex; flex-direction: column; justify-content: center; font-family: sans-serif;
+    }
+    
+    /* 인터랙티브 프리뷰용 스타일 */
+    .react-component-box { border: 2px dashed #06b6d4; padding: 16px; border-radius: 8px; position: relative; }
+    .react-component-label { position: absolute; top: -12px; left: 10px; background: #06b6d4; color: #fff; font-size: 0.7rem; font-weight: bold; padding: 2px 8px; border-radius: 4px; }
+    
+    .interactive-btn {
+      background-color: #06b6d4; color: white; border: none; padding: 10px 16px; 
+      border-radius: 8px; font-size: 1rem; cursor: pointer; transition: 0.2s; font-weight: bold;
+    }
+    .interactive-btn:hover { background-color: #0891b2; }
+
+    .tip-box {
+      background: rgba(6, 182, 212, 0.08); border-left: 4px solid var(--accent);
+      padding: 16px; border-radius: 0 8px 8px 0; margin-top: 16px; font-size: 0.95rem; color: #cbd5e1;
+    }
+    .tip-box strong { color: var(--accent); display: block; margin-bottom: 6px; font-size: 1rem; }
+
+    .next-btn {
+      display: block; width: 100%; text-align: center; padding: 20px;
+      background: linear-gradient(to right, #0891b2, #0369a1); color: #fff;
+      text-decoration: none; font-size: 1.2rem; font-weight: 800; border-radius: 12px;
+      transition: transform 0.2s, box-shadow 0.2s; margin-top: 50px;
+    }
+    .next-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(6, 182, 212, 0.4); }
+
+    /* =========================================
+       모바일 최적화 (768px 이하)
+       ========================================= */
+    @media (max-width: 768px) {
+      header { padding: 80px 0 24px; }
+      h1 { font-size: 1.6rem; margin-bottom: 12px; }
+      header p { font-size: 0.85rem; }
+      
+      section { margin-bottom: 40px; }
+      .section-title { font-size: 1.25rem; margin-bottom: 12px; }
+      .section-title::before { height: 18px; }
+      .text-content { font-size: 0.85rem; margin-bottom: 12px; }
+      
+      .card { padding: 16px; margin-bottom: 16px; }
+      .card h3 { font-size: 1rem; margin-bottom: 8px; }
+      
+      .demo-grid { grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
+      
+      .code-box, .preview-box { padding: 12px; font-size: 0.8rem; border-radius: 8px; }
+      
+      .tip-box { padding: 12px; font-size: 0.8rem; }
+      .tip-box strong { font-size: 0.85rem; margin-bottom: 4px; }
+
+      .next-btn { padding: 16px; font-size: 1rem; margin-top: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-glow"></div>
+
+  <nav>
+    <a href="index.html" class="nav-logo">DEV. <span>동아리</span></a>
+  </nav>
+
+  <div class="container">
+    <header>
+      <div class="kicker">Chapter 4. 모던 프론트엔드의 꽃</div>
+      <h1>React 핵심 개념 (Full Course)</h1>
+      <p>수많은 웹페이지를 복붙해서 만들던 시대는 끝났습니다. UI를 레고 블록처럼 조립하고, 데이터가 바뀌면 화면이 알아서 변하는 리액트의 세계에 오신 것을 환영합니다.</p>
+    </header>
+
+    <main>
+      <section>
+        <h2 class="section-title">1. 컴포넌트 (Components)</h2>
+        <p class="text-content">리액트의 가장 기본 단위입니다. 긴 HTML 코드를 하나의 함수로 묶어서, 마치 <strong>나만의 맞춤형 태그</strong>를 만드는 것과 같습니다.</p>
+        
+        <div class="card">
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="cm">// 나만의 Header 컴포넌트 만들기</span>
+<span class="kw">function</span> <span class="fn">Header</span>() {
+  <span class="kw">return</span> (
+    <span class="tag">&lt;header&gt;</span>
+      <span class="tag">&lt;h1&gt;</span>안녕하세요, 리액트!<span class="tag">&lt;/h1&gt;</span>
+    <span class="tag">&lt;/header&gt;</span>
+  );
+}
+
+<span class="cm">// 레고 블록 조립하듯 재사용하기</span>
+<span class="kw">function</span> <span class="fn">App</span>() {
+  <span class="kw">return</span> (
+    <span class="tag">&lt;div&gt;</span>
+      <span class="tag">&lt;Header</span> <span class="tag">/&gt;</span>
+      <span class="tag">&lt;Header</span> <span class="tag">/&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}
+            </div>
+            <div class="preview-box">
+              <div class="react-component-box" style="margin-bottom: 10px;">
+                <span class="react-component-label">&lt;Header /&gt;</span>
+                <h1 style="margin: 0; font-size: 1.2rem;">안녕하세요, 리액트!</h1>
+              </div>
+              <div class="react-component-box">
+                <span class="react-component-label">&lt;Header /&gt;</span>
+                <h1 style="margin: 0; font-size: 1.2rem;">안녕하세요, 리액트!</h1>
+              </div>
+            </div>
+          </div>
+          <div class="tip-box">
+            <strong>💡 컴포넌트 이름 규칙</strong>
+            리액트에서 컴포넌트의 이름은 반드시 <strong>대문자</strong>로 시작해야 합니다. 소문자로 시작하면 리액트가 일반 HTML 태그(예: div, header)로 오해합니다.
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">2. JSX (JavaScript XML)</h2>
+        <p class="text-content">자바스크립트 파일 안에서 HTML을 쓸 수 있게 해주는 마법의 문법입니다. HTML과 거의 똑같지만, 몇 가지 중요한 차이점이 있습니다.</p>
+
+        <div class="card">
+          <h3>JSX의 3가지 규칙</h3>
+          <p class="text-content">1) <code>class</code> 대신 <code>className</code>을 씁니다. <br>2) 자바스크립트 변수를 쓸 때는 <strong>중괄호 <code>{ }</code></strong>로 감쌉니다. <br>3) 모든 태그는 반드시 닫혀야 합니다. (예: <code>&lt;br /&gt;</code>, <code>&lt;img /&gt;</code>)</p>
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="kw">function</span> <span class="fn">Profile</span>() {
+  <span class="cm">// 자바스크립트 변수</span>
+  <span class="kw">const</span> name = <span class="st">"개발자"</span>;
+  <span class="kw">const</span> color = <span class="st">"blue"</span>;
+
+  <span class="kw">return</span> (
+    <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="st">"box"</span><span class="tag">&gt;</span>
+      <span class="cm">{/* 중괄호 안에서 JS 변수 사용! */}</span>
+      <span class="tag">&lt;h2&gt;</span>내 이름은 <span class="vr">{name}</span><span class="tag">&lt;/h2&gt;</span>
+      
+      <span class="cm">{/* 스타일도 중괄호 2개로 객체 형태로! */}</span>
+      <span class="tag">&lt;p</span> <span class="attr">style</span>=<span class="vr">{{ color: color }}</span><span class="tag">&gt;</span>
+        파란색 글씨입니다.
+      <span class="tag">&lt;/p&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}
+            </div>
+            <div class="preview-box">
+              <div style="border: 1px solid #ccc; padding: 15px; border-radius: 8px;">
+                <h2 style="margin: 0 0 10px 0; font-size: 1.2rem;">내 이름은 개발자</h2>
+                <p style="margin: 0; color: blue;">파란색 글씨입니다.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">3. Props (데이터 물려주기)</h2>
+        <p class="text-content">부모 컴포넌트가 자식 컴포넌트에게 데이터를 전달할 때 사용하는 방법입니다. HTML의 속성(Attribute)을 적는 것과 똑같은 방식입니다.</p>
+
+        <div class="card">
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="cm">// 자식: props를 받아서 화면에 그림</span>
+<span class="kw">function</span> <span class="fn">UserCard</span>(<span class="vr">props</span>) {
+  <span class="kw">return</span> (
+    <span class="tag">&lt;div</span> <span class="attr">className</span>=<span class="st">"card"</span><span class="tag">&gt;</span>
+      <span class="tag">&lt;h3&gt;</span>이름: <span class="vr">{props.name}</span><span class="tag">&lt;/h3&gt;</span>
+      <span class="tag">&lt;p&gt;</span>나이: <span class="vr">{props.age}</span><span class="tag">&lt;/p&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}
+
+<span class="cm">// 부모: 자식에게 이름과 나이를 전달</span>
+<span class="kw">function</span> <span class="fn">App</span>() {
+  <span class="kw">return</span> (
+    <span class="tag">&lt;div&gt;</span>
+      <span class="tag">&lt;UserCard</span> <span class="attr">name</span>=<span class="st">"홍길동"</span> <span class="attr">age</span>=<span class="vr">{20}</span> <span class="tag">/&gt;</span>
+      <span class="tag">&lt;UserCard</span> <span class="attr">name</span>=<span class="st">"김코딩"</span> <span class="attr">age</span>=<span class="vr">{25}</span> <span class="tag">/&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}
+            </div>
+            <div class="preview-box">
+              <div class="react-component-box" style="margin-bottom: 10px;">
+                <span class="react-component-label">UserCard (name="홍길동", age=20)</span>
+                <h3 style="margin: 0; font-size: 1rem;">이름: 홍길동</h3>
+                <p style="margin: 0; font-size: 0.9rem; color: #666;">나이: 20</p>
+              </div>
+              <div class="react-component-box">
+                <span class="react-component-label">UserCard (name="김코딩", age=25)</span>
+                <h3 style="margin: 0; font-size: 1rem;">이름: 김코딩</h3>
+                <p style="margin: 0; font-size: 0.9rem; color: #666;">나이: 25</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">4. State (상태 관리) ★가장 중요</h2>
+        <p class="text-content">일반 JS 변수는 값이 바뀌어도 화면이 그대로입니다. 하지만 리액트의 <strong>State</strong>는 값이 바뀌면 <strong>화면을 알아서 다시 새로고침(Re-render)</strong> 해주는 마법의 데이터입니다.</p>
+
+        <div class="card">
+          <h3>useState 훅(Hook) 사용하기</h3>
+          <p class="text-content"><code>[현재값, 값을바꿀함수] = useState(초기값)</code> 형태로 사용합니다.</p>
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="kw">import</span> { useState } <span class="kw">from</span> <span class="st">'react'</span>;
+
+<span class="kw">function</span> <span class="fn">Counter</span>() {
+  <span class="cm">// count는 0으로 시작, setCount로 값을 바꿈</span>
+  <span class="kw">const</span> [count, setCount] = <span class="fn">useState</span>(0);
+
+  <span class="kw">return</span> (
+    <span class="tag">&lt;div&gt;</span>
+      <span class="tag">&lt;p&gt;</span>현재 카운트: <span class="vr">{count}</span><span class="tag">&lt;/p&gt;</span>
+      
+      <span class="cm">{/* 버튼을 누르면 setCount로 count를 1 증가시킴 */}</span>
+      <span class="tag">&lt;button</span> <span class="attr">onClick</span>=<span class="vr">{() <span class="kw">=&gt;</span> <span class="fn">setCount</span>(count + 1)}</span><span class="tag">&gt;</span>
+        +1 누르기
+      <span class="tag">&lt;/button&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  );
+}
+            </div>
+            <div class="preview-box" style="align-items: center;">
+              <p style="font-size: 1.2rem; font-weight: bold; margin-bottom: 15px;">현재 카운트: <span id="demoCountVal" style="color: #06b6d4;">0</span></p>
+              <button id="demoCountBtn" class="interactive-btn">+1 누르기</button>
+            </div>
+          </div>
+          <div class="tip-box">
+            <strong>⚠️ 직접 수정 금지</strong>
+            <code>count = count + 1</code> 처럼 변수를 직접 바꾸면 리액트가 화면을 바꾸지 않습니다. 반드시 <code>setCount(새로운값)</code> 함수를 통해서만 값을 변경해야 합니다.
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">5. 실전 종합: 좋아요 버튼 만들기</h2>
+        <p class="text-content">State와 조건부 렌더링(삼항 연산자)을 섞으면 인스타그램 같은 '좋아요' 토글 버튼을 쉽게 만들 수 있습니다.</p>
+
+        <div class="card">
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="kw">function</span> <span class="fn">LikeButton</span>() {
+  <span class="cm">// 처음엔 좋아요를 안 누른 상태(false)</span>
+  <span class="kw">const</span> [isLiked, setIsLiked] = <span class="fn">useState</span>(<span class="kw">false</span>);
+
+  <span class="cm">// 클릭 시 현재 상태를 반대로 뒤집음 (!isLiked)</span>
+  <span class="kw">const</span> <span class="fn">handleLike</span> = () <span class="kw">=&gt;</span> {
+    <span class="fn">setIsLiked</span>(!isLiked);
+  };
+
+  <span class="kw">return</span> (
+    <span class="tag">&lt;button</span> 
+      <span class="attr">onClick</span>=<span class="vr">{handleLike}</span>
+      <span class="cm">{/* isLiked가 true면 빨강, 아니면 회색 */}</span>
+      <span class="attr">style</span>=<span class="vr">{{ 
+        color: isLiked ? <span class="st">"red"</span> : <span class="st">"gray"</span> 
+      }}</span>
+    <span class="tag">&gt;</span>
+      <span class="cm">{/* true면 꽉찬 하트, false면 빈 하트 */}</span>
+      <span class="vr">{isLiked ? <span class="st">"♥ 좋아요 취소"</span> : <span class="st">"♡ 좋아요"</span>}</span>
+    <span class="tag">&lt;/button&gt;</span>
+  );
+}
+            </div>
+            <div class="preview-box" style="align-items: center; background: #f8fafc;">
+              <button id="demoLikeBtn" style="background: white; border: 1px solid #ccc; padding: 10px 20px; border-radius: 20px; font-size: 1.1rem; cursor: pointer; transition: 0.2s; color: gray;">
+                ♡ 좋아요
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <a href="java_class.html" class="next-btn">
+        프론트엔드를 마스터했다면? ☕ 튼튼한 백엔드, Java 배우러 가기 →
+      </a>
+
+    </main>
+  </div>
+
+  <script>
+    // 문서 내 인터랙티브 데모 작동용 JS (Vanilla JS로 React의 State 동작을 시뮬레이션)
+    
+    // 데모 1: Counter
+    let countState = 0;
+    const demoCountBtn = document.querySelector('#demoCountBtn');
+    const demoCountVal = document.querySelector('#demoCountVal');
+    
+    if(demoCountBtn) {
+      demoCountBtn.addEventListener('click', () => {
+        countState += 1;
+        demoCountVal.innerText = countState;
+      });
+    }
+
+    // 데모 2: Like Button
+    let isLikedState = false;
+    const demoLikeBtn = document.querySelector('#demoLikeBtn');
+
+    if(demoLikeBtn) {
+      demoLikeBtn.addEventListener('click', () => {
+        isLikedState = !isLikedState; // Toggle state
+        
+        if(isLikedState) {
+          demoLikeBtn.innerText = "♥ 좋아요 취소";
+          demoLikeBtn.style.color = "red";
+          demoLikeBtn.style.borderColor = "red";
+        } else {
+          demoLikeBtn.innerText = "♡ 좋아요";
+          demoLikeBtn.style.color = "gray";
+          demoLikeBtn.style.borderColor = "#ccc";
+        }
+      });
+    }
+  </script>
+</body>
+</html>
