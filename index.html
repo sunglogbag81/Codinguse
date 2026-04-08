@@ -14,20 +14,18 @@
       --line: rgba(255, 255, 255, 0.1);
       
       /* 12개 언어별 브랜드 시그니처 컬러 */
-      --color-html: #f97316;   /* Orange */
-      --color-css: #3b82f6;    /* Blue */
-      --color-js: #eab308;     /* Yellow */
-      --color-react: #06b6d4;  /* Cyan */
-      
-      --color-java: #ef4444;   /* Red */
-      --color-spring: #84cc16; /* Lime Green */
-      --color-node: #22c55e;   /* Green */
-      --color-sql: #10b981;    /* Emerald */
-      
-      --color-python: #f59e0b; /* Golden Yellow */
-      --color-c: #8b5cf6;      /* Purple */
-      --color-cpp: #2563eb;    /* Royal Blue */
-      --color-csharp: #d946ef; /* Magenta */
+      --color-html: #f97316;
+      --color-css: #3b82f6;
+      --color-js: #eab308;
+      --color-react: #06b6d4;
+      --color-java: #ef4444;
+      --color-spring: #84cc16;
+      --color-node: #22c55e;
+      --color-sql: #10b981;
+      --color-python: #f59e0b;
+      --color-c: #8b5cf6;
+      --color-cpp: #2563eb;
+      --color-csharp: #d946ef;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -43,7 +41,6 @@
       flex-direction: column;
     }
 
-    /* 동적인 배경 효과 */
     .bg-glow {
       position: fixed; top: 0; left: 0; right: 0; bottom: 0;
       overflow: hidden; z-index: -1; pointer-events: none;
@@ -56,7 +53,6 @@
     .bg-glow::before { background: var(--color-css); top: -10%; left: -10%; }
     .bg-glow::after { background: var(--color-python); bottom: -10%; right: -10%; }
 
-    /* 헤더 */
     header { text-align: center; padding: 100px 20px 60px; }
     .badge {
       display: inline-block; padding: 6px 16px; margin-bottom: 20px;
@@ -69,15 +65,14 @@
     }
     h1 span {
       background: linear-gradient(to right, #38bdf8, #818cf8);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
     .subtitle { font-size: clamp(1rem, 2vw, 1.15rem); color: var(--text-muted); max-width: 650px; margin: 0 auto; word-break: keep-all; }
 
-    /* 메인 콘텐츠 (리스트 레이아웃) */
     main { flex: 1; max-width: 1000px; margin: 0 auto; padding: 0 20px 100px; width: 100%; }
 
     .category-section { margin-bottom: 60px; }
-    
     .category-title {
       font-size: 1.6rem; font-weight: 800; margin-bottom: 20px;
       padding-bottom: 12px; border-bottom: 2px solid rgba(255, 255, 255, 0.05);
@@ -86,7 +81,6 @@
 
     .course-list { display: flex; flex-direction: column; gap: 16px; }
 
-    /* 리스트형 카드 디자인 */
     .course-row {
       background: var(--bg-card); border: 1px solid var(--line); border-radius: 16px;
       padding: 24px; display: flex; align-items: center; justify-content: space-between;
@@ -99,7 +93,6 @@
       background: var(--theme-color); opacity: 0.6; transition: width 0.3s ease, opacity 0.3s ease;
     }
 
-    /* PC 호버 효과 */
     @media (hover: hover) and (pointer: fine) {
       .course-row:hover {
         background: var(--bg-card-hover); border-color: rgba(255, 255, 255, 0.2);
@@ -108,15 +101,12 @@
       .course-row:hover::before { width: 6px; opacity: 1; }
     }
 
-    /* 카드 좌측: 정보 */
     .course-info-wrap { display: flex; align-items: center; gap: 20px; flex: 1; }
     .course-icon { font-size: 2.5rem; min-width: 60px; text-align: center; }
     .course-info h3 { font-size: 1.3rem; font-weight: 800; margin-bottom: 6px; color: var(--theme-color); }
     .course-info p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; word-break: keep-all; }
 
-    /* 카드 우측: 트랙 버튼들 (기초/심화) */
     .course-tracks { display: flex; gap: 10px; flex-shrink: 0; }
-    
     .track-btn {
       display: inline-flex; align-items: center; justify-content: center;
       padding: 10px 16px; border-radius: 10px; font-size: 0.9rem; font-weight: 700;
@@ -127,43 +117,20 @@
     .track-btn.basic:hover { background: var(--theme-color); color: #fff; border-color: var(--theme-color); }
     
     .track-btn.advanced { background: rgba(255, 255, 255, 0.02); color: #94a3b8; border: 1px dashed rgba(255, 255, 255, 0.15); }
-    .track-btn.advanced:hover:not(.disabled) { border-color: var(--theme-color); color: var(--theme-color); background: rgba(255, 255, 255, 0.05); border-style: solid; }
-    
-    .track-btn.disabled { opacity: 0.4; cursor: not-allowed; }
+    .track-btn.advanced:hover { border-color: var(--theme-color); color: #fff; background: var(--theme-color); border-style: solid; }
     
     .track-btn.ppt { background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.2); }
     .track-btn.ppt:hover { background: #f59e0b; color: #fff; }
 
     footer { text-align: center; padding: 40px 20px; border-top: 1px solid var(--line); color: var(--text-muted); font-size: 0.9rem; }
 
-    /* ==========================================================
-       모바일 및 태블릿 최적화 (Responsive)
-       ========================================================== */
     @media (max-width: 768px) {
       header { padding: 8vh 20px 40px; }
-      
-      .course-row {
-        flex-direction: column; align-items: stretch; gap: 16px; padding: 20px;
-      }
-      
+      .course-row { flex-direction: column; align-items: stretch; gap: 16px; padding: 20px; }
       .course-info-wrap { align-items: flex-start; gap: 16px; }
       .course-icon { font-size: 2rem; min-width: 45px; }
-      .course-info h3 { font-size: 1.2rem; }
-      .course-info p { font-size: 0.9rem; }
-      
-      /* 모바일에서는 버튼이 꽉 차게 혹은 래핑되게 */
-      .course-tracks { flex-wrap: wrap; margin-left: 60px; }
+      .course-tracks { flex-wrap: wrap; margin-left: 0; }
       .track-btn { flex: 1; text-align: center; padding: 10px; font-size: 0.85rem; }
-    }
-
-    @media (max-width: 480px) {
-      .course-tracks { margin-left: 0; margin-top: 5px; flex-direction: column; }
-    }
-
-    /* 터치 디바이스 전용 액티브 효과 */
-    @media (hover: none) {
-      .course-row:active { transform: scale(0.98); background: var(--bg-card-hover); }
-      .track-btn:active { transform: scale(0.95); }
     }
   </style>
 </head>
@@ -171,23 +138,21 @@
   <div class="bg-glow"></div>
 
   <header>
-    <div class="badge">DEV. 동아리 커리큘럼</div>
-    <h1>성장을 위한 로드맵,<br><span>원하는 스택을 선택하세요</span></h1>
-    <p class="subtitle">모든 강좌는 혼자서도 꼼꼼히 읽어볼 수 있는 스크롤 형태(기초/심화)로 제공됩니다. 12개의 핵심 로드맵을 통해 개발자의 길을 열어보세요.</p>
+    <div class="badge">DEV. 동아리 온라인 학습 센터</div>
+    <h1>모든 트랙 오픈,<br><span>당신의 한계를 돌파하세요</span></h1>
+    <p class="subtitle">프론트엔드부터 백엔드, 시스템 하드코어 프로그래밍까지.<br>모든 버튼이 활성화되었습니다. 이제 학습을 시작하세요.</p>
   </header>
 
   <main>
-
     <section class="category-section">
       <h2 class="category-title">🎨 웹 프론트엔드 (Frontend)</h2>
       <div class="course-list">
-        
         <div class="course-row" style="--theme-color: var(--color-html);">
           <div class="course-info-wrap">
             <div class="course-icon">🏗️</div>
             <div class="course-info">
               <h3>HTML</h3>
-              <p>웹의 뼈대를 세우는 마크업 언어. 태그의 개념부터 폼 제어, 시맨틱 웹과 SEO 최적화까지 완벽하게 정복합니다.</p>
+              <p>웹의 근본. 시맨틱 구조와 최신 SEO 최적화 스킬을 정복합니다.</p>
             </div>
           </div>
           <div class="course-tracks">
@@ -201,7 +166,7 @@
             <div class="course-icon">🖌️</div>
             <div class="course-info">
               <h3>CSS</h3>
-              <p>뼈대에 옷을 입히는 스타일링. 박스 모델과 Flexbox를 넘어 Grid 레이아웃과 3D 애니메이션의 마법을 배웁니다.</p>
+              <p>디자인의 완성. Grid 레이아웃과 화려한 3D 애니메이션을 배웁니다.</p>
             </div>
           </div>
           <div class="course-tracks">
@@ -215,12 +180,12 @@
             <div class="course-icon">⚡</div>
             <div class="course-info">
               <h3>JavaScript</h3>
-              <p>웹페이지에 생명을 불어넣는 스크립트. 변수, 이벤트, DOM 조작을 통해 사용자와 상호작용하는 법을 배웁니다.</p>
+              <p>웹의 엔진. 클로저, 비동기 루프 등 고난도 개념을 파헤칩니다.</p>
             </div>
           </div>
           <div class="course-tracks">
             <a href="javascript_class.html" class="track-btn basic">기초 가이드</a>
-            <a href="#" class="track-btn advanced disabled">심화 (준비중)</a>
+            <a href="javascript_advanced.html" class="track-btn advanced">심화 가이드</a>
           </div>
         </div>
 
@@ -229,33 +194,31 @@
             <div class="course-icon">⚛️</div>
             <div class="course-info">
               <h3>React</h3>
-              <p>모던 프론트엔드의 핵심 라이브러리. UI를 레고 블록처럼 조립하고 State(상태)를 통해 화면을 동적으로 그립니다.</p>
+              <p>모던 웹의 표준. 전역 상태 관리와 렌더링 최적화를 마스터합니다.</p>
             </div>
           </div>
           <div class="course-tracks">
             <a href="react_class.html" class="track-btn basic">기초 가이드</a>
-            <a href="#" class="track-btn advanced disabled">심화 (준비중)</a>
+            <a href="react_advanced.html" class="track-btn advanced">심화 가이드</a>
           </div>
         </div>
-
       </div>
     </section>
 
     <section class="category-section">
       <h2 class="category-title">⚙️ 백엔드 & 데이터베이스 (Backend)</h2>
       <div class="course-list">
-
         <div class="course-row" style="--theme-color: var(--color-java);">
           <div class="course-info-wrap">
             <div class="course-icon">☕</div>
             <div class="course-info">
               <h3>Java</h3>
-              <p>전 세계에서 가장 많이 쓰이는 백엔드 표준 언어. 캡슐화, 상속, 다형성 등 객체지향(OOP)의 철학을 깊이 있게 이해합니다.</p>
+              <p>엔터프라이즈의 제왕. 객체지향의 정수를 배우고 시스템을 구축합니다.</p>
             </div>
           </div>
           <div class="course-tracks">
             <a href="java_class.html" class="track-btn basic">기초 가이드</a>
-            <a href="#" class="track-btn advanced disabled">심화 (준비중)</a>
+            <a href="java_advanced.html" class="track-btn advanced">심화 가이드</a>
           </div>
         </div>
 
@@ -264,12 +227,12 @@
             <div class="course-icon">🌱</div>
             <div class="course-info">
               <h3>Spring Boot</h3>
-              <p>한국 IT 대기업 백엔드의 절대적 기준. 의존성 주입(DI)과 어노테이션의 마법을 통해 강력한 REST API를 구축합니다.</p>
+              <p>강력한 백엔드 프레임워크. DI/IoC와 대규모 API 설계를 배웁니다.</p>
             </div>
           </div>
           <div class="course-tracks">
             <a href="springboot_class.html" class="track-btn basic">기초 가이드</a>
-            <a href="#" class="track-btn advanced disabled">심화 (준비중)</a>
+            <a href="springboot_advanced.html" class="track-btn advanced">심화 가이드</a>
           </div>
         </div>
 
@@ -277,13 +240,13 @@
           <div class="course-info-wrap">
             <div class="course-icon">🟩</div>
             <div class="course-info">
-              <h3>Node.js & Express</h3>
-              <p>자바스크립트 하나로 서버까지 정복하는 혁명. 비동기 처리와 가장 직관적이고 빠른 웹 서버 띄우는 방법을 배웁니다.</p>
+              <h3>Node.js</h3>
+              <p>JS 서버 사이드 혁명. 고성능 비동기 서버와 소켓 통신을 다룹니다.</p>
             </div>
           </div>
           <div class="course-tracks">
             <a href="nodejs_class.html" class="track-btn basic">기초 가이드</a>
-            <a href="#" class="track-btn advanced disabled">심화 (준비중)</a>
+            <a href="nodejs_advanced.html" class="track-btn advanced">심화 가이드</a>
           </div>
         </div>
 
@@ -292,33 +255,31 @@
             <div class="course-icon">🗄️</div>
             <div class="course-info">
               <h3>SQL (Database)</h3>
-              <p>데이터베이스의 심장. 엑셀의 초진화 버전을 다루며 데이터 검색, 삽입, 테이블 간의 강력한 연결(JOIN)을 마스터합니다.</p>
+              <p>데이터의 흐름. 복잡한 JOIN과 쿼리 최적화 기법을 정복합니다.</p>
             </div>
           </div>
           <div class="course-tracks">
             <a href="sql_class.html" class="track-btn basic">기초 가이드</a>
-            <a href="#" class="track-btn advanced disabled">심화 (준비중)</a>
+            <a href="sql_advanced.html" class="track-btn advanced">심화 가이드</a>
           </div>
         </div>
-
       </div>
     </section>
 
     <section class="category-section">
       <h2 class="category-title">🚀 코어 시스템 & 게임 (Core/Game)</h2>
       <div class="course-list">
-
         <div class="course-row" style="--theme-color: var(--color-python);">
           <div class="course-info-wrap">
             <div class="course-icon">🐍</div>
             <div class="course-info">
               <h3>Python</h3>
-              <p>가장 쉽고 직관적인 프로그래밍 입문 언어. 오프라인 동아리 발표 시간에 사용할 수 있는 프레젠테이션 모드를 제공합니다.</p>
+              <p>데이터와 AI의 중심. 발표용 PPT와 함께 실전 기술을 익힙니다.</p>
             </div>
           </div>
           <div class="course-tracks">
-            <a href="python_basic_class.html" class="track-btn ppt">동아리용 PPT</a>
-            <a href="#" class="track-btn advanced disabled">심화 (준비중)</a>
+            <a href="python_basic_class.html" class="track-btn ppt">발표용 PPT</a>
+            <a href="python_advanced.html" class="track-btn advanced">AI 심화</a>
           </div>
         </div>
 
@@ -327,12 +288,12 @@
             <div class="course-icon">💻</div>
             <div class="course-info">
               <h3>C 프로그래밍</h3>
-              <p>소프트웨어의 뿌리가 되는 언어. 모두를 좌절시키는 포인터와 메모리 주소의 개념을 가장 확실하게 짚고 넘어갑니다.</p>
+              <p>언어의 뿌리. 메모리 구조와 하드웨어 제어의 본질을 깨우칩니다.</p>
             </div>
           </div>
           <div class="course-tracks">
             <a href="c_class.html" class="track-btn basic">기초 가이드</a>
-            <a href="#" class="track-btn advanced disabled">심화 (준비중)</a>
+            <a href="c_advanced.html" class="track-btn advanced">메모리 심화</a>
           </div>
         </div>
 
@@ -341,12 +302,12 @@
             <div class="course-icon">⚡</div>
             <div class="course-info">
               <h3>C++</h3>
-              <p>압도적인 속도에 객체지향을 결합한 언어. STL(Vector, String)의 편리함과 레퍼런스를 통해 고성능 프로그램을 만듭니다.</p>
+              <p>극한의 퍼포먼스. STL과 모던 C++의 강력한 기능들을 마스터합니다.</p>
             </div>
           </div>
           <div class="course-tracks">
             <a href="cpp_class.html" class="track-btn basic">기초 가이드</a>
-            <a href="#" class="track-btn advanced disabled">심화 (준비중)</a>
+            <a href="cpp_advanced.html" class="track-btn advanced">성능 심화</a>
           </div>
         </div>
 
@@ -355,22 +316,20 @@
             <div class="course-icon">🎮</div>
             <div class="course-info">
               <h3>C# (Unity)</h3>
-              <p>유니티(Unity) 게임 개발을 지배하는 필수 언어. 프로퍼티의 마법과 매 프레임(Update) 캐릭터를 움직이는 원리를 배웁니다.</p>
+              <p>게임 개발의 표준. 유니티 엔진과 연동하는 실전 기술을 정복합니다.</p>
             </div>
           </div>
           <div class="course-tracks">
             <a href="csharp_class.html" class="track-btn basic">기초 가이드</a>
-            <a href="#" class="track-btn advanced disabled">심화 (준비중)</a>
+            <a href="csharp_advanced.html" class="track-btn advanced">게임 엔진 심화</a>
           </div>
         </div>
-
       </div>
     </section>
-
   </main>
 
   <footer>
-    <p>ⓒ 2026 DEV. 동아리 커리큘럼. All rights reserved.</p>
+    <p>ⓒ 2026 DEV. 동아리 커리큘럼 센터. All rights reserved.</p>
   </footer>
 </body>
 </html>
