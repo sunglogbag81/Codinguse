@@ -15,215 +15,136 @@
       --line: rgba(255, 255, 255, 0.1);
       
       /* 언어별 브랜드 컬러 */
-      --color-python: #f59e0b; /* Yellow */
-      --color-html: #f97316;   /* Orange */
-      --color-css: #3b82f6;    /* Blue */
-      --color-js: #eab308;     /* Yellow */
-      --color-react: #06b6d4;  /* Cyan */
-      --color-java: #ef4444;   /* Red */
-      --color-c: #8b5cf6;      /* Purple */
-      --color-cpp: #2563eb;    /* Royal Blue */
+      --color-python: #f59e0b;
+      --color-html: #f97316;
+      --color-css: #3b82f6;
+      --color-js: #eab308;
+      --color-react: #06b6d4;
+      --color-java: #ef4444;
+      --color-c: #8b5cf6;
+      --color-cpp: #2563eb;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      background-color: var(--bg-darker);
-      color: var(--text-main);
+      background-color: var(--bg-darker); color: var(--text-main);
       font-family: "Pretendard Variable", "SUIT Variable", "Noto Sans KR", sans-serif;
-      line-height: 1.6;
-      overflow-x: hidden;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      line-height: 1.6; overflow-x: hidden; min-height: 100vh;
+      display: flex; flex-direction: column;
     }
 
     /* 동적인 배경 효과 */
     .bg-glow {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      overflow: hidden;
-      z-index: -1;
-      pointer-events: none;
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      overflow: hidden; z-index: -1; pointer-events: none;
     }
     .bg-glow::before, .bg-glow::after {
-      content: '';
-      position: absolute;
-      width: 600px;
-      height: 600px;
-      border-radius: 50%;
-      filter: blur(120px);
-      opacity: 0.15;
+      content: ''; position: absolute; width: 60vw; height: 60vw;
+      max-width: 600px; max-height: 600px; border-radius: 50%;
+      filter: blur(120px); opacity: 0.15;
     }
-    .bg-glow::before {
-      background: var(--color-css);
-      top: -100px; left: -100px;
-    }
-    .bg-glow::after {
-      background: var(--color-python);
-      bottom: -100px; right: -100px;
-    }
+    .bg-glow::before { background: var(--color-css); top: -10%; left: -10%; }
+    .bg-glow::after { background: var(--color-python); bottom: -10%; right: -10%; }
 
-    /* 헤더 및 히어로 섹션 */
-    header {
-      text-align: center;
-      padding: 100px 20px 60px;
-    }
+    /* 헤더 */
+    header { text-align: center; padding: 10vh 20px 60px; }
     .badge {
-      display: inline-block;
-      padding: 6px 16px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      color: var(--text-muted);
-      font-size: 0.9rem;
-      letter-spacing: 0.05em;
-      margin-bottom: 20px;
+      display: inline-block; padding: 6px 16px; margin-bottom: 20px;
+      background: rgba(255, 255, 255, 0.05); border: 1px solid var(--line);
+      border-radius: 999px; color: var(--text-muted); font-size: 0.9rem; font-weight: 600;
     }
     h1 {
-      font-size: clamp(2.5rem, 5vw, 4rem);
-      font-weight: 900;
-      line-height: 1.2;
-      margin-bottom: 20px;
-      letter-spacing: -0.03em;
+      font-size: clamp(2rem, 5vw, 4rem); font-weight: 900; line-height: 1.25;
+      margin-bottom: 20px; letter-spacing: -0.03em; word-break: keep-all;
     }
     h1 span {
       background: linear-gradient(to right, #38bdf8, #818cf8);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
-    .subtitle {
-      font-size: 1.2rem;
-      color: var(--text-muted);
-      max-width: 600px;
-      margin: 0 auto;
-    }
+    .subtitle { font-size: clamp(1rem, 2vw, 1.2rem); color: var(--text-muted); max-width: 600px; margin: 0 auto; word-break: keep-all; }
 
-    /* 메인 콘텐츠 (그리드 레이아웃) */
-    main {
-      flex: 1;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px 100px;
-      width: 100%;
-    }
+    /* 메인 콘텐츠 */
+    main { flex: 1; max-width: 1200px; margin: 0 auto; padding: 0 20px 100px; width: 100%; }
 
     .course-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 24px;
-      margin-top: 40px;
+      gap: 24px; margin-top: 40px;
     }
 
     /* 카드 디자인 */
     .course-card {
-      background: var(--card-bg);
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      padding: 30px;
-      text-decoration: none;
-      color: var(--text-main);
-      display: flex;
-      flex-direction: column;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-      backdrop-filter: blur(10px);
+      background: var(--card-bg); border: 1px solid var(--line); border-radius: 20px;
+      padding: 30px; text-decoration: none; color: var(--text-main);
+      display: flex; flex-direction: column; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.3s, border-color 0.3s, box-shadow 0.3s;
+      position: relative; overflow: hidden; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
     }
-    
     .course-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 4px;
-      background: var(--theme-color);
-      opacity: 0.5;
-      transition: opacity 0.3s;
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+      background: var(--theme-color); opacity: 0.5; transition: opacity 0.3s;
     }
 
-    .course-card:hover {
-      transform: translateY(-8px);
-      background: var(--card-hover);
-      border-color: rgba(255, 255, 255, 0.2);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-    }
-    .course-card:hover::before {
-      opacity: 1;
+    /* PC 호버 효과 (마우스가 있는 환경만 적용) */
+    @media (hover: hover) and (pointer: fine) {
+      .course-card:hover {
+        transform: translateY(-8px); background: var(--card-hover);
+        border-color: rgba(255, 255, 255, 0.2); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      }
+      .course-card:hover::before { opacity: 1; }
+      .course-card:hover .card-footer::after { transform: translateX(5px); }
     }
 
     /* 카드 내부 요소 */
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    .icon {
-      font-size: 2.5rem;
-    }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .icon { font-size: clamp(2rem, 3vw, 2.5rem); }
     .type-badge {
-      font-size: 0.75rem;
-      padding: 4px 10px;
-      border-radius: 6px;
-      background: rgba(0, 0, 0, 0.3);
-      color: var(--text-muted);
-      font-weight: 600;
-      text-transform: uppercase;
+      font-size: 0.75rem; padding: 4px 10px; border-radius: 6px;
+      background: rgba(0, 0, 0, 0.3); color: var(--text-muted); font-weight: 700; text-transform: uppercase;
     }
-    .type-badge.ppt {
-      background: rgba(245, 158, 11, 0.1);
-      color: var(--color-python);
-      border: 1px solid rgba(245, 158, 11, 0.2);
-    }
-    .type-badge.scroll {
-      background: rgba(56, 189, 248, 0.1);
-      color: #38bdf8;
-      border: 1px solid rgba(56, 189, 248, 0.2);
-    }
+    .type-badge.ppt { background: rgba(245, 158, 11, 0.1); color: var(--color-python); border: 1px solid rgba(245, 158, 11, 0.2); }
+    .type-badge.scroll { background: rgba(56, 189, 248, 0.1); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.2); }
 
-    .course-title {
-      font-size: 1.5rem;
-      font-weight: 800;
-      margin-bottom: 10px;
-    }
-    .course-desc {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      flex-grow: 1;
-    }
+    .course-title { font-size: 1.4rem; font-weight: 800; margin-bottom: 10px; }
+    .course-desc { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; flex-grow: 1; word-break: keep-all; }
 
-    .card-footer {
-      margin-top: 24px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--theme-color);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .card-footer::after {
-      content: '→';
-      transition: transform 0.2s;
-    }
-    .course-card:hover .card-footer::after {
-      transform: translateX(5px);
-    }
+    .card-footer { margin-top: 24px; font-size: 0.9rem; font-weight: 700; color: var(--theme-color); display: flex; align-items: center; gap: 8px; }
+    .card-footer::after { content: '→'; transition: transform 0.2s; }
 
-    footer {
-      text-align: center;
-      padding: 40px 20px;
-      border-top: 1px solid var(--line);
-      color: var(--text-muted);
-      font-size: 0.9rem;
-    }
+    footer { text-align: center; padding: 30px 20px; border-top: 1px solid var(--line); color: var(--text-muted); font-size: 0.9rem; }
 
+    /* ==========================================================
+       모바일 및 태블릿 최적화 (Responsive Media Queries)
+       ========================================================== */
+
+    /* 태블릿 및 작은 PC (768px 이하) */
     @media (max-width: 768px) {
-      header { padding: 60px 20px 40px; }
-      .course-grid { grid-template-columns: 1fr; }
+      header { padding: 8vh 20px 40px; }
+      .course-grid { gap: 16px; margin-top: 30px; }
+      .course-card { padding: 24px; }
+      main { padding: 0 16px 80px; }
+    }
+
+    /* 스마트폰 (480px 이하) */
+    @media (max-width: 480px) {
+      header { padding: 6vh 16px 30px; }
+      .badge { font-size: 0.8rem; padding: 5px 12px; }
+      .course-grid { grid-template-columns: 1fr; /* 모바일은 무조건 1열 */ }
+      .course-card { padding: 20px; border-radius: 16px; }
+      .card-header { margin-bottom: 16px; }
+      .course-title { font-size: 1.25rem; }
+      .course-desc { font-size: 0.9rem; }
+      .card-footer { margin-top: 16px; }
+    }
+
+    /* 터치 디바이스 전용 액티브 효과 (모바일 끈적임 방지) */
+    @media (hover: none) {
+      .course-card:active {
+        transform: scale(0.98); /* 터치 시 살짝 눌리는 느낌 */
+        background: var(--card-hover);
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+      .course-card:active::before { opacity: 1; }
     }
   </style>
 </head>
@@ -255,7 +176,7 @@
           <span class="type-badge scroll">Scroll Mode</span>
         </div>
         <h2 class="course-title">HTML 기초</h2>
-        <p class="course-desc">웹의 뼈대를 세우는 마크업 언어. 태그의 개념부터 링크, 이미지 삽입까지 스크롤하며 차근차근 배워봅니다.</p>
+        <p class="course-desc">웹의 뼈대를 세우는 마크업 언어. 태그의 개념부터 링크, 이미지 삽입까지 스마트폰으로도 쾌적하게 배워봅니다.</p>
         <div class="card-footer">학습하기</div>
       </a>
 
@@ -323,8 +244,7 @@
   </main>
 
   <footer>
-    <p>ⓒ 2026 Developer Club. All rights reserved.</p>
+    <p>ⓒ 2026 DEV. 동아리. All rights reserved.</p>
   </footer>
 </body>
 </html>
-
