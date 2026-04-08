@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 활용 완벽 가이드 - DEV. 동아리</title>
+  <style>
+    :root {
+      --bg-dark: #090510;
+      --bg-card: rgba(20, 15, 30, 0.6);
+      --text-main: #f8fafc;
+      --text-muted: #a1a1aa;
+      --accent: #a855f7; /* AI Purple */
+      --accent-soft: rgba(168, 85, 247, 0.15);
+      --line: rgba(255, 255, 255, 0.08);
+      --code-bg: #121214;
+      --preview-bg: #000000;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: "Pretendard Variable", "SUIT Variable", "Noto Sans KR", sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    .bg-glow {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; pointer-events: none;
+    }
+    .bg-glow::before {
+      content: ''; position: absolute; top: -20%; left: -10%; width: 60vw; height: 60vw;
+      max-width: 800px; max-height: 800px;
+      background: var(--accent); filter: blur(180px); opacity: 0.12; border-radius: 50%;
+    }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; height: 50px;
+      background: rgba(9, 5, 16, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line); z-index: 100;
+      display: flex; align-items: center; padding: 0 20px;
+    }
+    .nav-logo { font-weight: 800; font-size: 1.1rem; color: var(--text-main); text-decoration: none; }
+    .nav-logo span { color: var(--accent); }
+
+    .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+
+    header {
+      padding: 100px 0 40px; text-align: center;
+    }
+    .kicker {
+      display: inline-block; padding: 4px 12px; background: var(--accent-soft);
+      color: var(--accent); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 999px;
+      font-size: 0.85rem; font-weight: 700; margin-bottom: 16px; letter-spacing: 0.05em;
+    }
+    h1 { font-size: 3rem; font-weight: 900; line-height: 1.2; margin-bottom: 16px; word-break: keep-all; }
+    header p { font-size: 1.1rem; color: var(--text-muted); word-break: keep-all; max-width: 700px; margin: 0 auto; }
+
+    main { padding-bottom: 100px; }
+
+    section { margin-bottom: 60px; scroll-margin-top: 70px; }
+    
+    .section-title {
+      font-size: 1.7rem; font-weight: 800; margin-bottom: 16px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-title::before { content: ''; display: block; width: 5px; height: 24px; background: var(--accent); border-radius: 4px; }
+    
+    .text-content { font-size: 1.05rem; color: #d4d4d8; margin-bottom: 20px; word-break: keep-all; line-height: 1.6; }
+
+    .card {
+      background: var(--bg-card); border: 1px solid var(--line); border-radius: 16px;
+      padding: 24px; margin-bottom: 20px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    }
+    .card h3 { font-size: 1.3rem; margin-bottom: 10px; color: var(--accent); display: flex; align-items: center; gap: 8px; }
+    
+    .badge {
+      display: inline-block; padding: 3px 10px; background: #1e293b; color: #cbd5e1;
+      border-radius: 6px; font-size: 0.8rem; font-weight: bold; margin-right: 8px; border: 1px solid #334155;
+    }
+
+    .demo-grid { display: grid; gap: 20px; margin-top: 16px; grid-template-columns: 1fr 1fr; }
+    .demo-grid.full { grid-template-columns: 1fr; }
+
+    .feature-list { list-style: none; padding: 0; }
+    .feature-list li {
+      position: relative; padding-left: 24px; margin-bottom: 12px; color: #e2e8f0; font-size: 1.05rem;
+    }
+    .feature-list li::before {
+      content: '⚡'; position: absolute; left: 0; top: 2px; font-size: 0.9rem;
+    }
+
+    /* Prompt Box Styling */
+    .prompt-box {
+      background: #1e1b4b; border: 1px solid #3730a3; padding: 16px; border-radius: 8px;
+      font-family: "Pretendard Variable", sans-serif; color: #c7d2fe; margin-top: 10px;
+    }
+    .prompt-header { font-size: 0.85rem; color: #818cf8; margin-bottom: 8px; font-weight: bold; text-transform: uppercase; }
+
+    .tip-box {
+      background: rgba(168, 85, 247, 0.08); border-left: 4px solid var(--accent);
+      padding: 16px; border-radius: 0 8px 8px 0; margin-top: 16px; font-size: 0.95rem; color: #cbd5e1;
+    }
+    .tip-box strong { color: var(--accent); display: block; margin-bottom: 6px; font-size: 1rem; }
+
+    .next-btn {
+      display: block; width: 100%; text-align: center; padding: 20px;
+      background: linear-gradient(to right, #a855f7, #7e22ce); color: #fff;
+      text-decoration: none; font-size: 1.2rem; font-weight: 800; border-radius: 12px;
+      transition: transform 0.2s, box-shadow 0.2s; margin-top: 50px;
+    }
+    .next-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(168, 85, 247, 0.4); }
+
+    @media (max-width: 768px) {
+      header { padding: 80px 0 24px; }
+      h1 { font-size: 1.6rem; margin-bottom: 12px; }
+      header p { font-size: 0.85rem; }
+      section { margin-bottom: 40px; }
+      .section-title { font-size: 1.25rem; margin-bottom: 12px; }
+      .card { padding: 16px; margin-bottom: 16px; }
+      .prompt-box { font-size: 0.9rem; }
+      .next-btn { padding: 16px; font-size: 1rem; margin-top: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-glow"></div>
+
+  <nav>
+    <a href="index.html" class="nav-logo">DEV. <span>동아리</span></a>
+  </nav>
+
+  <div class="container">
+    <header>
+      <div class="kicker">Chapter 2. 코딩 파트너 영입하기</div>
+      <h1>AI 활용 완벽 가이드</h1>
+      <p>"개발자는 AI에 대체되지 않습니다. AI를 쓰는 개발자에게 대체될 뿐입니다." 시중의 핵심 AI 모델들과 코딩 생산성을 100배 올려줄 애플리케이션들을 완벽 정리합니다.</p>
+    </header>
+
+    <main>
+      <section>
+        <h2 class="section-title">🧠 1. 세계관 3대장: 핵심 AI 모델 (LLM)</h2>
+        <p class="text-content">모든 AI 서비스의 두뇌 역할을 하는 가장 거대한 언어 모델 3가지입니다. 브라우저에서 직접 채팅하며 코드를 짜거나 질문할 때 사용합니다.</p>
+        
+        <div class="card" style="border-top: 4px solid #10a37f;">
+          <h3><span style="color: #10a37f;">🟢</span> ChatGPT (OpenAI)</h3>
+          <ul class="feature-list">
+            <li><span class="badge">특징</span>AI 시대를 연 선구자이자 가장 대중적인 모델(GPT-4o)입니다.</li>
+            <li><span class="badge">장점</span>데이터 분석, 파이썬 코드 작성, 일반적인 논리 추론에서 압도적인 범용성을 자랑합니다.</li>
+            <li><span class="badge">추천 용도</span>복잡한 알고리즘 설계, 데이터 분석, 일상적인 질문 및 기획.</li>
+          </ul>
+        </div>
+
+        <div class="card" style="border-top: 4px solid #d97757;">
+          <h3><span style="color: #d97757;">🟠</span> Claude (Anthropic)</h3>
+          <ul class="feature-list">
+            <li><span class="badge">특징</span>오픈AI 출신들이 만든 AI. 현재 <strong>개발자들 사이에서 코딩 원탑</strong>으로 불립니다 (Claude 3.5 Sonnet).</li>
+            <li><span class="badge">장점</span>한국어가 아주 자연스러우며, 한 번에 읽을 수 있는 문서량(컨텍스트)이 엄청나게 큽니다.</li>
+            <li><span class="badge">추천 용도</span>리액트/웹 프론트엔드 코드 작성, 긴 문서 요약 및 번역, 자연스러운 글쓰기.</li>
+          </ul>
+        </div>
+
+        <div class="card" style="border-top: 4px solid #4285f4;">
+          <h3><span style="color: #4285f4;">🔵</span> Gemini (Google)</h3>
+          <ul class="feature-list">
+            <li><span class="badge">특징</span>구글에서 만든 최신 AI 모델입니다. (참고로 여러분의 질문에 답변하고 있는 제가 바로 이 Gemini입니다!)</li>
+            <li><span class="badge">장점</span>응답 속도가 매우 빠르고, 구글 드라이브, 독스, 유튜브 등 구글 생태계와 완벽하게 연동됩니다.</li>
+            <li><span class="badge">추천 용도</span>최신 웹 정보 검색, 구글 문서 연동 작업, 빠른 아이디어 브레인스토밍.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">💻 2. 실전 코딩용 AI 애플리케이션</h2>
+        <p class="text-content">브라우저를 켜서 채팅하는 것을 넘어, 아예 <strong>개발 환경(IDE) 안에 스며들어 내 손가락을 대신해주는</strong> 마법의 툴들입니다.</p>
+
+        <div class="card" style="border-top: 4px solid #ffffff;">
+          <h3><span style="color: #ffffff;">⬜</span> Cursor (커서) ★강력 추천</h3>
+          <ul class="feature-list">
+            <li><span class="badge">설명</span>VS Code를 똑같이 복사한 뒤, 그 안에 GPT-4o와 Claude를 내장시킨 'AI 네이티브 에디터'입니다.</li>
+            <li><span class="badge">실전 활용</span>에디터에서 <code>Ctrl+K</code>를 누르고 <strong>"여기에 모달창 띄우는 코드 추가해줘"</strong>라고 치면, 여러 파일에 걸쳐 알아서 코드를 수정해 줍니다. 현재 개발 씬의 게임 체인저입니다.</li>
+          </ul>
+        </div>
+
+        <div class="card" style="border-top: 4px solid #facc15;">
+          <h3><span style="color: #facc15;">🟡</span> GitHub Copilot (코파일럿)</h3>
+          <ul class="feature-list">
+            <li><span class="badge">설명</span>마이크로소프트와 깃허브가 만든 'AI 짝꿍 프로그래머'입니다. 기존에 쓰던 VS Code나 IntelliJ에 확장 프로그램으로 설치합니다.</li>
+            <li><span class="badge">실전 활용</span>내가 코드를 한 줄 치면, 그 다음 10줄을 <strong>회색 글씨로 미리 예상해서 보여줍니다.</strong> <code>Tab</code> 키만 누르면 코드가 완성되는 마법을 경험할 수 있습니다. (학생 인증 시 무료)</li>
+          </ul>
+        </div>
+        
+        <div class="card" style="border-top: 4px solid #000000;">
+          <h3><span style="color: #a855f7;">🟣</span> v0 by Vercel</h3>
+          <ul class="feature-list">
+            <li><span class="badge">설명</span>글씨로 디자인을 설명하면 <strong>React와 Tailwind CSS 코드로 UI를 뚝딱 만들어주는 서비스</strong>입니다.</li>
+            <li><span class="badge">실전 활용</span>"에어비앤비 스타일의 숙소 예약 달력 만들어줘"라고 치면, 디자인된 화면과 함께 복붙 가능한 코드를 줍니다. 프론트엔드 작업 시간을 압도적으로 단축시킵니다.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">🔍 3. 검색 & 생산성 AI</h2>
+        <p class="text-content">코딩 외에도 구글링과 문서 작업을 대체해 줄 훌륭한 AI 툴들입니다.</p>
+
+        <div class="card" style="border-top: 4px solid #14b8a6;">
+          <h3><span style="color: #14b8a6;">🩵</span> Perplexity (퍼플렉시티)</h3>
+          <ul class="feature-list">
+            <li><span class="badge">설명</span>"구글 킬러"라 불리는 <strong>AI 검색 엔진</strong>입니다. 링크를 찾아주는 게 아니라, 링크들을 읽고 요약해서 정답만 알려줍니다.</li>
+            <li><span class="badge">장점</span>답변마다 [1], [2] 형식으로 <strong>출처(Reference)를 명확히 달아주어</strong> AI의 거짓말(할루시네이션)을 쉽게 검증할 수 있습니다. 에러 코드 검색할 때 최고입니다.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">💡 4. 코딩 AI 프롬프트(질문) 작성 팁</h2>
+        <p class="text-content">AI에게 그냥 "로그인 화면 만들어줘"라고 하면 허접한 코드를 줍니다. <strong>컨텍스트(맥락)</strong>와 <strong>제약조건</strong>을 명확히 주는 것이 핵심입니다.</p>
+
+        <div class="card">
+          <div class="prompt-box">
+            <div class="prompt-header">좋은 프롬프트 예시</div>
+            너는 10년 차 시니어 React 개발자야. [역할 부여]<br><br>
+            아래에 첨부한 내 코드를 보고, 이메일과 비밀번호를 입력받는 로그인 폼 컴포넌트를 만들어줘. [명확한 목표]<br><br>
+            조건:<br>
+            1. CSS는 일반 CSS 파일 대신 Tailwind CSS를 사용할 것.<br>
+            2. 이메일 형식이 틀렸을 경우 빨간색 경고 메시지가 뜨도록 할 것.<br>
+            3. 각 함수마다 친절하게 한국어로 주석을 달아줄 것. [제약 조건]
+          </div>
+          <div class="tip-box">
+            <strong>⚠️ AI 코딩 시 주의사항</strong>
+            AI가 짜준 코드를 맹신하지 마세요. 복붙만 하다 보면 실력이 절대 늘지 않습니다. AI가 짠 코드를 보고 <strong>"왜 이렇게 짰지?"</strong>라고 되물으며 원리를 이해하는 것이 진짜 실력 향상의 지름길입니다.
+          </div>
+        </div>
+      </section>
+
+      <a href="html_class.html" class="next-btn">
+        AI라는 든든한 짝꿍이 생겼네요! 🎨 본격적인 웹 개발 시작하기 →
+      </a>
+
+    </main>
+  </div>
+</body>
+</html>
