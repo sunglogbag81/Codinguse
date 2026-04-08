@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C# 프로그래밍 완벽 가이드 - DEV. 동아리</title>
+  <style>
+    :root {
+      --bg-dark: #0a040a;
+      --bg-card: rgba(25, 10, 25, 0.6);
+      --text-main: #f8fafc;
+      --text-muted: #a1a1aa;
+      --accent: #d946ef; /* C# / VS Purple-Magenta */
+      --accent-soft: rgba(217, 70, 239, 0.15);
+      --line: rgba(255, 255, 255, 0.08);
+      --code-bg: #121214;
+      --preview-bg: #000000;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: "Pretendard Variable", "SUIT Variable", "Noto Sans KR", sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    .bg-glow {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; pointer-events: none;
+    }
+    .bg-glow::before {
+      content: ''; position: absolute; top: -20%; left: -10%; width: 60vw; height: 60vw;
+      max-width: 800px; max-height: 800px;
+      background: var(--accent); filter: blur(180px); opacity: 0.15; border-radius: 50%;
+    }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; height: 50px;
+      background: rgba(10, 4, 10, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line); z-index: 100;
+      display: flex; align-items: center; padding: 0 20px;
+    }
+    .nav-logo { font-weight: 800; font-size: 1.1rem; color: var(--text-main); text-decoration: none; }
+    .nav-logo span { color: var(--accent); }
+
+    .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+
+    header {
+      padding: 100px 0 40px; text-align: center;
+    }
+    .kicker {
+      display: inline-block; padding: 4px 12px; background: var(--accent-soft);
+      color: var(--accent); border: 1px solid rgba(217, 70, 239, 0.3); border-radius: 999px;
+      font-size: 0.85rem; font-weight: 700; margin-bottom: 16px; letter-spacing: 0.05em;
+    }
+    h1 { font-size: 3rem; font-weight: 900; line-height: 1.2; margin-bottom: 16px; word-break: keep-all; }
+    header p { font-size: 1.1rem; color: var(--text-muted); word-break: keep-all; max-width: 700px; margin: 0 auto; }
+
+    main { padding-bottom: 100px; }
+
+    section { margin-bottom: 60px; scroll-margin-top: 70px; }
+    
+    .section-title {
+      font-size: 1.7rem; font-weight: 800; margin-bottom: 16px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-title::before { content: ''; display: block; width: 5px; height: 24px; background: var(--accent); border-radius: 4px; }
+    
+    .text-content { font-size: 1.05rem; color: #d4d4d8; margin-bottom: 20px; word-break: keep-all; line-height: 1.6; }
+
+    .card {
+      background: var(--bg-card); border: 1px solid var(--line); border-radius: 16px;
+      padding: 24px; margin-bottom: 20px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    }
+    .card h3 { font-size: 1.2rem; margin-bottom: 10px; color: var(--accent); }
+    
+    .demo-grid { display: grid; gap: 20px; margin-top: 16px; grid-template-columns: 1fr 1fr; }
+
+    .code-box, .preview-box {
+      border-radius: 12px; padding: 20px; font-size: 0.95rem; overflow-x: auto;
+    }
+    .code-box {
+      background: var(--code-bg); border: 1px solid #27272a; font-family: "D2Coding", monospace;
+      color: #e4e4e7; line-height: 1.5; white-space: pre-wrap; word-break: break-all;
+    }
+    /* C# Syntax Highlighting */
+    .kw { color: #ff7b72; } /* keyword (using, public, class, void, int, float, foreach) */
+    .cls { color: #f2cc60; } /* classes (Console, String, MonoBehaviour) */
+    .fn { color: #d2a8ff; } /* function (WriteLine, Start, Update) */
+    .st { color: #a5d6ff; } /* string */
+    .nm { color: #79c0ff; } /* number */
+    .cm { color: #71717a; } /* comment */
+    .prop { color: #38bdf8; } /* properties ({ get; set; }) */
+
+    /* 터미널/콘솔 출력 스타일 */
+    .preview-box {
+      background: var(--preview-bg); color: #d946ef; border: 1px solid #333;
+      display: flex; flex-direction: column; font-family: "D2Coding", monospace;
+    }
+    .console-header { color: #666; font-size: 0.8rem; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 8px; }
+
+    .tip-box {
+      background: rgba(217, 70, 239, 0.08); border-left: 4px solid var(--accent);
+      padding: 16px; border-radius: 0 8px 8px 0; margin-top: 16px; font-size: 0.95rem; color: #cbd5e1;
+    }
+    .tip-box strong { color: var(--accent); display: block; margin-bottom: 6px; font-size: 1rem; }
+
+    .next-btn {
+      display: block; width: 100%; text-align: center; padding: 20px;
+      background: linear-gradient(to right, #c026d3, #a21caf); color: #fff;
+      text-decoration: none; font-size: 1.2rem; font-weight: 800; border-radius: 12px;
+      transition: transform 0.2s, box-shadow 0.2s; margin-top: 50px;
+    }
+    .next-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(217, 70, 239, 0.4); }
+
+    /* =========================================
+       모바일 최적화 (768px 이하)
+       ========================================= */
+    @media (max-width: 768px) {
+      header { padding: 80px 0 24px; }
+      h1 { font-size: 1.6rem; margin-bottom: 12px; }
+      header p { font-size: 0.85rem; }
+      
+      section { margin-bottom: 40px; }
+      .section-title { font-size: 1.25rem; margin-bottom: 12px; }
+      .section-title::before { height: 18px; }
+      .text-content { font-size: 0.85rem; margin-bottom: 12px; }
+      
+      .card { padding: 16px; margin-bottom: 16px; }
+      .card h3 { font-size: 1rem; margin-bottom: 8px; }
+      
+      .demo-grid { grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
+      
+      .code-box, .preview-box { padding: 12px; font-size: 0.8rem; border-radius: 8px; }
+      
+      .tip-box { padding: 12px; font-size: 0.8rem; }
+      .tip-box strong { font-size: 0.85rem; margin-bottom: 4px; }
+
+      .next-btn { padding: 16px; font-size: 1rem; margin-top: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-glow"></div>
+
+  <nav>
+    <a href="index.html" class="nav-logo">DEV. <span>동아리</span></a>
+  </nav>
+
+  <div class="container">
+    <header>
+      <div class="kicker">Chapter 11. 게임과 윈도우의 지배자</div>
+      <h1>C# 프로그래밍 (Full Course)</h1>
+      <p>C++의 강력함과 Java의 편리함을 모두 갖춘 언어입니다. 특히 전 세계에서 가장 많이 쓰이는 게임 엔진인 <b>Unity(유니티)</b>를 다루기 위해 반드시 거쳐야 하는 필수 관문입니다.</p>
+    </header>
+
+    <main>
+      <section>
+        <h2 class="section-title">1. C# 프로그램의 첫인상</h2>
+        <p class="text-content">C#은 자바(Java)와 뼈대가 매우 비슷합니다. <code>using</code>으로 필요한 도구를 가져오고, <code>class</code> 안에 <code>Main</code> 함수를 만들어 실행합니다.</p>
+        
+        <div class="card">
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="kw">using</span> System; <span class="cm">// 기본 입출력 도구함</span>
+
+<span class="kw">namespace</span> <span class="cls">GameProject</span>
+{
+    <span class="kw">class</span> <span class="cls">Program</span>
+    {
+        <span class="cm">// 프로그램이 시작되는 곳</span>
+        <span class="kw">static void</span> <span class="fn">Main</span>(<span class="kw">string</span>[] args)
+        {
+            <span class="cm">// 화면에 글자를 출력하고 줄바꿈(Line)</span>
+            <span class="cls">Console</span>.<span class="fn">WriteLine</span>(<span class="st">"Hello, C#!"</span>);
+        }
+    }
+}
+            </div>
+            <div class="preview-box">
+              <div class="console-header">> Terminal - dotnet run</div>
+              <div>Hello, C#!</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">2. 변수와 f의 마법 (float)</h2>
+        <p class="text-content">C#은 엄격한 자료형을 가집니다. 특히 게임 개발에서는 캐릭터의 위치나 속도를 나타낼 때 소수점(실수)을 엄청나게 많이 쓰는데, C#에서는 이를 위해 <strong><code>float</code></strong>를 주로 사용합니다.</p>
+
+        <div class="card">
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="kw">using</span> System;
+
+<span class="kw">class</span> <span class="cls">Program</span>
+{
+    <span class="kw">static void</span> <span class="fn">Main</span>()
+    {
+        <span class="kw">int</span> hp = <span class="nm">100</span>;            <span class="cm">// 정수</span>
+        <span class="kw">string</span> name = <span class="st">"용사"</span>;    <span class="cm">// 문자열</span>
+        <span class="kw">bool</span> isAlive = <span class="kw">true</span>;     <span class="cm">// 참/거짓</span>
+        
+        <span class="cm">// 소수점을 쓸 때는 반드시 숫자 뒤에 'f'를 붙여야 합니다!</span>
+        <span class="kw">float</span> speed = <span class="nm">5.5f</span>;
+        
+        <span class="cm">// 문자열 보간 (달러 기호 $를 쓰면 변수를 쏙쏙 넣기 편합니다)</span>
+        <span class="cls">Console</span>.<span class="fn">WriteLine</span>(<span class="st">$"{name}의 속도는 {speed}입니다."</span>);
+    }
+}
+            </div>
+            <div class="preview-box">
+              <div class="console-header">> Terminal - dotnet run</div>
+              <div>용사의 속도는 5.5입니다.</div>
+            </div>
+          </div>
+          <div class="tip-box">
+            <strong>💡 왜 float 뒤에 'f'를 붙이나요?</strong>
+            C#에서 소수점을 그냥 쓰면 더 크고 무거운 <code>double</code>(8바이트)로 인식합니다. 하지만 게임에서는 초당 60번씩 수만 개의 숫자를 계산해야 하므로, 가벼운 <code>float</code>(4바이트)를 명시하기 위해 <strong>f</strong>를 꼭 붙여줍니다.
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">3. 제어문과 foreach</h2>
+        <p class="text-content"><code>if</code>문과 <code>for</code>문은 다른 언어와 완전히 같습니다. 하지만 C#에는 배열이나 리스트를 훑어볼 때 정말 편리한 <strong><code>foreach</code></strong>라는 꿀단지 문법이 있습니다.</p>
+
+        <div class="card">
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="kw">using</span> System;
+
+<span class="kw">class</span> <span class="cls">Program</span>
+{
+    <span class="kw">static void</span> <span class="fn">Main</span>()
+    {
+        <span class="cm">// 무기 배열 만들기</span>
+        <span class="kw">string</span>[] weapons = { <span class="st">"단검"</span>, <span class="st">"장검"</span>, <span class="st">"지팡이"</span> };
+
+        <span class="cm">// for문보다 훨씬 직관적인 foreach문!</span>
+        <span class="cm">// "weapons 안에 있는 각각의(foreach) weapon(무기)에 대하여"</span>
+        <span class="kw">foreach</span> (<span class="kw">string</span> weapon <span class="kw">in</span> weapons)
+        {
+            <span class="cls">Console</span>.<span class="fn">WriteLine</span>(<span class="st">$"획득: {weapon}"</span>);
+        }
+    }
+}
+            </div>
+            <div class="preview-box">
+              <div class="console-header">> Terminal - dotnet run</div>
+              <div>획득: 단검</div>
+              <div>획득: 장검</div>
+              <div>획득: 지팡이</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">4. 클래스와 프로퍼티 (Properties)</h2>
+        <p class="text-content">C#은 객체지향 언어입니다. 자바에서는 변수를 숨기고(private) <code>getHp()</code>, <code>setHp()</code> 같은 함수를 일일이 만들었지만, C#은 <strong>프로퍼티(<code>{ get; set; }</code>)</strong>라는 기능으로 이 과정을 파격적으로 줄였습니다.</p>
+
+        <div class="card">
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="kw">using</span> System;
+
+<span class="kw">class</span> <span class="cls">Player</span>
+{
+    <span class="cm">// 한 줄이면 캡슐화 끝! (프로퍼티 기능)</span>
+    <span class="kw">public string</span> Name { <span class="prop">get</span>; <span class="prop">set</span>; }
+    <span class="kw">public int</span> Hp { <span class="prop">get</span>; <span class="prop">private set</span>; } <span class="cm">// 피는 외부에서 조작 금지!</span>
+
+    <span class="cm">// 생성자 (태어날 때 초기화)</span>
+    <span class="kw">public</span> <span class="fn">Player</span>(<span class="kw">string</span> name)
+    {
+        Name = name;
+        Hp = <span class="nm">100</span>;
+    }
+
+    <span class="cm">// 데미지를 받는 메서드</span>
+    <span class="kw">public void</span> <span class="fn">TakeDamage</span>(<span class="kw">int</span> damage)
+    {
+        Hp -= damage;
+        <span class="cls">Console</span>.<span class="fn">WriteLine</span>(<span class="st">$"{Name}이(가) 맞았습니다! 남은 HP: {Hp}"</span>);
+    }
+}
+
+<span class="kw">class</span> <span class="cls">Program</span>
+{
+    <span class="kw">static void</span> <span class="fn">Main</span>()
+    {
+        <span class="cls">Player</span> p = <span class="kw">new</span> <span class="cls">Player</span>(<span class="st">"전사"</span>);
+        <span class="cm">// p.Hp = 1000; // ❌ private set 이라 조작 불가능! (핵 방지)</span>
+        p.<span class="fn">TakeDamage</span>(<span class="nm">30</span>);
+    }
+}
+            </div>
+            <div class="preview-box">
+              <div class="console-header">> Terminal - dotnet run</div>
+              <div>전사이(가) 맞았습니다! 남은 HP: 70</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">5. (보너스) 유니티(Unity)에서의 C#</h2>
+        <p class="text-content">C#을 배우는 가장 큰 이유인 <b>Unity 게임 엔진</b>에서는 프로그램의 뼈대가 조금 다릅니다. <code>Main</code> 함수 대신, 유니티가 알아서 실행해 주는 <strong><code>Start()</code>와 <code>Update()</code> 메서드</strong>를 사용합니다.</p>
+
+        <div class="card">
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="kw">using</span> UnityEngine; <span class="cm">// 유니티 엔진 기능 가져오기</span>
+
+<span class="cm">// 유니티의 스크립트는 항상 MonoBehaviour를 상속받습니다.</span>
+<span class="kw">public class</span> <span class="cls">PlayerController</span> : <span class="cls">MonoBehaviour</span>
+{
+    <span class="kw">public float</span> speed = <span class="nm">5.0f</span>;
+
+    <span class="cm">// Start: 게임이 켜지자마자 딱 1번 실행됨 (초기 세팅)</span>
+    <span class="kw">void</span> <span class="fn">Start</span>()
+    {
+        <span class="cls">Debug</span>.<span class="fn">Log</span>(<span class="st">"게임이 시작되었습니다!"</span>);
+    }
+
+    <span class="cm">// Update: 게임이 진행되는 동안 초당 60번씩(매 프레임) 계속 실행됨</span>
+    <span class="kw">void</span> <span class="fn">Update</span>()
+    {
+        <span class="cm">// 매 프레임마다 캐릭터를 앞(Forward)으로 이동시킴</span>
+        transform.<span class="fn">Translate</span>(<span class="cls">Vector3</span>.forward * speed * <span class="cls">Time</span>.deltaTime);
+    }
+}
+            </div>
+            <div class="preview-box">
+              <div class="console-header">> Unity Console</div>
+              <div>게임이 시작되었습니다!</div>
+              <div style="color: #666; font-size: 0.8rem; margin-top: 10px;">(캐릭터가 매 프레임마다 앞으로 이동 중...)</div>
+            </div>
+          </div>
+          <div class="tip-box">
+            <strong>💡 Update() 는 왜 필요한가요?</strong>
+            게임은 동영상과 같습니다. 1초에 60장의 사진(프레임)을 빠르게 넘겨서 움직이는 것처럼 보이게 하죠. <code>Update()</code>는 그 사진이 1장 넘어갈 때마다 키보드 입력을 확인하고 캐릭터를 움직이게 해주는 <strong>게임의 심장 박동</strong> 역할을 합니다.
+          </div>
+        </div>
+      </section>
+
+      <a href="index.html" class="next-btn">
+        🎮 게임 개발자의 첫걸음을 떼셨군요! 메인 화면으로 →
+      </a>
+
+    </main>
+  </div>
+</body>
+</html>
