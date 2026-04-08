@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SQL 데이터베이스 완벽 가이드 - DEV. 동아리</title>
+  <style>
+    :root {
+      --bg-dark: #020f0a;
+      --bg-card: rgba(10, 30, 20, 0.6);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #10b981; /* Database Emerald Green */
+      --accent-soft: rgba(16, 185, 129, 0.15);
+      --line: rgba(255, 255, 255, 0.08);
+      --code-bg: #121214;
+      --preview-bg: #ffffff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: "Pretendard Variable", "SUIT Variable", "Noto Sans KR", sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    .bg-glow {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; pointer-events: none;
+    }
+    .bg-glow::before {
+      content: ''; position: absolute; top: -20%; left: -10%; width: 60vw; height: 60vw;
+      max-width: 800px; max-height: 800px;
+      background: var(--accent); filter: blur(180px); opacity: 0.15; border-radius: 50%;
+    }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; height: 50px;
+      background: rgba(5, 15, 10, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line); z-index: 100;
+      display: flex; align-items: center; padding: 0 20px;
+    }
+    .nav-logo { font-weight: 800; font-size: 1.1rem; color: var(--text-main); text-decoration: none; }
+    .nav-logo span { color: var(--accent); }
+
+    .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+
+    header {
+      padding: 100px 0 40px; text-align: center;
+    }
+    .kicker {
+      display: inline-block; padding: 4px 12px; background: var(--accent-soft);
+      color: var(--accent); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 999px;
+      font-size: 0.85rem; font-weight: 700; margin-bottom: 16px; letter-spacing: 0.05em;
+    }
+    h1 { font-size: 3rem; font-weight: 900; line-height: 1.2; margin-bottom: 16px; word-break: keep-all; }
+    header p { font-size: 1.1rem; color: var(--text-muted); word-break: keep-all; max-width: 700px; margin: 0 auto; }
+
+    main { padding-bottom: 100px; }
+
+    section { margin-bottom: 60px; scroll-margin-top: 70px; }
+    
+    .section-title {
+      font-size: 1.7rem; font-weight: 800; margin-bottom: 16px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-title::before { content: ''; display: block; width: 5px; height: 24px; background: var(--accent); border-radius: 4px; }
+    
+    .text-content { font-size: 1.05rem; color: #d4d4d8; margin-bottom: 20px; word-break: keep-all; line-height: 1.6; }
+
+    .card {
+      background: var(--bg-card); border: 1px solid var(--line); border-radius: 16px;
+      padding: 24px; margin-bottom: 20px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    }
+    .card h3 { font-size: 1.2rem; margin-bottom: 10px; color: #34d399; }
+    
+    .demo-grid { display: grid; gap: 20px; margin-top: 16px; grid-template-columns: 1fr 1fr; }
+
+    .code-box, .preview-box {
+      border-radius: 12px; padding: 20px; font-size: 0.95rem; overflow-x: auto;
+    }
+    .code-box {
+      background: var(--code-bg); border: 1px solid #27272a; font-family: "D2Coding", monospace;
+      color: #e4e4e7; line-height: 1.5; white-space: pre-wrap; word-break: break-all;
+    }
+    /* SQL Syntax Highlighting */
+    .kw { color: #d2a8ff; font-weight: bold; } /* keyword (SELECT, FROM, WHERE, INSERT, UPDATE, JOIN) */
+    .tbl { color: #79c0ff; } /* table or column names */
+    .st { color: #a5d6ff; } /* string */
+    .nm { color: #ff7b72; } /* number */
+    .cm { color: #71717a; } /* comment */
+    .op { color: #c9d1d9; } /* operator */
+
+    /* DB 테이블 뷰어 화면용 스타일 */
+    .preview-box {
+      background: var(--preview-bg); color: #333; border: 1px solid #e4e4e7;
+      display: flex; flex-direction: column; font-family: sans-serif;
+    }
+    .db-header { 
+      font-family: monospace; color: #10b981; font-weight: bold; font-size: 0.85rem; 
+      margin-bottom: 12px; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; 
+    }
+    .db-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; text-align: left; }
+    .db-table th { background-color: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; padding: 8px; font-weight: bold; }
+    .db-table td { border: 1px solid #d1fae5; padding: 8px; color: #374151; }
+    .db-table tr:nth-child(even) { background-color: #f9fafb; }
+    .db-msg { color: #10b981; font-weight: bold; font-size: 0.9rem; padding: 10px; background: #ecfdf5; border-radius: 6px; border: 1px dashed #6ee7b7; text-align: center; }
+
+    .tip-box {
+      background: rgba(16, 185, 129, 0.08); border-left: 4px solid var(--accent);
+      padding: 16px; border-radius: 0 8px 8px 0; margin-top: 16px; font-size: 0.95rem; color: #cbd5e1;
+    }
+    .tip-box strong { color: #34d399; display: block; margin-bottom: 6px; font-size: 1rem; }
+
+    .next-btn {
+      display: block; width: 100%; text-align: center; padding: 20px;
+      background: linear-gradient(to right, #10b981, #059669); color: #fff;
+      text-decoration: none; font-size: 1.2rem; font-weight: 800; border-radius: 12px;
+      transition: transform 0.2s, box-shadow 0.2s; margin-top: 50px;
+    }
+    .next-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(16, 185, 129, 0.4); }
+
+    /* =========================================
+       모바일 최적화 (768px 이하)
+       ========================================= */
+    @media (max-width: 768px) {
+      header { padding: 80px 0 24px; }
+      h1 { font-size: 1.6rem; margin-bottom: 12px; }
+      header p { font-size: 0.85rem; }
+      
+      section { margin-bottom: 40px; }
+      .section-title { font-size: 1.25rem; margin-bottom: 12px; }
+      .section-title::before { height: 18px; }
+      .text-content { font-size: 0.85rem; margin-bottom: 12px; }
+      
+      .card { padding: 16px; margin-bottom: 16px; }
+      .card h3 { font-size: 1rem; margin-bottom: 8px; }
+      
+      .demo-grid { grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
+      
+      .code-box, .preview-box { padding: 12px; font-size: 0.8rem; border-radius: 8px; }
+      .db-table { font-size: 0.75rem; }
+      .db-table th, .db-table td { padding: 6px; }
+      
+      .tip-box { padding: 12px; font-size: 0.8rem; }
+      .tip-box strong { font-size: 0.85rem; margin-bottom: 4px; }
+
+      .next-btn { padding: 16px; font-size: 1rem; margin-top: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-glow"></div>
+
+  <nav>
+    <a href="index.html" class="nav-logo">DEV. <span>동아리</span></a>
+  </nav>
+
+  <div class="container">
+    <header>
+      <div class="kicker">Chapter 8. 데이터베이스의 심장</div>
+      <h1>SQL 데이터 다루기 (Full Course)</h1>
+      <p>서버가 기억력을 갖기 위해 사용하는 엑셀의 초진화 버전입니다. SQL은 데이터에게 "원하는 것을 정확하게 찾아와!"라고 명령을 내리는 전 세계 공통어입니다.</p>
+    </header>
+
+    <main>
+      <section>
+        <h2 class="section-title">1. 데이터베이스와 테이블</h2>
+        <p class="text-content">데이터베이스는 커다란 파일 서랍장이고, 그 안에 들어있는 엑셀 시트 하나하나를 <strong>테이블(Table)</strong>이라고 부릅니다. 세로줄은 <strong>컬럼(Column, 속성)</strong>, 가로줄은 <strong>로우(Row, 데이터 한 줄)</strong>입니다.</p>
+        
+        <div class="card">
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="cm">-- users 테이블을 처음으로 생성하는 명령</span>
+<span class="kw">CREATE TABLE</span> <span class="tbl">users</span> (
+    <span class="tbl">id</span> INT PRIMARY KEY AUTO_INCREMENT,
+    <span class="tbl">name</span> VARCHAR(<span class="nm">50</span>),
+    <span class="tbl">age</span> INT,
+    <span class="tbl">grade</span> VARCHAR(<span class="nm">10</span>)
+);
+            </div>
+            <div class="preview-box">
+              <div class="db-header">▶ Table Schema Created: `users`</div>
+              <table class="db-table">
+                <tr><th>Column</th><th>Type</th><th>Key</th></tr>
+                <tr><td>id</td><td>INT</td><td>PRI</td></tr>
+                <tr><td>name</td><td>VARCHAR</td><td></td></tr>
+                <tr><td>age</td><td>INT</td><td></td></tr>
+                <tr><td>grade</td><td>VARCHAR</td><td></td></tr>
+              </table>
+            </div>
+          </div>
+          <div class="tip-box">
+            <strong>💡 Primary Key (기본키)란?</strong>
+            주민등록번호나 학번처럼, 수백만 개의 데이터 중에서 <strong>이 데이터를 유일하게 식별할 수 있는 고유한 값</strong>입니다. 데이터베이스에서 가장 중요한 개념입니다.
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">2. 데이터 조회하기 (SELECT, FROM, WHERE)</h2>
+        <p class="text-content">SQL에서 가장 많이 쓰는, 데이터를 검색하는 명령입니다. <code>SELECT</code>(무엇을), <code>FROM</code>(어디서), <code>WHERE</code>(어떤 조건으로) 세 가지만 알면 90%의 질문을 던질 수 있습니다.</p>
+
+        <div class="card">
+          <h3>모든 데이터 가져오기 vs 조건 걸기</h3>
+          <p class="text-content">별표(<code>*</code>)는 '모든 컬럼'을 의미합니다. <code>WHERE</code> 뒤에는 파이썬이나 자바처럼 비교 연산자를 써서 조건을 줍니다.</p>
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="cm">-- 1. users 테이블의 모든 컬럼(*)과 모든 데이터를 가져와라!</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="tbl">users</span>;
+
+<span class="cm">-- 2. 나이가 20살 이상인 사람의 이름과 등급만 가져와라!</span>
+<span class="kw">SELECT</span> <span class="tbl">name</span>, <span class="tbl">grade</span>
+<span class="kw">FROM</span> <span class="tbl">users</span>
+<span class="kw">WHERE</span> <span class="tbl">age</span> &gt;= <span class="nm">20</span>;
+            </div>
+            <div class="preview-box">
+              <div class="db-header">▶ Query Result (2 rows returned)</div>
+              <table class="db-table">
+                <tr><th>name</th><th>grade</th></tr>
+                <tr><td>홍길동</td><td>VIP</td></tr>
+                <tr><td>김철수</td><td>GOLD</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">3. 정렬과 개수 제한 (ORDER BY, LIMIT)</h2>
+        <p class="text-content">게시판의 최신 글을 불러오거나, 게임 랭킹 1~3위를 보여줄 때 필수적으로 사용하는 명령어입니다.</p>
+
+        <div class="card">
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="cm">-- 나이(age)를 기준으로 내림차순(DESC) 정렬하고,</span>
+<span class="cm">-- 위에서부터 딱 3명(LIMIT 3)만 가져와라!</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="tbl">users</span>
+<span class="kw">ORDER BY</span> <span class="tbl">age</span> <span class="kw">DESC</span>
+<span class="kw">LIMIT</span> <span class="nm">3</span>;
+            </div>
+            <div class="preview-box">
+              <div class="db-header">▶ Top 3 Oldest Users</div>
+              <table class="db-table">
+                <tr><th>id</th><th>name</th><th>age</th></tr>
+                <tr><td>3</td><td>박영희</td><td>35</td></tr>
+                <tr><td>1</td><td>홍길동</td><td>25</td></tr>
+                <tr><td>2</td><td>김철수</td><td>22</td></tr>
+              </table>
+            </div>
+          </div>
+          <div class="tip-box">
+            <strong>💡 DESC 와 ASC</strong>
+            <code>DESC</code>(Descending)는 큰 숫자부터 작아지는 <strong>내림차순</strong>(최신순, 높은점수순)이고, <code>ASC</code>(Ascending)는 작은 숫자부터 커지는 <strong>오름차순</strong>입니다. (ASC는 기본값이라 생략 가능합니다.)
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">4. 데이터 조작하기 (INSERT, UPDATE, DELETE)</h2>
+        <p class="text-content">검색을 벗어나, 테이블에 새로운 데이터를 밀어 넣거나 기존 데이터를 수정하고 지우는 <strong>CRUD</strong> 작업입니다.</p>
+
+        <div class="card">
+          <h3>WHERE 조건을 잊으면 대참사가 일어납니다!</h3>
+          <p class="text-content">UPDATE와 DELETE를 할 때는 <strong>반드시 <code>WHERE</code> 절을 적어 특정 데이터만 지정</strong>해야 합니다. 안 그러면 모든 유저의 데이터가 날아가거나 덮어씌워집니다.</p>
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="cm">-- 1. 데이터 추가 (Create)</span>
+<span class="kw">INSERT INTO</span> <span class="tbl">users</span> (<span class="tbl">name</span>, <span class="tbl">age</span>, <span class="tbl">grade</span>)
+<span class="kw">VALUES</span> (<span class="st">'이데이터'</span>, <span class="nm">19</span>, <span class="st">'NEW'</span>);
+
+<span class="cm">-- 2. 데이터 수정 (Update)</span>
+<span class="cm">-- 아이디가 1인 유저의 등급을 VVIP로 바꿔라!</span>
+<span class="kw">UPDATE</span> <span class="tbl">users</span>
+<span class="kw">SET</span> <span class="tbl">grade</span> = <span class="st">'VVIP'</span>
+<span class="kw">WHERE</span> <span class="tbl">id</span> = <span class="nm">1</span>;
+
+<span class="cm">-- 3. 데이터 삭제 (Delete)</span>
+<span class="cm">-- 나이가 10살 미만인 유저를 지워라!</span>
+<span class="kw">DELETE FROM</span> <span class="tbl">users</span>
+<span class="kw">WHERE</span> <span class="tbl">age</span> &lt; <span class="nm">10</span>;
+            </div>
+            <div class="preview-box" style="justify-content: flex-start;">
+              <div class="db-header">▶ Query Executed Successfully</div>
+              <div class="db-msg" style="margin-bottom: 8px;">1 row inserted.</div>
+              <div class="db-msg" style="margin-bottom: 8px;">1 row updated.</div>
+              <div class="db-msg">0 rows deleted.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">5. 테이블 연결하기 (JOIN) ★가장 중요</h2>
+        <p class="text-content">데이터베이스를 강력하게 만드는 이유입니다. 유저 정보 테이블과 주문 내역 테이블을 분리해 두었다가, 필요할 때 <strong>공통된 연결고리(id)를 통해 하나로 합쳐서</strong> 보여주는 기술입니다.</p>
+
+        <div class="card">
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="cm">-- users 테이블의 이름과 orders 테이블의 상품명을 같이 보고 싶다!</span>
+<span class="kw">SELECT</span> <span class="tbl">users.name</span>, <span class="tbl">orders.product</span>
+<span class="kw">FROM</span> <span class="tbl">users</span>
+<span class="cm">-- orders 테이블을 옆에 가져다 붙여라 (JOIN)</span>
+<span class="kw">JOIN</span> <span class="tbl">orders</span> 
+  <span class="cm">-- 단, users의 id와 orders의 user_id가 같은 것끼리만 (ON)</span>
+  <span class="kw">ON</span> <span class="tbl">users.id</span> = <span class="tbl">orders.user_id</span>;
+            </div>
+            <div class="preview-box">
+              <div class="db-header">▶ Joined Query Result</div>
+              <table class="db-table">
+                <tr><th>name (users)</th><th>product (orders)</th></tr>
+                <tr><td>홍길동</td><td>맥북 프로</td></tr>
+                <tr><td>홍길동</td><td>매직 마우스</td></tr>
+                <tr><td>김철수</td><td>아이패드</td></tr>
+              </table>
+            </div>
+          </div>
+          <div class="tip-box">
+            <strong>💡 Foreign Key (외래키)란?</strong>
+            위 예시에서 <code>orders</code> 테이블의 <code>user_id</code>처럼, 다른 테이블의 기본키(Primary Key)를 가리키는 속성을 외래키라고 합니다. 이 외래키 덕분에 테이블 간에 거미줄처럼 관계를 맺을 수 있습니다.
+          </div>
+        </div>
+      </section>
+
+      <a href="index.html" class="next-btn">
+        🎉 데이터베이스까지 섭렵하셨습니다! 메인 화면으로 돌아가기 →
+      </a>
+
+    </main>
+  </div>
+</body>
+</html>
