@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>클라우드 & 배포 완벽 가이드 - DEV. 동아리</title>
+  <style>
+    :root {
+      --bg-dark: #040c14;
+      --bg-card: rgba(15, 25, 35, 0.6);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #0ea5e9; /* Sky Blue */
+      --accent-soft: rgba(14, 165, 233, 0.15);
+      --line: rgba(255, 255, 255, 0.08);
+      --code-bg: #0f172a;
+      --preview-bg: #000000;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: "Pretendard Variable", "SUIT Variable", "Noto Sans KR", sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    .bg-glow {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; pointer-events: none;
+    }
+    .bg-glow::before {
+      content: ''; position: absolute; top: -20%; right: -10%; width: 60vw; height: 60vw;
+      max-width: 800px; max-height: 800px;
+      background: var(--accent); filter: blur(180px); opacity: 0.12; border-radius: 50%;
+    }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; height: 50px;
+      background: rgba(4, 12, 20, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line); z-index: 100;
+      display: flex; align-items: center; padding: 0 20px;
+    }
+    .nav-logo { font-weight: 800; font-size: 1.1rem; color: var(--text-main); text-decoration: none; }
+    .nav-logo span { color: var(--accent); }
+
+    .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+
+    header {
+      padding: 100px 0 40px; text-align: center;
+    }
+    .kicker {
+      display: inline-block; padding: 4px 12px; background: var(--accent-soft);
+      color: var(--accent); border: 1px solid rgba(14, 165, 233, 0.3); border-radius: 999px;
+      font-size: 0.85rem; font-weight: 700; margin-bottom: 16px; letter-spacing: 0.05em;
+    }
+    h1 { font-size: 3rem; font-weight: 900; line-height: 1.2; margin-bottom: 16px; word-break: keep-all; }
+    header p { font-size: 1.1rem; color: var(--text-muted); word-break: keep-all; max-width: 700px; margin: 0 auto; }
+
+    main { padding-bottom: 100px; }
+
+    section { margin-bottom: 60px; scroll-margin-top: 70px; }
+    
+    .section-title {
+      font-size: 1.7rem; font-weight: 800; margin-bottom: 16px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-title::before { content: ''; display: block; width: 5px; height: 24px; background: var(--accent); border-radius: 4px; }
+    
+    .text-content { font-size: 1.05rem; color: #cbd5e1; margin-bottom: 20px; word-break: keep-all; line-height: 1.6; }
+
+    .card {
+      background: var(--bg-card); border: 1px solid var(--line); border-radius: 16px;
+      padding: 24px; margin-bottom: 20px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    }
+    .card h3 { font-size: 1.3rem; margin-bottom: 10px; color: var(--accent); display: flex; align-items: center; gap: 8px; }
+
+    .demo-grid { display: grid; gap: 20px; margin-top: 16px; grid-template-columns: 1fr 1fr; }
+    .demo-grid.full { grid-template-columns: 1fr; }
+
+    .code-box, .preview-box {
+      border-radius: 12px; padding: 20px; font-size: 0.95rem; overflow-x: auto;
+    }
+    .code-box {
+      background: var(--code-bg); border: 1px solid #1e293b; font-family: "D2Coding", monospace;
+      color: #e2e8f0; line-height: 1.5; white-space: pre-wrap; word-break: break-all;
+    }
+    
+    /* Syntax Highlighting */
+    .kw { color: #f472b6; } /* keyword */
+    .cmd { color: #38bdf8; font-weight: bold; } /* command */
+    .arg { color: #818cf8; } /* arguments */
+    .st { color: #a5d6ff; } /* string */
+    .cm { color: #64748b; } /* comment */
+
+    .preview-box {
+      background: var(--preview-bg); color: #cbd5e1; border: 1px solid #333;
+      display: flex; flex-direction: column; font-family: "D2Coding", monospace;
+    }
+    .console-header { color: #666; font-size: 0.8rem; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 8px; }
+    .console-success { color: #34d399; }
+    .console-link { color: #38bdf8; text-decoration: underline; }
+
+    .tip-box {
+      background: rgba(14, 165, 233, 0.08); border-left: 4px solid var(--accent);
+      padding: 16px; border-radius: 0 8px 8px 0; margin-top: 16px; font-size: 0.95rem; color: #cbd5e1;
+    }
+    .tip-box strong { color: var(--accent); display: block; margin-bottom: 6px; font-size: 1rem; }
+
+    .next-btn {
+      display: block; width: 100%; text-align: center; padding: 20px;
+      background: linear-gradient(to right, #0ea5e9, #0284c7); color: #fff;
+      text-decoration: none; font-size: 1.2rem; font-weight: 800; border-radius: 12px;
+      transition: transform 0.2s, box-shadow 0.2s; margin-top: 50px;
+    }
+    .next-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(14, 165, 233, 0.4); }
+
+    @media (max-width: 768px) {
+      header { padding: 80px 0 24px; }
+      h1 { font-size: 1.6rem; margin-bottom: 12px; }
+      header p { font-size: 0.85rem; }
+      section { margin-bottom: 40px; }
+      .section-title { font-size: 1.25rem; margin-bottom: 12px; }
+      .card { padding: 16px; margin-bottom: 16px; }
+      .demo-grid { grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
+      .next-btn { padding: 16px; font-size: 1rem; margin-top: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-glow"></div>
+
+  <nav>
+    <a href="index.html" class="nav-logo">DEV. <span>동아리</span></a>
+  </nav>
+
+  <div class="container">
+    <header>
+      <div class="kicker">Chapter 3. 내 프로젝트, 전 세계에 자랑하기</div>
+      <h1>클라우드 & 배포 (Deploy) 완벽 가이드</h1>
+      <p>localhost:3000 지옥에서 탈출할 시간입니다. 친구에게 스마트폰으로 접속할 수 있는 '진짜 주소'를 만들어주는 클라우드 서버와 배포의 마법을 배워봅시다.</p>
+    </header>
+
+    <main>
+      <section>
+        <h2 class="section-title">1. 배포(Deployment)가 대체 뭔가요?</h2>
+        <p class="text-content">우리가 코딩할 때 보는 <code>http://localhost:3000</code>은 '내 컴퓨터(로컬)' 안에서만 돌아가는 가짜 인터넷입니다. 이 코드를 <strong>24시간 내내 켜져 있고, 전 세계 어디서든 접속할 수 있는 남의 컴퓨터(서버)</strong>에 올려두는 과정을 **배포**라고 합니다.</p>
+        
+        <div class="card">
+          <ul style="margin-left: 20px; color: #cbd5e1; font-size: 1.05rem; line-height: 1.8;">
+            <li><strong>호스팅(Hosting)</strong>: 남의 컴퓨터(서버)의 공간을 월세 내고 빌리는 것 (예: AWS, GCP)</li>
+            <li><strong>클라우드(Cloud)</strong>: 물리적인 서버 컴퓨터를 직접 사지 않고, 인터넷을 통해 가상으로 서버를 빌려 쓰는 현대적인 방식</li>
+          </ul>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">2. 프론트엔드 1분 배포 (Vercel / Netlify)</h2>
+        <p class="text-content">HTML, CSS, React로 만든 프론트엔드 화면은 서버 세팅을 할 필요가 없습니다. GitHub 레포지토리를 연결만 하면 버튼 한 번에 전 세계로 배포해 주는 미친 서비스들이 있습니다.</p>
+
+        <div class="card">
+          <h3>Vercel (버셀) - React/Next.js의 신</h3>
+          <p class="text-content">GitHub에 내 코드를 <code>push</code> 하기만 하면, Vercel이 그걸 감지해서 자동으로 빌드(Build)하고 나만의 도메인(링크)을 만들어줍니다. 심지어 무료입니다!</p>
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="cm"># 터미널에서 명령어로도 바로 배포할 수 있습니다.</span>
+<span class="cm"># (프로젝트 폴더 안에서)</span>
+
+<span class="cm"># 1. vercel 프로그램 설치</span>
+<span class="cmd">npm</span> <span class="arg">i -g vercel</span>
+
+<span class="cm"># 2. 내 코드 Vercel 클라우드로 쏘아올리기</span>
+<span class="cmd">vercel</span>
+
+<span class="cm"># (몇 가지 질문에 Y/Enter 누르면 끝!)</span>
+            </div>
+            <div class="preview-box">
+              <div class="console-header">> Terminal - Vercel CLI</div>
+              <div>Vercel CLI 34.0.0</div>
+              <div>? Set up and deploy "~/my-react-app"? [Y/n] y</div>
+              <div>- Building project...</div>
+              <div class="console-success">✓ Production Deploy Completed [42s]</div>
+              <div>Ready! Available at: <span class="console-link">https://my-react-app-sigma.vercel.app</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">3. 백엔드 서버 (AWS EC2 vs PaaS)</h2>
+        <p class="text-content">데이터베이스를 다루고 로직을 계산하는 백엔드(Java, Node.js, Python)는 프론트엔드보다 복잡합니다. 리눅스 운영체제가 깔린 '진짜 컴퓨터'를 빌려야 합니다.</p>
+
+        <div class="card">
+          <h3>초보자를 위한 추천 테크트리</h3>
+          <ul style="margin-left: 20px; color: #cbd5e1; font-size: 1.05rem; line-height: 1.8; margin-bottom: 20px;">
+            <li><strong style="color: #38bdf8;">1단계 (PaaS): Render, Heroku</strong> - 초보자용. 코드만 주면 자기들이 알아서 컴퓨터 세팅하고 실행해 줍니다. 매우 편하지만 나중에 요금이 비싸질 수 있습니다.</li>
+            <li><strong style="color: #facc15;">2단계 (IaaS): AWS EC2</strong> - 전문가용. 빈 깡통 컴퓨터(주로 리눅스)만 달랑 빌려줍니다. 우리가 직접 접속해서 Java 깔고, DB 깔고, 포트 열어줘야 하지만, 실무에서는 99% 이걸 씁니다.</li>
+          </ul>
+          
+          <div class="tip-box">
+            <strong>💡 서버비 폭탄 주의!</strong>
+            AWS 가입할 때 카드 번호를 넣게 되는데, 무료로 제공하는 '프리티어(Free Tier)' 서버 사양을 넘어서거나 코딩 실수로 무한 루프가 돌면 한 달에 수십만 원이 청구될 수 있습니다. 꼭 요금 알림(Billing Alarm)을 설정하세요!
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">4. 도커 (Docker) - "내 컴에선 되는데?" 방지용</h2>
+        <p class="text-content">로컬(내 맥북)에서는 쌩쌩 돌아가던 서버가, AWS 리눅스 컴퓨터에 올렸더니 버전이 달라서 에러를 뿜는 경우가 엄청 많습니다. 이를 해결하기 위한 기술이 <strong>컨테이너(Container)</strong>입니다.</p>
+
+        <div class="card">
+          <h3>도커의 마법: 코드와 환경을 박스 하나에!</h3>
+          <p class="text-content">내 코드뿐만 아니라, 그 코드가 돌아가는 데 필요한 운영체제, Java 버전, 환경설정까지 전부 하나의 '컨테이너 박스'에 담아서 묶어버립니다. 이 박스는 윈도우든 맥이든 리눅스든 어디서나 똑같이 켜집니다.</p>
+          <div class="demo-grid full">
+            <div class="code-box">
+<span class="cm"># Dockerfile (도커 박스를 만드는 레시피)</span>
+
+<span class="cm"># 1. 뼈대: Node.js 18버전이 깔린 리눅스 환경을 가져와라</span>
+<span class="kw">FROM</span> node:18-alpine
+
+<span class="cm"># 2. 작업 폴더 지정</span>
+<span class="kw">WORKDIR</span> /app
+
+<span class="cm"># 3. 내 컴퓨터에 있는 패키지 설정 파일 복사</span>
+<span class="kw">COPY</span> package.json .
+
+<span class="cm"># 4. 박스 안에서 라이브러리 설치</span>
+<span class="kw">RUN</span> npm install
+
+<span class="cm"># 5. 내 소스코드들 전부 박스 안으로 복사</span>
+<span class="kw">COPY</span> . .
+
+<span class="cm"># 6. 박스 켜질 때 실행할 명령어</span>
+<span class="kw">CMD</span> ["npm", "start"]
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">5. 도메인(Domain)과 HTTPS (보안)</h2>
+        <p class="text-content">서버를 열면 <code>123.45.67.89:8080</code> 같은 흉측한 IP 주소가 생깁니다. 여기에 예쁜 이름을 붙여주고, 자물쇠 마크(보안)를 다는 과정입니다.</p>
+
+        <div class="card">
+          <ul style="margin-left: 20px; color: #cbd5e1; font-size: 1.05rem; line-height: 1.8;">
+            <li><strong>도메인 (Domain)</strong>: 가비아, 호스팅케이알 같은 곳에서 1년에 1~2만 원 주고 <code>my-project.com</code> 같은 이름표를 사는 겁니다.</li>
+            <li><strong>DNS (Domain Name System)</strong>: 사람들이 <code>my-project.com</code>을 쳤을 때, 내 AWS 서버의 숫자 IP 주소(123.45.67.89)로 길을 안내해 주는 전화번호부 역할입니다.</li>
+            <li><strong>HTTPS (SSL 인증서)</strong>: 주소창 옆에 뜨는 '자물쇠' 마크입니다. 통신을 암호화해 주며, 요즘 이거 없으면 크롬 브라우저가 접속을 막아버립니다.</li>
+          </ul>
+        </div>
+      </section>
+
+      <a href="index.html" class="next-btn">
+        축하합니다! 🎉 이제 전 세계에 프로젝트를 뽐내러 가볼까요? (홈으로)
+      </a>
+
+    </main>
+  </div>
+</body>
+</html>
