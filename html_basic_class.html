@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HTML 기초 풀코스 - DEV. 동아리</title>
+  <title>HTML 기초 완벽 가이드 - DEV. 동아리</title>
   <style>
     :root {
-      --bg-dark: #0f0a08;
-      --bg-card: rgba(30, 20, 15, 0.6);
+      --bg-dark: #0a0705;
+      --bg-card: rgba(25, 18, 14, 0.6);
       --text-main: #f8fafc;
       --text-muted: #a1a1aa;
       --accent: #f97316; /* HTML Orange */
       --accent-soft: rgba(249, 115, 22, 0.15);
-      --line: rgba(255, 255, 255, 0.1);
-      --code-bg: #18181b;
+      --line: rgba(255, 255, 255, 0.08);
+      --code-bg: #121214;
       --preview-bg: #ffffff;
     }
 
@@ -32,54 +32,56 @@
       position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; pointer-events: none;
     }
     .bg-glow::before {
-      content: ''; position: absolute; top: -10%; left: -10%; width: 50vw; height: 50vw;
-      max-width: 600px; max-height: 600px;
-      background: var(--accent); filter: blur(150px); opacity: 0.15; border-radius: 50%;
+      content: ''; position: absolute; top: -20%; left: 0; width: 60vw; height: 60vw;
+      max-width: 800px; max-height: 800px;
+      background: var(--accent); filter: blur(180px); opacity: 0.12; border-radius: 50%;
     }
 
     nav {
       position: fixed; top: 0; left: 0; right: 0; height: 50px;
-      background: rgba(15, 10, 8, 0.8); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      background: rgba(10, 7, 5, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--line); z-index: 100;
       display: flex; align-items: center; padding: 0 20px;
     }
     .nav-logo { font-weight: 800; font-size: 1.1rem; color: var(--text-main); text-decoration: none; }
     .nav-logo span { color: var(--accent); }
 
+    /* PC에서 넓은 화면을 쓰기 위해 max-width를 1000px로 증가 */
+    .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+
     header {
-      padding: 100px 20px 40px; max-width: 800px; margin: 0 auto; text-align: center;
+      padding: 100px 0 40px; text-align: center;
     }
     .kicker {
-      display: inline-block; padding: 5px 12px; background: var(--accent-soft);
+      display: inline-block; padding: 4px 12px; background: var(--accent-soft);
       color: var(--accent); border: 1px solid rgba(249, 115, 22, 0.3); border-radius: 999px;
       font-size: 0.85rem; font-weight: 700; margin-bottom: 16px; letter-spacing: 0.05em;
     }
-    h1 { font-size: clamp(1.8rem, 5vw, 3.2rem); font-weight: 900; line-height: 1.2; margin-bottom: 16px; word-break: keep-all; }
-    header p { font-size: clamp(0.95rem, 2vw, 1.1rem); color: var(--text-muted); word-break: keep-all; }
+    h1 { font-size: 3rem; font-weight: 900; line-height: 1.2; margin-bottom: 16px; word-break: keep-all; }
+    header p { font-size: 1.1rem; color: var(--text-muted); word-break: keep-all; max-width: 700px; margin: 0 auto; }
 
-    main { max-width: 800px; margin: 0 auto; padding: 0 20px 100px; width: 100%; }
+    main { padding-bottom: 100px; }
 
-    section { margin-bottom: 50px; scroll-margin-top: 70px; }
+    section { margin-bottom: 60px; scroll-margin-top: 70px; }
     
     .section-title {
-      font-size: clamp(1.4rem, 3vw, 1.8rem); font-weight: 800; margin-bottom: 20px;
+      font-size: 1.7rem; font-weight: 800; margin-bottom: 16px;
       display: flex; align-items: center; gap: 10px;
     }
     .section-title::before { content: ''; display: block; width: 5px; height: 24px; background: var(--accent); border-radius: 4px; }
     
-    .text-content { font-size: clamp(0.95rem, 2vw, 1.05rem); color: #d4d4d8; margin-bottom: 20px; word-break: keep-all; line-height: 1.6; }
+    .text-content { font-size: 1.05rem; color: #d4d4d8; margin-bottom: 20px; word-break: keep-all; line-height: 1.6; }
 
     .card {
       background: var(--bg-card); border: 1px solid var(--line); border-radius: 16px;
       padding: 24px; margin-bottom: 20px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
     }
-    .card h3 { font-size: clamp(1.1rem, 2vw, 1.25rem); margin-bottom: 10px; color: var(--accent); }
+    .card h3 { font-size: 1.2rem; margin-bottom: 10px; color: var(--accent); }
     
-    .demo-grid { display: grid; gap: 16px; margin-top: 16px; }
-    @media (min-width: 768px) { .demo-grid { grid-template-columns: 1fr 1fr; } }
+    .demo-grid { display: grid; gap: 20px; margin-top: 16px; grid-template-columns: 1fr 1fr; }
 
     .code-box, .preview-box {
-      border-radius: 12px; padding: 16px; font-size: 0.9rem; overflow-x: auto;
+      border-radius: 12px; padding: 20px; font-size: 0.95rem; overflow-x: auto;
     }
     .code-box {
       background: var(--code-bg); border: 1px solid #27272a; font-family: "D2Coding", monospace;
@@ -88,36 +90,63 @@
     .tag { color: #f17105; } .attr { color: #38bdf8; } .val { color: #a7f3d0; } .cm { color: #71717a; }
 
     .preview-box {
-      background: var(--preview-bg); color: #000; border: 1px solid #e4e4e7;
-      display: flex; flex-direction: column; justify-content: center;
+      background: var(--preview-bg); color: #111; border: 1px solid #e4e4e7;
+      display: flex; flex-direction: column; justify-content: center; font-family: sans-serif;
     }
-    .preview-box h1, .preview-box h2, .preview-box h3 { margin: 0 0 8px 0; line-height: 1.2; }
-    .preview-box p { margin: 0 0 8px 0; }
-    .preview-box a { color: blue; text-decoration: underline; }
-    .preview-box ul, .preview-box ol { margin-left: 20px; margin-bottom: 10px; }
-    .preview-box table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
-    .preview-box th, .preview-box td { border: 1px solid #ccc; padding: 6px; text-align: left; }
+    .preview-box h1, .preview-box h2, .preview-box h3 { margin: 0 0 10px 0; line-height: 1.2; color: #000; }
+    .preview-box p { margin: 0 0 10px 0; }
+    .preview-box a { color: #2563eb; text-decoration: underline; }
+    .preview-box ul, .preview-box ol { margin-left: 24px; margin-bottom: 12px; }
+    .preview-box table { width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 0.9rem; }
+    .preview-box th, .preview-box td { border: 1px solid #cbd5e1; padding: 8px; text-align: left; }
+    .preview-box th { background-color: #f1f5f9; }
+    .preview-box input, .preview-box select, .preview-box textarea, .preview-box button {
+      font-family: inherit; margin-bottom: 8px; padding: 6px; border: 1px solid #ccc; border-radius: 4px;
+    }
 
     .tip-box {
-      background: rgba(56, 189, 248, 0.1); border-left: 4px solid #38bdf8;
-      padding: 14px 16px; border-radius: 0 8px 8px 0; margin-top: 16px; font-size: 0.95rem;
+      background: rgba(56, 189, 248, 0.08); border-left: 4px solid #38bdf8;
+      padding: 16px; border-radius: 0 8px 8px 0; margin-top: 16px; font-size: 0.95rem; color: #cbd5e1;
     }
-    .tip-box strong { color: #38bdf8; display: block; margin-bottom: 4px; font-size: 1rem; }
+    .tip-box strong { color: #38bdf8; display: block; margin-bottom: 6px; font-size: 1rem; }
 
     .next-btn {
-      display: block; width: 100%; text-align: center; padding: 16px;
+      display: block; width: 100%; text-align: center; padding: 20px;
       background: linear-gradient(to right, #ea580c, #c2410c); color: #fff;
-      text-decoration: none; font-size: 1.1rem; font-weight: 800; border-radius: 12px;
-      transition: transform 0.2s, box-shadow 0.2s; margin-top: 40px;
+      text-decoration: none; font-size: 1.2rem; font-weight: 800; border-radius: 12px;
+      transition: transform 0.2s, box-shadow 0.2s; margin-top: 50px;
     }
     .next-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(234, 88, 12, 0.4); }
 
-    /* 모바일 디바이스 최적화 (768px 이하) */
+    /* =========================================
+       모바일 최적화 (768px 이하)
+       글씨 크기, 여백 대폭 축소
+       ========================================= */
     @media (max-width: 768px) {
-      header { padding: 80px 16px 30px; }
-      main { padding: 0 16px 80px; }
-      .card { padding: 16px; }
-      .code-box, .preview-box { padding: 12px; font-size: 0.85rem; }
+      header { padding: 80px 0 24px; }
+      h1 { font-size: 1.6rem; margin-bottom: 12px; }
+      header p { font-size: 0.85rem; }
+      
+      section { margin-bottom: 40px; }
+      .section-title { font-size: 1.25rem; margin-bottom: 12px; }
+      .section-title::before { height: 18px; }
+      .text-content { font-size: 0.85rem; margin-bottom: 12px; }
+      
+      .card { padding: 16px; margin-bottom: 16px; }
+      .card h3 { font-size: 1rem; margin-bottom: 8px; }
+      
+      /* 모바일에서는 코드와 미리보기를 위아래로 배치 */
+      .demo-grid { grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
+      
+      .code-box, .preview-box { padding: 12px; font-size: 0.8rem; border-radius: 8px; }
+      .preview-box h1 { font-size: 1.4rem; }
+      .preview-box h2 { font-size: 1.2rem; }
+      .preview-box h3 { font-size: 1rem; }
+      
+      .tip-box { padding: 12px; font-size: 0.8rem; }
+      .tip-box strong { font-size: 0.85rem; margin-bottom: 4px; }
+
+      .next-btn { padding: 16px; font-size: 1rem; margin-top: 30px; }
     }
   </style>
 </head>
@@ -128,207 +157,250 @@
     <a href="index.html" class="nav-logo">DEV. <span>동아리</span></a>
   </nav>
 
-  <header>
-    <div class="kicker">Chapter 1. 웹 프론트엔드 시작</div>
-    <h1>HTML 뼈대 세우기</h1>
-    <p>어렵고 복잡한 연산은 필요 없습니다. 우리가 매일 보는 웹사이트의 구조를 텍스트로 블록 조립하듯 만들어보는 첫걸음입니다.</p>
-  </header>
+  <div class="container">
+    <header>
+      <div class="kicker">Chapter 1. 웹 프론트엔드 완벽 가이드</div>
+      <h1>HTML 뼈대 세우기 (Full Course)</h1>
+      <p>가장 기초적인 태그부터 폼(Form) 구성, 시맨틱 웹까지. 이 페이지 하나로 HTML의 모든 핵심 개념을 마스터할 수 있습니다.</p>
+    </header>
 
-  <main>
-    <section>
-      <h2 class="section-title">1. 태그(Tag)란 무엇인가?</h2>
-      <p class="text-content">HTML의 전부라고 해도 과언이 아닙니다. 브라우저에게 "이 텍스트는 제목이야", "이건 버튼이야"라고 알려주기 위해 <strong>이름표(태그)</strong>를 붙여주는 것이죠.</p>
-      
-      <div class="card">
-        <h3>기본 문법: 열었으면 닫아라!</h3>
-        <p class="text-content">대부분의 태그는 한 쌍으로 움직입니다. <code>&lt;태그명&gt;</code>으로 열고, <code>&lt;/태그명&gt;</code>으로 꼭 닫아주어야 합니다.</p>
+    <main>
+      <section>
+        <h2 class="section-title">1. 태그(Tag)와 텍스트 포맷팅</h2>
+        <p class="text-content">HTML은 브라우저에게 "이건 제목이야", "이건 강조할 글자야"라고 <strong>이름표(태그)</strong>를 붙여주는 언어입니다. <code>&lt;태그명&gt;</code>으로 열고 <code>&lt;/태그명&gt;</code>으로 닫습니다.</p>
         
-        <div class="demo-grid">
-          <div class="code-box">
+        <div class="card">
+          <h3>제목, 문단, 그리고 텍스트 꾸미기</h3>
+          <p class="text-content">단순한 글자 출력을 넘어, 글자의 굵기나 기울기, 형광펜 효과 등을 줄 수 있습니다.</p>
+          <div class="demo-grid">
+            <div class="code-box">
 <span class="tag">&lt;h1&gt;</span>가장 큰 제목<span class="tag">&lt;/h1&gt;</span>
 <span class="tag">&lt;h3&gt;</span>중간 제목<span class="tag">&lt;/h3&gt;</span>
-<span class="tag">&lt;p&gt;</span>일반적인 문단입니다. <span class="tag">&lt;br&gt;</span>
-br 태그는 줄바꿈을 해줍니다.<span class="tag">&lt;/p&gt;</span>
-          </div>
-          <div class="preview-box">
-            <h1>가장 큰 제목</h1>
-            <h3>중간 제목</h3>
-            <p>일반적인 문단입니다. <br>br 태그는 줄바꿈을 해줍니다.</p>
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <section>
-      <h2 class="section-title">2. HTML 문서의 기본 뼈대</h2>
-      <p class="text-content">사람에게 머리와 몸통이 있듯, HTML도 눈에 보이지 않는 설정을 담당하는 <code>head</code>와 실제 내용이 들어가는 <code>body</code>로 나뉩니다. VS Code에서 <code>!</code> 치고 엔터를 누르면 자동 완성됩니다.</p>
-
-      <div class="card">
-        <div class="code-box">
-<span class="cm">&lt;!-- 문서 버전 명시 --&gt;</span>
-<span class="tag">&lt;!DOCTYPE html&gt;</span>
-<span class="tag">&lt;html</span> <span class="attr">lang</span>=<span class="val">"ko"</span><span class="tag">&gt;</span>
-<span class="tag">&lt;head&gt;</span>
-  <span class="cm">&lt;!-- 눈에 보이지 않는 설정 --&gt;</span>
-  <span class="tag">&lt;meta</span> <span class="attr">charset</span>=<span class="val">"UTF-8"</span><span class="tag">&gt;</span>
-  <span class="tag">&lt;title&gt;</span>브라우저 탭 이름<span class="tag">&lt;/title&gt;</span>
-<span class="tag">&lt;/head&gt;</span>
-<span class="tag">&lt;body&gt;</span>
-  <span class="cm">&lt;!-- 우리가 화면에서 보는 모든 것 --&gt;</span>
-<span class="tag">&lt;/body&gt;</span>
-<span class="tag">&lt;/html&gt;</span>
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <h2 class="section-title">3. 링크와 이미지 (속성)</h2>
-      <p class="text-content">"어디로 갈지", "어떤 사진을 띄울지" 등 추가 정보를 태그 안에 적어주는 것을 <strong>속성(Attribute)</strong>이라고 합니다.</p>
-
-      <div class="card">
-        <h3>a 태그와 img 태그</h3>
-        <p class="text-content"><code>a</code>(Anchor) 태그는 href 속성을, <code>img</code> 태그는 src 속성을 사용합니다.</p>
-        
-        <div class="demo-grid">
-          <div class="code-box">
-<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="val">"https://google.com"</span><span class="tag">&gt;</span>구글 가기<span class="tag">&lt;/a&gt;</span>
-<span class="tag">&lt;br&gt;&lt;br&gt;</span>
-<span class="cm">&lt;!-- 닫는 태그 없음 --&gt;</span>
-<span class="tag">&lt;img</span> <span class="attr">src</span>=<span class="val">"photo.jpg"</span> <span class="attr">alt</span>=<span class="val">"설명"</span> <span class="attr">width</span>=<span class="val">"100"</span><span class="tag">&gt;</span>
-          </div>
-          <div class="preview-box">
-            <a href="#">구글 가기</a>
-            <br>
-            <div style="width: 100px; height: 100px; background: #ddd; display:flex; align-items:center; justify-content:center; color:#666; font-size:12px; border-radius:4px;">(이미지)</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <h2 class="section-title">4. 목록과 표 만들기</h2>
-      <p class="text-content">정보를 나열할 때는 리스트(List)를, 격자 형태로 보여줄 때는 테이블(Table)을 사용합니다.</p>
-
-      <div class="card">
-        <h3>ul, ol, li 태그</h3>
-        <p class="text-content"><code>ul</code>은 순서 없는 목록(점), <code>ol</code>은 순서 있는 목록(숫자)입니다. 항목은 <code>li</code>로 적습니다.</p>
-        <div class="demo-grid">
-          <div class="code-box">
-<span class="tag">&lt;ul&gt;</span>
-  <span class="tag">&lt;li&gt;</span>사과<span class="tag">&lt;/li&gt;</span>
-  <span class="tag">&lt;li&gt;</span>바나나<span class="tag">&lt;/li&gt;</span>
-<span class="tag">&lt;/ul&gt;</span>
-
-<span class="tag">&lt;ol&gt;</span>
-  <span class="tag">&lt;li&gt;</span>첫 번째<span class="tag">&lt;/li&gt;</span>
-  <span class="tag">&lt;li&gt;</span>두 번째<span class="tag">&lt;/li&gt;</span>
-<span class="tag">&lt;/ol&gt;</span>
-          </div>
-          <div class="preview-box">
-            <ul>
-              <li>사과</li>
-              <li>바나나</li>
-            </ul>
-            <ol>
-              <li>첫 번째</li>
-              <li>두 번째</li>
-            </ol>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3>table 태그</h3>
-        <p class="text-content"><code>tr</code>은 행(가로줄), <code>th</code>는 제목 셀, <code>td</code>는 일반 데이터 셀입니다.</p>
-        <div class="demo-grid">
-          <div class="code-box">
-<span class="tag">&lt;table</span> <span class="attr">border</span>=<span class="val">"1"</span><span class="tag">&gt;</span>
-  <span class="tag">&lt;tr&gt;</span>
-    <span class="tag">&lt;th&gt;</span>이름<span class="tag">&lt;/th&gt;</span>
-    <span class="tag">&lt;th&gt;</span>나이<span class="tag">&lt;/th&gt;</span>
-  <span class="tag">&lt;/tr&gt;</span>
-  <span class="tag">&lt;tr&gt;</span>
-    <span class="tag">&lt;td&gt;</span>홍길동<span class="tag">&lt;/td&gt;</span>
-    <span class="tag">&lt;td&gt;</span>20<span class="tag">&lt;/td&gt;</span>
-  <span class="tag">&lt;/tr&gt;</span>
-<span class="tag">&lt;/table&gt;</span>
-          </div>
-          <div class="preview-box">
-            <table>
-              <tr>
-                <th style="background:#f0f0f0;">이름</th>
-                <th style="background:#f0f0f0;">나이</th>
-              </tr>
-              <tr>
-                <td>홍길동</td>
-                <td>20</td>
-              </tr>
-            </table>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <h2 class="section-title">5. 입력창 (Form & Input)</h2>
-      <p class="text-content">로그인이나 회원가입처럼 사용자의 입력을 받을 때 사용합니다.</p>
-
-      <div class="card">
-        <h3>다양한 input 타입</h3>
-        <p class="text-content"><code>type</code> 속성을 바꾸면 텍스트, 비밀번호, 체크박스 등 모양이 변합니다.</p>
-        <div class="demo-grid">
-          <div class="code-box">
-<span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="val">"text"</span> <span class="attr">placeholder</span>=<span class="val">"아이디"</span><span class="tag">&gt;</span><span class="tag">&lt;br&gt;</span>
-<span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="val">"password"</span> <span class="attr">placeholder</span>=<span class="val">"비밀번호"</span><span class="tag">&gt;</span><span class="tag">&lt;br&gt;</span>
-<span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="val">"checkbox"</span><span class="tag">&gt;</span> 동의합니다<span class="tag">&lt;br&gt;</span>
-<span class="tag">&lt;button&gt;</span>제출<span class="tag">&lt;/button&gt;</span>
-          </div>
-          <div class="preview-box">
-            <input type="text" placeholder="아이디" style="margin-bottom:5px; padding:4px;"><br>
-            <input type="password" placeholder="비밀번호" style="margin-bottom:5px; padding:4px;"><br>
-            <label style="font-size: 14px;"><input type="checkbox"> 동의합니다</label><br>
-            <button style="padding: 4px 12px; margin-top:5px; cursor:pointer;">제출</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <h2 class="section-title">6. 구역 나누기 & 시맨틱 태그</h2>
-      <p class="text-content">웹페이지를 디자인하기 위해 투명한 상자로 레이아웃을 나눕니다.</p>
-
-      <div class="card">
-        <h3>div 와 span</h3>
-        <p class="text-content"><code>div</code>는 한 줄을 다 차지하는 큰 박스, <code>span</code>은 글자 크기만큼만 차지하는 작은 박스입니다.</p>
-        <div class="demo-grid">
-          <div class="code-box">
-<span class="tag">&lt;div</span> <span class="attr">style</span>=<span class="val">"background: yellow;"</span><span class="tag">&gt;</span>박스1<span class="tag">&lt;/div&gt;</span>
-<span class="tag">&lt;div</span> <span class="attr">style</span>=<span class="val">"background: orange;"</span><span class="tag">&gt;</span>박스2<span class="tag">&lt;/div&gt;</span>
-
-<span class="tag">&lt;span</span> <span class="attr">style</span>=<span class="val">"background: lightblue;"</span><span class="tag">&gt;</span>글자1<span class="tag">&lt;/span&gt;</span>
-<span class="tag">&lt;span</span> <span class="attr">style</span>=<span class="val">"background: lightgreen;"</span><span class="tag">&gt;</span>글자2<span class="tag">&lt;/span&gt;</span>
-          </div>
-          <div class="preview-box">
-            <div style="background: yellow; margin-bottom: 2px;">박스1</div>
-            <div style="background: orange; margin-bottom: 8px;">박스2</div>
-            <div>
-              <span style="background: lightblue;">글자1</span>
-              <span style="background: lightgreen;">글자2</span>
+<span class="tag">&lt;p&gt;</span>
+  일반 문단입니다. <span class="tag">&lt;br&gt;</span>
+  <span class="tag">&lt;strong&gt;</span>중요한 글자(굵게)<span class="tag">&lt;/strong&gt;</span><span class="tag">&lt;br&gt;</span>
+  <span class="tag">&lt;em&gt;</span>강조하는 글자(기울임)<span class="tag">&lt;/em&gt;</span><span class="tag">&lt;br&gt;</span>
+  <span class="tag">&lt;mark&gt;</span>형광펜 효과<span class="tag">&lt;/mark&gt;</span><span class="tag">&lt;br&gt;</span>
+  <span class="tag">&lt;del&gt;</span>취소선<span class="tag">&lt;/del&gt;</span>
+<span class="tag">&lt;/p&gt;</span>
+            </div>
+            <div class="preview-box">
+              <h1>가장 큰 제목</h1>
+              <h3>중간 제목</h3>
+              <p>
+                일반 문단입니다. <br>
+                <strong>중요한 글자(굵게)</strong><br>
+                <em>강조하는 글자(기울임)</em><br>
+                <mark>형광펜 효과</mark><br>
+                <del>취소선</del>
+              </p>
             </div>
           </div>
         </div>
-        
-        <div class="tip-box">
-          <strong>💡 시맨틱(Semantic) 태그란?</strong>
-          의미 없는 div 대신, 역할을 명확히 알 수 있게 만든 태그입니다. (예: <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;footer&gt;</code>) 겉모양은 div와 똑같지만 검색 엔진이 웹사이트를 잘 이해하도록 돕습니다.
+      </section>
+
+      <section>
+        <h2 class="section-title">2. 문서의 뼈대 구성</h2>
+        <p class="text-content">모든 HTML 문서는 눈에 보이지 않는 설정을 담당하는 <code>&lt;head&gt;</code>와 실제 화면에 그려지는 <code>&lt;body&gt;</code>로 나뉩니다. VS Code에서 <code>!</code> + Enter를 누르면 자동 완성됩니다.</p>
+
+        <div class="card">
+          <div class="code-box">
+<span class="cm">&lt;!-- 문서가 HTML5임을 명시 --&gt;</span>
+<span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html</span> <span class="attr">lang</span>=<span class="val">"ko"</span><span class="tag">&gt;</span>
+
+<span class="tag">&lt;head&gt;</span>
+  <span class="cm">&lt;!-- 한글이 깨지지 않도록 인코딩 설정 --&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">charset</span>=<span class="val">"UTF-8"</span><span class="tag">&gt;</span>
+  <span class="cm">&lt;!-- 모바일 화면 크기 맞춤 설정 --&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">name</span>=<span class="val">"viewport"</span> <span class="attr">content</span>=<span class="val">"width=device-width, initial-scale=1.0"</span><span class="tag">&gt;</span>
+  <span class="cm">&lt;!-- 브라우저 탭에 표시될 제목 --&gt;</span>
+  <span class="tag">&lt;title&gt;</span>내 웹사이트<span class="tag">&lt;/title&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+
+<span class="tag">&lt;body&gt;</span>
+  <span class="cm">&lt;!-- 웹 브라우저 화면에 보일 모든 내용은 여기에 --&gt;</span>
+  <span class="tag">&lt;h1&gt;</span>안녕하세요!<span class="tag">&lt;/h1&gt;</span>
+<span class="tag">&lt;/body&gt;</span>
+
+<span class="tag">&lt;/html&gt;</span>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <a href="css_class.html" class="next-btn">
-      구조를 다 잡았다면? 🎨 다음 장 CSS 배우러 가기 →
-    </a>
+      <section>
+        <h2 class="section-title">3. 속성(Attribute)과 멀티미디어</h2>
+        <p class="text-content">"어디로 이동할지", "어떤 파일을 재생할지" 등 부가적인 명령을 태그 안에 적어주는 것을 <strong>속성</strong>이라고 합니다.</p>
 
-  </main>
+        <div class="card">
+          <h3>링크, 이미지, 비디오, 오디오</h3>
+          <p class="text-content">멀티미디어 태그들은 <code>src</code>(Source, 파일 경로) 속성을 필수로 가집니다.</p>
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="cm">&lt;!-- 1. 링크 (target="_blank"는 새 탭 열기) --&gt;</span>
+<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="val">"https://google.com"</span> <span class="attr">target</span>=<span class="val">"_blank"</span><span class="tag">&gt;</span>구글<span class="tag">&lt;/a&gt;</span>
+
+<span class="cm">&lt;!-- 2. 이미지 (alt는 시각장애인용 대체 텍스트) --&gt;</span>
+<span class="tag">&lt;img</span> <span class="attr">src</span>=<span class="val">"dog.jpg"</span> <span class="attr">alt</span>=<span class="val">"귀여운 강아지"</span> <span class="attr">width</span>=<span class="val">"100"</span><span class="tag">&gt;</span>
+
+<span class="cm">&lt;!-- 3. 비디오 (controls는 재생 버튼 표시) --&gt;</span>
+<span class="tag">&lt;video</span> <span class="attr">src</span>=<span class="val">"movie.mp4"</span> <span class="attr">controls</span> <span class="attr">width</span>=<span class="val">"200"</span><span class="tag">&gt;&lt;/video&gt;</span>
+
+<span class="cm">&lt;!-- 4. 오디오 --&gt;</span>
+<span class="tag">&lt;audio</span> <span class="attr">src</span>=<span class="val">"music.mp3"</span> <span class="attr">controls</span><span class="tag">&gt;&lt;/audio&gt;</span>
+            </div>
+            <div class="preview-box">
+              <a href="#">구글 (새 탭)</a>
+              <div style="margin:8px 0; width: 100px; height: 60px; background: #ddd; display:flex; align-items:center; justify-content:center; color:#666; font-size:11px;">(이미지)</div>
+              <div style="margin:8px 0; width: 200px; height: 100px; background: #333; display:flex; align-items:center; justify-content:center; color:#fff; font-size:11px;">(비디오 플레이어)</div>
+              <div style="width: 200px; height: 40px; background: #eee; display:flex; align-items:center; padding:10px; color:#666; font-size:11px; border-radius:20px;">(오디오 플레이어)</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">4. 목록(List)과 표(Table)</h2>
+        <p class="text-content">데이터를 깔끔하게 나열할 때 사용합니다. 표(Table)는 과거 웹 레이아웃에 쓰였지만, 현재는 <strong>순수하게 표 형태의 데이터</strong>를 보여줄 때만 사용합니다.</p>
+
+        <div class="card">
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="cm">&lt;!-- 순서 없는 목록 (Unordered List) --&gt;</span>
+<span class="tag">&lt;ul&gt;</span>
+  <span class="tag">&lt;li&gt;</span>HTML<span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span>CSS<span class="tag">&lt;/li&gt;</span>
+<span class="tag">&lt;/ul&gt;</span>
+
+<span class="cm">&lt;!-- 순서 있는 목록 (Ordered List) --&gt;</span>
+<span class="tag">&lt;ol&gt;</span>
+  <span class="tag">&lt;li&gt;</span>기획하기<span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span>개발하기<span class="tag">&lt;/li&gt;</span>
+<span class="tag">&lt;/ol&gt;</span>
+
+<span class="cm">&lt;!-- 표 만들기 --&gt;</span>
+<span class="tag">&lt;table&gt;</span>
+  <span class="tag">&lt;thead&gt;</span> <span class="cm">&lt;!-- 표 제목 영역 --&gt;</span>
+    <span class="tag">&lt;tr&gt;</span> <span class="cm">&lt;!-- Table Row (가로줄) --&gt;</span>
+      <span class="tag">&lt;th&gt;</span>과목<span class="tag">&lt;/th&gt;</span> <span class="cm">&lt;!-- Table Header (제목 셀) --&gt;</span>
+      <span class="tag">&lt;th&gt;</span>점수<span class="tag">&lt;/th&gt;</span>
+    <span class="tag">&lt;/tr&gt;</span>
+  <span class="tag">&lt;/thead&gt;</span>
+  <span class="tag">&lt;tbody&gt;</span> <span class="cm">&lt;!-- 표 본문 영역 --&gt;</span>
+    <span class="tag">&lt;tr&gt;</span>
+      <span class="tag">&lt;td&gt;</span>수학<span class="tag">&lt;/td&gt;</span> <span class="cm">&lt;!-- Table Data (일반 셀) --&gt;</span>
+      <span class="tag">&lt;td&gt;</span>100<span class="tag">&lt;/td&gt;</span>
+    <span class="tag">&lt;/tr&gt;</span>
+  <span class="tag">&lt;/tbody&gt;</span>
+<span class="tag">&lt;/table&gt;</span>
+            </div>
+            <div class="preview-box">
+              <ul><li>HTML</li><li>CSS</li></ul>
+              <ol><li>기획하기</li><li>개발하기</li></ol>
+              <table>
+                <thead>
+                  <tr><th>과목</th><th>점수</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>수학</td><td>100</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">5. 사용자 입력 받기 (Form)</h2>
+        <p class="text-content">로그인, 회원가입, 댓글 쓰기 등 사용자가 서버로 데이터를 보낼 때 <code>&lt;form&gt;</code> 태그와 다양한 입력(Input) 태그들을 사용합니다.</p>
+
+        <div class="card">
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="tag">&lt;form&gt;</span>
+  <span class="cm">&lt;!-- 짧은 글자 입력 --&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="val">"text"</span> <span class="attr">placeholder</span>=<span class="val">"아이디"</span><span class="tag">&gt;</span><span class="tag">&lt;br&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="val">"password"</span> <span class="attr">placeholder</span>=<span class="val">"비번"</span><span class="tag">&gt;</span><span class="tag">&lt;br&gt;</span>
+
+  <span class="cm">&lt;!-- 여러 개 중 하나 선택 (라디오 버튼) --&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="val">"radio"</span> <span class="attr">name</span>=<span class="val">"gender"</span><span class="tag">&gt;</span>남
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="val">"radio"</span> <span class="attr">name</span>=<span class="val">"gender"</span><span class="tag">&gt;</span>여<span class="tag">&lt;br&gt;</span>
+
+  <span class="cm">&lt;!-- 다중 선택 (체크박스) --&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="val">"checkbox"</span><span class="tag">&gt;</span> 약관 동의<span class="tag">&lt;br&gt;</span>
+
+  <span class="cm">&lt;!-- 드롭다운 선택 --&gt;</span>
+  <span class="tag">&lt;select&gt;</span>
+    <span class="tag">&lt;option&gt;</span>SKT<span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;option&gt;</span>KT<span class="tag">&lt;/option&gt;</span>
+  <span class="tag">&lt;/select&gt;</span><span class="tag">&lt;br&gt;</span>
+
+  <span class="cm">&lt;!-- 긴 글 입력창 --&gt;</span>
+  <span class="tag">&lt;textarea</span> <span class="attr">rows</span>=<span class="val">"3"</span> <span class="attr">placeholder</span>=<span class="val">"내용"</span><span class="tag">&gt;&lt;/textarea&gt;</span><span class="tag">&lt;br&gt;</span>
+
+  <span class="cm">&lt;!-- 제출 버튼 --&gt;</span>
+  <span class="tag">&lt;button</span> <span class="attr">type</span>=<span class="val">"submit"</span><span class="tag">&gt;</span>가입하기<span class="tag">&lt;/button&gt;</span>
+<span class="tag">&lt;/form&gt;</span>
+            </div>
+            <div class="preview-box">
+              <input type="text" placeholder="아이디">
+              <input type="password" placeholder="비번">
+              <div style="font-size: 0.85rem; margin-bottom: 8px;">
+                <label><input type="radio" name="g">남</label>
+                <label><input type="radio" name="g">여</label>
+              </div>
+              <div style="font-size: 0.85rem; margin-bottom: 8px;">
+                <label><input type="checkbox"> 약관 동의</label>
+              </div>
+              <select>
+                <option>SKT</option><option>KT</option>
+              </select>
+              <textarea rows="3" placeholder="내용"></textarea>
+              <button style="background:#2563eb; color:#fff; border:none; cursor:pointer;">가입하기</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">6. 공간 분할과 시맨틱(Semantic) 태그</h2>
+        <p class="text-content">웹페이지를 디자인하려면 블록 단위로 구역을 묶어야 합니다. 이때 가장 많이 쓰는 것이 <code>div</code>와 <code>span</code>입니다.</p>
+
+        <div class="card">
+          <h3>id 와 class 속성</h3>
+          <p class="text-content">수많은 <code>div</code>를 구분하기 위해 별명을 붙여줍니다. 이는 <strong>CSS와 JavaScript에서 조작할 때 핵심 역할</strong>을 합니다.</p>
+          <div class="code-box" style="margin-bottom: 16px;">
+<span class="cm">&lt;!-- class: 중복 가능한 별명 (디자인용) --&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"box card-item"</span><span class="tag">&gt;</span>1번 카드<span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"box card-item"</span><span class="tag">&gt;</span>2번 카드<span class="tag">&lt;/div&gt;</span>
+
+<span class="cm">&lt;!-- id: 문서 내 유일한 이름 (주요 식별용) --&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">id</span>=<span class="val">"main-header"</span><span class="tag">&gt;</span>메인 상단<span class="tag">&lt;/div&gt;</span>
+          </div>
+
+          <h3>시맨틱(의미론적) 태그</h3>
+          <p class="text-content">과거에는 모든 구역을 <code>&lt;div id="header"&gt;</code>처럼 나눴지만, HTML5부터는 이름 자체에 의미가 담긴 태그를 사용합니다. 이는 구글 검색엔진(SEO) 최적화에 큰 도움을 줍니다.</p>
+          <div class="code-box">
+<span class="tag">&lt;header&gt;</span> 웹페이지의 맨 위 헤더 영역 <span class="tag">&lt;/header&gt;</span>
+<span class="tag">&lt;nav&gt;</span> 메뉴(내비게이션) 영역 <span class="tag">&lt;/nav&gt;</span>
+<span class="tag">&lt;main&gt;</span> 본문 핵심 영역 <span class="tag">&lt;/main&gt;</span>
+<span class="tag">&lt;section&gt;</span> 본문 내부의 구분된 구역 <span class="tag">&lt;/section&gt;</span>
+<span class="tag">&lt;article&gt;</span> 독립적인 글(게시물) 영역 <span class="tag">&lt;/article&gt;</span>
+<span class="tag">&lt;footer&gt;</span> 맨 아래 사업자정보 등 푸터 영역 <span class="tag">&lt;/footer&gt;</span>
+          </div>
+          <div class="tip-box">
+            <strong>💡 알아두기</strong>
+            시맨틱 태그들은 기능적으로는 <code>div</code>와 100% 동일합니다. (화면 전체 가로를 차지하는 블록 요소) 단지 컴퓨터가 "아, 여기가 메뉴구나"라고 이해할 수 있게 도와줄 뿐입니다.
+          </div>
+        </div>
+      </section>
+
+      <a href="css_class.html" class="next-btn">
+        HTML을 완벽히 잡았다면? 🎨 다음 장 CSS 배우러 가기 →
+      </a>
+
+    </main>
+  </div>
 </body>
 </html>
