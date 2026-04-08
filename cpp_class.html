@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C++ 프로그래밍 완벽 가이드 - DEV. 동아리</title>
+  <style>
+    :root {
+      --bg-dark: #050a15;
+      --bg-card: rgba(15, 20, 35, 0.6);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #2563eb; /* C++ Royal Blue */
+      --accent-soft: rgba(37, 99, 235, 0.15);
+      --line: rgba(255, 255, 255, 0.08);
+      --code-bg: #121214;
+      --preview-bg: #000000;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: "Pretendard Variable", "SUIT Variable", "Noto Sans KR", sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    .bg-glow {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; pointer-events: none;
+    }
+    .bg-glow::before {
+      content: ''; position: absolute; top: -20%; left: -10%; width: 60vw; height: 60vw;
+      max-width: 800px; max-height: 800px;
+      background: var(--accent); filter: blur(180px); opacity: 0.15; border-radius: 50%;
+    }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; height: 50px;
+      background: rgba(5, 10, 20, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line); z-index: 100;
+      display: flex; align-items: center; padding: 0 20px;
+    }
+    .nav-logo { font-weight: 800; font-size: 1.1rem; color: var(--text-main); text-decoration: none; }
+    .nav-logo span { color: var(--accent); }
+
+    .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+
+    header {
+      padding: 100px 0 40px; text-align: center;
+    }
+    .kicker {
+      display: inline-block; padding: 4px 12px; background: var(--accent-soft);
+      color: var(--accent); border: 1px solid rgba(37, 99, 235, 0.3); border-radius: 999px;
+      font-size: 0.85rem; font-weight: 700; margin-bottom: 16px; letter-spacing: 0.05em;
+    }
+    h1 { font-size: 3rem; font-weight: 900; line-height: 1.2; margin-bottom: 16px; word-break: keep-all; }
+    header p { font-size: 1.1rem; color: var(--text-muted); word-break: keep-all; max-width: 700px; margin: 0 auto; }
+
+    main { padding-bottom: 100px; }
+
+    section { margin-bottom: 60px; scroll-margin-top: 70px; }
+    
+    .section-title {
+      font-size: 1.7rem; font-weight: 800; margin-bottom: 16px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-title::before { content: ''; display: block; width: 5px; height: 24px; background: var(--accent); border-radius: 4px; }
+    
+    .text-content { font-size: 1.05rem; color: #d4d4d8; margin-bottom: 20px; word-break: keep-all; line-height: 1.6; }
+
+    .card {
+      background: var(--bg-card); border: 1px solid var(--line); border-radius: 16px;
+      padding: 24px; margin-bottom: 20px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    }
+    .card h3 { font-size: 1.2rem; margin-bottom: 10px; color: #60a5fa; }
+    
+    .demo-grid { display: grid; gap: 20px; margin-top: 16px; grid-template-columns: 1fr 1fr; }
+
+    .code-box, .preview-box {
+      border-radius: 12px; padding: 20px; font-size: 0.95rem; overflow-x: auto;
+    }
+    .code-box {
+      background: var(--code-bg); border: 1px solid #27272a; font-family: "D2Coding", monospace;
+      color: #e4e4e7; line-height: 1.5; white-space: pre-wrap; word-break: break-all;
+    }
+    /* C++ Syntax Highlighting */
+    .dir { color: #ff7b72; } /* directives (#include) */
+    .kw { color: #ff7b72; } /* keyword (int, return, class, public, private, using, namespace) */
+    .fn { color: #d2a8ff; } /* function/object (cout, cin, endl, string, vector, main) */
+    .st { color: #a5d6ff; } /* string */
+    .nm { color: #79c0ff; } /* number */
+    .cm { color: #71717a; } /* comment */
+
+    /* 터미널(콘솔) 화면용 스타일 */
+    .preview-box {
+      background: var(--preview-bg); color: #3b82f6; border: 1px solid #333;
+      display: flex; flex-direction: column; font-family: "D2Coding", monospace;
+    }
+    .console-header { color: #666; font-size: 0.8rem; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 8px; }
+    .console-input { color: #e4e4e7; } /* 사용자가 입력한 값 표현용 */
+
+    .tip-box {
+      background: rgba(37, 99, 235, 0.08); border-left: 4px solid var(--accent);
+      padding: 16px; border-radius: 0 8px 8px 0; margin-top: 16px; font-size: 0.95rem; color: #cbd5e1;
+    }
+    .tip-box strong { color: #60a5fa; display: block; margin-bottom: 6px; font-size: 1rem; }
+
+    .next-btn {
+      display: block; width: 100%; text-align: center; padding: 20px;
+      background: linear-gradient(to right, #1d4ed8, #1e3a8a); color: #fff;
+      text-decoration: none; font-size: 1.2rem; font-weight: 800; border-radius: 12px;
+      transition: transform 0.2s, box-shadow 0.2s; margin-top: 50px;
+    }
+    .next-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(37, 99, 235, 0.4); }
+
+    /* =========================================
+       모바일 최적화 (768px 이하)
+       ========================================= */
+    @media (max-width: 768px) {
+      header { padding: 80px 0 24px; }
+      h1 { font-size: 1.6rem; margin-bottom: 12px; }
+      header p { font-size: 0.85rem; }
+      
+      section { margin-bottom: 40px; }
+      .section-title { font-size: 1.25rem; margin-bottom: 12px; }
+      .section-title::before { height: 18px; }
+      .text-content { font-size: 0.85rem; margin-bottom: 12px; }
+      
+      .card { padding: 16px; margin-bottom: 16px; }
+      .card h3 { font-size: 1rem; margin-bottom: 8px; }
+      
+      .demo-grid { grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
+      
+      .code-box, .preview-box { padding: 12px; font-size: 0.8rem; border-radius: 8px; }
+      
+      .tip-box { padding: 12px; font-size: 0.8rem; }
+      .tip-box strong { font-size: 0.85rem; margin-bottom: 4px; }
+
+      .next-btn { padding: 16px; font-size: 1rem; margin-top: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-glow"></div>
+
+  <nav>
+    <a href="index.html" class="nav-logo">DEV. <span>동아리</span></a>
+  </nav>
+
+  <div class="container">
+    <header>
+      <div class="kicker">Chapter 7. 극한의 성능과 객체지향</div>
+      <h1>C++ 심화 (Full Course)</h1>
+      <p>C언어의 압도적인 속도를 그대로 유지하면서, 자바의 객체지향(OOP)과 강력한 편의 기능을 모두 갖춘 궁극의 언어입니다. 게임 개발과 인공지능 분야의 핵심 언어입니다.</p>
+    </header>
+
+    <main>
+      <section>
+        <h2 class="section-title">1. 편해진 입출력 (iostream)</h2>
+        <p class="text-content">C언어의 <code>printf</code>와 <code>scanf</code>처럼 복잡한 <code>%d, %f</code> 서식 지정자를 외울 필요가 없습니다. 화살표 모양의 <strong>스트림(<code>&lt;&lt;</code>, <code>&gt;&gt;</code>)</strong> 기호를 사용하여 물 흐르듯 데이터를 넣고 뺍니다.</p>
+        
+        <div class="card">
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="dir">#include &lt;iostream&gt;</span>
+<span class="kw">using namespace</span> std; <span class="cm">// std:: 를 생략하게 해줌</span>
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    <span class="kw">int</span> age;
+    
+    <span class="cm">// cout (Console Out): 화면으로 데이터를 보냄 (출력)</span>
+    <span class="fn">cout</span> &lt;&lt; <span class="st">"나이를 입력하세요: "</span>;
+    
+    <span class="cm">// cin (Console In): 입력을 받아서 변수에 넣음</span>
+    <span class="fn">cin</span> &gt;&gt; age;
+    
+    <span class="cm">// endl 은 엔터(줄바꿈)를 의미함</span>
+    <span class="fn">cout</span> &lt;&lt; <span class="st">"당신의 나이는 "</span> &lt;&lt; age &lt;&lt; <span class="st">"살 입니다."</span> &lt;&lt; <span class="fn">endl</span>;
+    
+    <span class="kw">return</span> <span class="nm">0</span>;
+}
+            </div>
+            <div class="preview-box">
+              <div class="console-header">> Terminal - ./main</div>
+              <div>나이를 입력하세요: <span class="console-input">20</span></div>
+              <div>당신의 나이는 20살 입니다.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">2. 강력해진 도구: String과 Vector</h2>
+        <p class="text-content">C언어에서는 문자열이나 크기가 변하는 배열을 다루는 것이 지옥이었습니다. C++에서는 <strong>STL(표준 템플릿 라이브러리)</strong> 덕분에 파이썬처럼 쉽게 데이터를 다룰 수 있습니다.</p>
+
+        <div class="card">
+          <h3>문자열(String)과 동적 배열(Vector)</h3>
+          <p class="text-content"><code>string</code>은 문자열을 무한히 더할 수 있고, <code>vector</code>는 배열이 꽉 차면 스스로 크기를 늘리는 마법의 배열입니다.</p>
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="dir">#include &lt;iostream&gt;</span>
+<span class="dir">#include &lt;string&gt;</span>
+<span class="dir">#include &lt;vector&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    <span class="cm">// 1. String: C언어의 char[] 보다 훨씬 편합니다.</span>
+    <span class="fn">string</span> name = <span class="st">"Hello"</span>;
+    name = name + <span class="st">" C++!"</span>; <span class="cm">// 덧셈으로 문자열 붙이기 가능</span>
+    
+    <span class="cm">// 2. Vector: 크기가 자유자재로 변하는 배열</span>
+    <span class="fn">vector</span>&lt;<span class="kw">int</span>&gt; scores = {<span class="nm">80</span>, <span class="nm">90</span>};
+    
+    <span class="cm">// push_back: 배열의 맨 끝에 데이터 추가</span>
+    scores.<span class="fn">push_back</span>(<span class="nm">100</span>); 
+    
+    <span class="fn">cout</span> &lt;&lt; name &lt;&lt; <span class="fn">endl</span>;
+    <span class="fn">cout</span> &lt;&lt; <span class="st">"총 과목 수: "</span> &lt;&lt; scores.<span class="fn">size</span>() &lt;&lt; <span class="fn">endl</span>;
+    
+    <span class="kw">return</span> <span class="nm">0</span>;
+}
+            </div>
+            <div class="preview-box">
+              <div class="console-header">> Terminal - ./main</div>
+              <div>Hello C++!</div>
+              <div>총 과목 수: 3</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">3. 포인터 대신 레퍼런스(Reference)</h2>
+        <p class="text-content">C언어에서 메모리 주소를 넘길 때 썼던 복잡한 포인터(`*`와 `&`의 늪)를 대체하기 위해, C++에서는 <strong>참조자(Reference, `&`)</strong>라는 개념을 도입했습니다. 변수의 '별명'을 지어주는 것과 같습니다.</p>
+
+        <div class="card">
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="dir">#include &lt;iostream&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="cm">// 레퍼런스(&)를 사용하면 원본 데이터를 직접 수정할 수 있음</span>
+<span class="cm">// C언어처럼 포인터(*)를 쓰지 않아도 됨!</span>
+<span class="kw">void</span> <span class="fn">swap</span>(<span class="kw">int</span>&amp; a, <span class="kw">int</span>&amp; b) {
+    <span class="kw">int</span> temp = a;
+    a = b;
+    b = temp;
+}
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    <span class="kw">int</span> x = <span class="nm">10</span>, y = <span class="nm">20</span>;
+    
+    <span class="fn">swap</span>(x, y); <span class="cm">// 원본 변수를 그대로 넘김</span>
+    
+    <span class="fn">cout</span> &lt;&lt; <span class="st">"x: "</span> &lt;&lt; x &lt;&lt; <span class="st">", y: "</span> &lt;&lt; y &lt;&lt; <span class="fn">endl</span>;
+    <span class="kw">return</span> <span class="nm">0</span>;
+}
+            </div>
+            <div class="preview-box">
+              <div class="console-header">> Terminal - ./main</div>
+              <div>x: 20, y: 10</div>
+            </div>
+          </div>
+          <div class="tip-box">
+            <strong>💡 왜 포인터를 안 썼나요?</strong>
+            만약 함수에서 `int a` 로 그냥 값을 받으면 원본이 복사되어 넘어옵니다(값에 의한 호출). 하지만 `int& a` 로 참조자를 사용하면, 복사하지 않고 원본 메모리에 직접 연결되므로 메모리도 아끼고 원본 값도 수정할 수 있습니다.
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">4. 객체지향 프로그래밍 (Class) ★중요</h2>
+        <p class="text-content">C++의 존재 이유입니다. C언어의 구조체(struct)에 <strong>'함수'를 함께 묶고, 데이터를 숨길 수 있는(private) 캡슐화</strong> 기능을 더해 완벽한 객체지향 언어로 진화했습니다.</p>
+
+        <div class="card">
+          <h3>클래스(설계도)와 접근 제어자</h3>
+          <p class="text-content"><code>private</code>는 클래스 외부에서 접근할 수 없게 막고, <code>public</code>은 외부에서 접근을 허용합니다.</p>
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="dir">#include &lt;iostream&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="cm">// 1. 플레이어 설계도(Class) 생성</span>
+<span class="kw">class</span> <span class="fn">Player</span> {
+<span class="kw">private</span>:
+    <span class="cm">// 체력은 외부에서 맘대로 못 바꾸게 숨김</span>
+    <span class="kw">int</span> hp; 
+
+<span class="kw">public</span>:
+    <span class="cm">// 생성자 (객체가 태어날 때 초기화)</span>
+    <span class="fn">Player</span>(<span class="kw">int</span> initialHp) {
+        hp = initialHp;
+    }
+    
+    <span class="cm">// 외부에서 호출할 수 있는 함수</span>
+    <span class="kw">void</span> <span class="fn">takeDamage</span>(<span class="kw">int</span> damage) {
+        hp = hp - damage;
+        <span class="fn">cout</span> &lt;&lt; <span class="st">"앗! 남은 체력: "</span> &lt;&lt; hp &lt;&lt; <span class="fn">endl</span>;
+    }
+};
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    <span class="cm">// 2. 설계도를 바탕으로 객체(인스턴스) 생성</span>
+    <span class="fn">Player</span> hero(<span class="nm">100</span>);
+    
+    <span class="cm">// hero.hp = 0; // ❌ private 이라 불가능! (핵 방지)</span>
+    
+    <span class="cm">// 3. public 메서드를 통해 상호작용</span>
+    hero.<span class="fn">takeDamage</span>(<span class="nm">30</span>);
+    
+    <span class="kw">return</span> <span class="nm">0</span>;
+}
+            </div>
+            <div class="preview-box">
+              <div class="console-header">> Terminal - ./main</div>
+              <div>앗! 남은 체력: 70</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <a href="index.html" class="next-btn">
+        🎉 C++까지 수고하셨습니다! 메인 화면으로 돌아가기 →
+      </a>
+
+    </main>
+  </div>
+</body>
+</html>
