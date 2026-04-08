@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C 프로그래밍 완벽 가이드 - DEV. 동아리</title>
+  <style>
+    :root {
+      --bg-dark: #0a0510;
+      --bg-card: rgba(25, 15, 35, 0.6);
+      --text-main: #f8fafc;
+      --text-muted: #a1a1aa;
+      --accent: #8b5cf6; /* C Purple */
+      --accent-soft: rgba(139, 92, 246, 0.15);
+      --line: rgba(255, 255, 255, 0.08);
+      --code-bg: #121214;
+      --preview-bg: #000000;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: "Pretendard Variable", "SUIT Variable", "Noto Sans KR", sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    .bg-glow {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; pointer-events: none;
+    }
+    .bg-glow::before {
+      content: ''; position: absolute; top: -20%; left: -10%; width: 60vw; height: 60vw;
+      max-width: 800px; max-height: 800px;
+      background: var(--accent); filter: blur(180px); opacity: 0.15; border-radius: 50%;
+    }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; height: 50px;
+      background: rgba(10, 5, 15, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line); z-index: 100;
+      display: flex; align-items: center; padding: 0 20px;
+    }
+    .nav-logo { font-weight: 800; font-size: 1.1rem; color: var(--text-main); text-decoration: none; }
+    .nav-logo span { color: var(--accent); }
+
+    .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+
+    header {
+      padding: 100px 0 40px; text-align: center;
+    }
+    .kicker {
+      display: inline-block; padding: 4px 12px; background: var(--accent-soft);
+      color: var(--accent); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 999px;
+      font-size: 0.85rem; font-weight: 700; margin-bottom: 16px; letter-spacing: 0.05em;
+    }
+    h1 { font-size: 3rem; font-weight: 900; line-height: 1.2; margin-bottom: 16px; word-break: keep-all; }
+    header p { font-size: 1.1rem; color: var(--text-muted); word-break: keep-all; max-width: 700px; margin: 0 auto; }
+
+    main { padding-bottom: 100px; }
+
+    section { margin-bottom: 60px; scroll-margin-top: 70px; }
+    
+    .section-title {
+      font-size: 1.7rem; font-weight: 800; margin-bottom: 16px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-title::before { content: ''; display: block; width: 5px; height: 24px; background: var(--accent); border-radius: 4px; }
+    
+    .text-content { font-size: 1.05rem; color: #d4d4d8; margin-bottom: 20px; word-break: keep-all; line-height: 1.6; }
+
+    .card {
+      background: var(--bg-card); border: 1px solid var(--line); border-radius: 16px;
+      padding: 24px; margin-bottom: 20px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    }
+    .card h3 { font-size: 1.2rem; margin-bottom: 10px; color: var(--accent); }
+    
+    .demo-grid { display: grid; gap: 20px; margin-top: 16px; grid-template-columns: 1fr 1fr; }
+
+    .code-box, .preview-box {
+      border-radius: 12px; padding: 20px; font-size: 0.95rem; overflow-x: auto;
+    }
+    .code-box {
+      background: var(--code-bg); border: 1px solid #27272a; font-family: "D2Coding", monospace;
+      color: #e4e4e7; line-height: 1.5; white-space: pre-wrap; word-break: break-all;
+    }
+    /* C Syntax Highlighting */
+    .dir { color: #ff7b72; } /* directives (#include) */
+    .kw { color: #ff7b72; } /* keyword (int, return, float, char) */
+    .fn { color: #d2a8ff; } /* function (printf, scanf, main) */
+    .st { color: #a5d6ff; } /* string */
+    .nm { color: #79c0ff; } /* number */
+    .cm { color: #71717a; } /* comment */
+    .op { color: #c9d1d9; } /* operator */
+
+    /* 터미널(콘솔) 화면용 스타일 */
+    .preview-box {
+      background: var(--preview-bg); color: #a855f7; border: 1px solid #333;
+      display: flex; flex-direction: column; font-family: "D2Coding", monospace;
+    }
+    .console-header { color: #666; font-size: 0.8rem; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 8px; }
+    .console-input { color: #e4e4e7; } /* 사용자가 입력한 값 표현용 */
+
+    .tip-box {
+      background: rgba(139, 92, 246, 0.08); border-left: 4px solid var(--accent);
+      padding: 16px; border-radius: 0 8px 8px 0; margin-top: 16px; font-size: 0.95rem; color: #cbd5e1;
+    }
+    .tip-box strong { color: var(--accent); display: block; margin-bottom: 6px; font-size: 1rem; }
+
+    .next-btn {
+      display: block; width: 100%; text-align: center; padding: 20px;
+      background: linear-gradient(to right, #8b5cf6, #6d28d9); color: #fff;
+      text-decoration: none; font-size: 1.2rem; font-weight: 800; border-radius: 12px;
+      transition: transform 0.2s, box-shadow 0.2s; margin-top: 50px;
+    }
+    .next-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(139, 92, 246, 0.4); }
+
+    /* =========================================
+       모바일 최적화 (768px 이하)
+       ========================================= */
+    @media (max-width: 768px) {
+      header { padding: 80px 0 24px; }
+      h1 { font-size: 1.6rem; margin-bottom: 12px; }
+      header p { font-size: 0.85rem; }
+      
+      section { margin-bottom: 40px; }
+      .section-title { font-size: 1.25rem; margin-bottom: 12px; }
+      .section-title::before { height: 18px; }
+      .text-content { font-size: 0.85rem; margin-bottom: 12px; }
+      
+      .card { padding: 16px; margin-bottom: 16px; }
+      .card h3 { font-size: 1rem; margin-bottom: 8px; }
+      
+      .demo-grid { grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
+      
+      .code-box, .preview-box { padding: 12px; font-size: 0.8rem; border-radius: 8px; }
+      
+      .tip-box { padding: 12px; font-size: 0.8rem; }
+      .tip-box strong { font-size: 0.85rem; margin-bottom: 4px; }
+
+      .next-btn { padding: 16px; font-size: 1rem; margin-top: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-glow"></div>
+
+  <nav>
+    <a href="index.html" class="nav-logo">DEV. <span>동아리</span></a>
+  </nav>
+
+  <div class="container">
+    <header>
+      <div class="kicker">Chapter 6. 소프트웨어의 뿌리</div>
+      <h1>C 프로그래밍 (Full Course)</h1>
+      <p>현대 프로그래밍 언어들의 조상입니다. C언어를 배우면 컴퓨터가 메모리를 어떻게 다루고 작동하는지 그 진짜 원리를 깨우칠 수 있습니다.</p>
+    </header>
+
+    <main>
+      <section>
+        <h2 class="section-title">1. 프로그램의 기본 구조</h2>
+        <p class="text-content">C언어는 요리를 하기 전 도구를 준비하듯, <strong>표준 입출력 도구(stdio.h)</strong>를 먼저 가져오고 <strong>main 함수</strong> 안에서 모든 작업을 시작합니다.</p>
+        
+        <div class="card">
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="cm">// 1. 헤더 파일 포함 (Standard Input/Output)</span>
+<span class="dir">#include &lt;stdio.h&gt;</span>
+
+<span class="cm">// 2. 프로그램의 시작점 (main 함수)</span>
+<span class="kw">int</span> <span class="fn">main</span>() {
+    
+    <span class="cm">// 콘솔에 글자 출력. \n은 줄바꿈을 뜻합니다.</span>
+    <span class="fn">printf</span>(<span class="st">"Hello, C Programming!\n"</span>);
+    
+    <span class="cm">// 운영체제에게 "에러 없이 정상 종료됨(0)"을 알림</span>
+    <span class="kw">return</span> <span class="nm">0</span>;
+}
+            </div>
+            <div class="preview-box">
+              <div class="console-header">> Terminal - ./main</div>
+              <div>Hello, C Programming!</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">2. 변수와 서식 지정자</h2>
+        <p class="text-content">C언어는 변수를 출력할 때 자바스크립트나 파이썬처럼 쉽게 섞어 쓸 수 없습니다. <strong>"%d 자리에 이 정수를 넣어줘"</strong>라는 방식으로 <strong>서식 지정자</strong>를 꼭 써야 합니다.</p>
+
+        <div class="card">
+          <h3>printf 와 scanf</h3>
+          <p class="text-content"><code>%d</code>는 정수(decimal), <code>%f</code>는 실수(float), <code>%c</code>는 문자 하나(character)를 의미합니다.</p>
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="dir">#include &lt;stdio.h&gt;</span>
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    <span class="kw">int</span> age = <span class="nm">20</span>;
+    <span class="kw">float</span> height = <span class="nm">175.5</span>;
+    <span class="kw">char</span> grade = <span class="st">'A'</span>;
+    
+    <span class="cm">// %d, %f, %c 자리에 콤마 뒤의 변수들이 순서대로 들어감</span>
+    <span class="fn">printf</span>(<span class="st">"나이: %d살\n"</span>, age);
+    <span class="fn">printf</span>(<span class="st">"키: %.1fcm\n"</span>, height); <span class="cm">// .1은 소수점 1자리까지</span>
+    <span class="fn">printf</span>(<span class="st">"등급: %c\n"</span>, grade);
+    
+    <span class="kw">return</span> <span class="nm">0</span>;
+}
+            </div>
+            <div class="preview-box">
+              <div class="console-header">> Terminal - ./main</div>
+              <div>나이: 20살</div>
+              <div>키: 175.5cm</div>
+              <div>등급: A</div>
+            </div>
+          </div>
+          <div class="tip-box">
+            <strong>💡 작은따옴표와 큰따옴표의 차이</strong>
+            C언어에서 <code>'A'</code>처럼 작은따옴표는 단 하나의 문자(char)를 의미하고, <code>"Hello"</code>처럼 큰따옴표는 문자열을 의미합니다. 절대 섞어서 쓰면 안 됩니다.
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">3. 제어문 (if와 for)</h2>
+        <p class="text-content">기본적인 조건문과 반복문은 다른 언어와 완전히 똑같습니다. C언어의 문법이 후대 언어들의 표준이 되었기 때문입니다.</p>
+
+        <div class="card">
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="dir">#include &lt;stdio.h&gt;</span>
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    <span class="kw">int</span> score = <span class="nm">85</span>;
+    
+    <span class="cm">// 1. 조건문</span>
+    <span class="kw">if</span> (score >= <span class="nm">90</span>) {
+        <span class="fn">printf</span>(<span class="st">"합격\n"</span>);
+    } <span class="kw">else</span> {
+        <span class="fn">printf</span>(<span class="st">"불합격\n"</span>);
+    }
+
+    <span class="cm">// 2. 반복문 (구구단 2단 출력)</span>
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="nm">1</span>; i <= <span class="nm">3</span>; i++) {
+        <span class="fn">printf</span>(<span class="st">"2 x %d = %d\n"</span>, i, <span class="nm">2</span> * i);
+    }
+    
+    <span class="kw">return</span> <span class="nm">0</span>;
+}
+            </div>
+            <div class="preview-box">
+              <div class="console-header">> Terminal - ./main</div>
+              <div>불합격</div>
+              <div>2 x 1 = 2</div>
+              <div>2 x 2 = 4</div>
+              <div>2 x 3 = 6</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">4. 포인터 (Pointer) ★가장 중요</h2>
+        <p class="text-content">C언어의 하이라이트이자 최대 진입장벽입니다. 포인터는 <strong>데이터의 '값'이 아니라 데이터가 저장된 메모리의 '주소'를 보관하는 특수한 변수</strong>입니다.</p>
+
+        <div class="card">
+          <h3>주소(&)와 가리키는 값(*)</h3>
+          <p class="text-content"><code>&</code>를 붙이면 그 변수가 사는 집 주소(메모리 주소)를 알려주고, 포인터 변수 앞에 <code>*</code>를 붙이면 그 주소로 직접 찾아가 안의 값을 열어봅니다.</p>
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="dir">#include &lt;stdio.h&gt;</span>
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    <span class="kw">int</span> num = <span class="nm">10</span>;
+    
+    <span class="cm">// 포인터 변수 선언 (자료형 뒤에 *를 붙임)</span>
+    <span class="cm">// &num 은 num 변수의 '메모리 주소'를 뜻함</span>
+    <span class="kw">int</span> *ptr = &num; 
+    
+    <span class="fn">printf</span>(<span class="st">"num의 값: %d\n"</span>, num);
+    <span class="fn">printf</span>(<span class="st">"num의 주소: %p\n"</span>, ptr);
+    
+    <span class="cm">// ptr 앞에 *를 붙이면 그 주소에 있는 '실제 값'을 의미함</span>
+    <span class="fn">printf</span>(<span class="st">"ptr이 가리키는 값: %d\n"</span>, *ptr);
+    
+    <span class="kw">return</span> <span class="nm">0</span>;
+}
+            </div>
+            <div class="preview-box">
+              <div class="console-header">> Terminal - ./main</div>
+              <div>num의 값: 10</div>
+              <div>num의 주소: 0x7ffeefbff5a8</div>
+              <div>ptr이 가리키는 값: 10</div>
+            </div>
+          </div>
+          <div class="tip-box">
+            <strong>💡 왜 포인터를 쓰나요?</strong>
+            만약 1GB짜리 데이터를 함수로 넘길 때, 데이터 전체를 복사하면 컴퓨터가 멈출 것입니다. 하지만 "이 데이터는 OOO번지 주소에 있어!"라고 포인터(주소표)만 넘기면 1초 만에 작업이 끝납니다.
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">5. 배열과 문자열</h2>
+        <p class="text-content">C언어에는 자바나 파이썬처럼 문자열(String)을 저장하는 전용 자료형이 없습니다. 대신 <strong>문자(char)들을 기차처럼 연결한 배열</strong>로 문자열을 표현합니다.</p>
+
+        <div class="card">
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="dir">#include &lt;stdio.h&gt;</span>
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    <span class="cm">// 1. 일반 숫자 배열</span>
+    <span class="kw">int</span> scores[<span class="nm">3</span>] = {<span class="nm">80</span>, <span class="nm">90</span>, <span class="nm">100</span>};
+    <span class="fn">printf</span>(<span class="st">"첫 번째 점수: %d\n"</span>, scores[<span class="nm">0</span>]);
+    
+    <span class="cm">// 2. 문자 배열 (이것이 C언어의 문자열)</span>
+    <span class="cm">// %s 서식 지정자를 사용하여 문자열을 출력합니다.</span>
+    <span class="kw">char</span> name[] = <span class="st">"Apple"</span>;
+    <span class="fn">printf</span>(<span class="st">"단어: %s\n"</span>, name);
+    <span class="fn">printf</span>(<span class="st">"첫 글자: %c\n"</span>, name[<span class="nm">0</span>]);
+    
+    <span class="kw">return</span> <span class="nm">0</span>;
+}
+            </div>
+            <div class="preview-box">
+              <div class="console-header">> Terminal - ./main</div>
+              <div>첫 번째 점수: 80</div>
+              <div>단어: Apple</div>
+              <div>첫 글자: A</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <a href="cpp_class.html" class="next-btn">
+        포인터를 이해하셨나요? 🚀 객체지향을 얹은 C++ 배우러 가기 →
+      </a>
+
+    </main>
+  </div>
+</body>
+</html>
