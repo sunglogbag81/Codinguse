@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SQL 심화 완벽 가이드 - DEV. 동아리</title>
+  <style>
+    :root {
+      --bg-dark: #020f0a;
+      --bg-card: rgba(10, 30, 20, 0.6);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #10b981; /* Database Emerald Green */
+      --accent-soft: rgba(16, 185, 129, 0.15);
+      --line: rgba(255, 255, 255, 0.08);
+      --code-bg: #121214;
+      --preview-bg: #ffffff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: "Pretendard Variable", "SUIT Variable", "Noto Sans KR", sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    .bg-glow {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; pointer-events: none;
+    }
+    .bg-glow::before {
+      content: ''; position: absolute; top: -20%; left: -10%; width: 60vw; height: 60vw;
+      max-width: 800px; max-height: 800px;
+      background: var(--accent); filter: blur(180px); opacity: 0.15; border-radius: 50%;
+    }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; height: 50px;
+      background: rgba(5, 15, 10, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line); z-index: 100;
+      display: flex; align-items: center; padding: 0 20px;
+    }
+    .nav-logo { font-weight: 800; font-size: 1.1rem; color: var(--text-main); text-decoration: none; }
+    .nav-logo span { color: var(--accent); }
+
+    .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+
+    header { padding: 100px 0 40px; text-align: center; }
+    .kicker {
+      display: inline-block; padding: 4px 12px; background: var(--accent-soft);
+      color: var(--accent); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 999px;
+      font-size: 0.85rem; font-weight: 700; margin-bottom: 16px; letter-spacing: 0.05em;
+    }
+    h1 { font-size: 3rem; font-weight: 900; line-height: 1.2; margin-bottom: 16px; word-break: keep-all; }
+    header p { font-size: 1.1rem; color: var(--text-muted); word-break: keep-all; max-width: 700px; margin: 0 auto; }
+
+    main { padding-bottom: 100px; }
+
+    section { margin-bottom: 60px; scroll-margin-top: 70px; }
+    
+    .section-title {
+      font-size: 1.7rem; font-weight: 800; margin-bottom: 16px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-title::before { content: ''; display: block; width: 5px; height: 24px; background: var(--accent); border-radius: 4px; }
+    
+    .text-content { font-size: 1.05rem; color: #d4d4d8; margin-bottom: 20px; word-break: keep-all; line-height: 1.6; }
+
+    .card {
+      background: var(--bg-card); border: 1px solid var(--line); border-radius: 16px;
+      padding: 24px; margin-bottom: 20px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    }
+    .card h3 { font-size: 1.2rem; margin-bottom: 10px; color: #34d399; }
+    
+    .demo-grid { display: grid; gap: 20px; margin-top: 16px; grid-template-columns: 1fr 1fr; }
+    .demo-grid.full { grid-template-columns: 1fr; }
+
+    .code-box, .preview-box {
+      border-radius: 12px; padding: 20px; font-size: 0.95rem; overflow-x: auto;
+    }
+    .code-box {
+      background: var(--code-bg); border: 1px solid #27272a; font-family: "D2Coding", monospace;
+      color: #e4e4e7; line-height: 1.5; white-space: pre-wrap; word-break: break-all;
+    }
+    /* SQL Syntax Highlighting */
+    .kw { color: #d2a8ff; font-weight: bold; } /* keyword */
+    .fn { color: #facc15; } /* functions like COUNT, RANK */
+    .tbl { color: #79c0ff; } /* table/columns */
+    .st { color: #a5d6ff; } /* string */
+    .nm { color: #ff7b72; } /* number */
+    .cm { color: #71717a; } /* comment */
+
+    /* DB 테이블 뷰어 화면용 스타일 */
+    .preview-box {
+      background: var(--preview-bg); color: #333; border: 1px solid #e4e4e7;
+      display: flex; flex-direction: column; font-family: sans-serif;
+    }
+    .db-header { 
+      font-family: monospace; color: #10b981; font-weight: bold; font-size: 0.85rem; 
+      margin-bottom: 12px; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; 
+    }
+    .db-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; text-align: left; }
+    .db-table th { background-color: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; padding: 8px; font-weight: bold; }
+    .db-table td { border: 1px solid #d1fae5; padding: 8px; color: #374151; }
+    .db-table tr:nth-child(even) { background-color: #f9fafb; }
+    
+    .terminal-mode { background: #000; color: #10b981; font-family: "D2Coding", monospace; }
+    .terminal-mode .db-header { color: #a7f3d0; border-bottom-color: #333; }
+
+    .tip-box {
+      background: rgba(16, 185, 129, 0.08); border-left: 4px solid var(--accent);
+      padding: 16px; border-radius: 0 8px 8px 0; margin-top: 16px; font-size: 0.95rem; color: #cbd5e1;
+    }
+    .tip-box strong { color: #34d399; display: block; margin-bottom: 6px; font-size: 1rem; }
+
+    .next-btn {
+      display: block; width: 100%; text-align: center; padding: 20px;
+      background: linear-gradient(to right, #10b981, #059669); color: #fff;
+      text-decoration: none; font-size: 1.2rem; font-weight: 800; border-radius: 12px;
+      transition: transform 0.2s, box-shadow 0.2s; margin-top: 50px;
+    }
+    .next-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(16, 185, 129, 0.4); }
+
+    @media (max-width: 768px) {
+      header { padding: 80px 0 24px; }
+      h1 { font-size: 1.6rem; margin-bottom: 12px; }
+      header p { font-size: 0.85rem; }
+      section { margin-bottom: 40px; }
+      .section-title { font-size: 1.25rem; margin-bottom: 12px; }
+      .card { padding: 16px; margin-bottom: 16px; }
+      .demo-grid { grid-template-columns: 1fr; gap: 10px; }
+      .code-box, .preview-box { padding: 12px; font-size: 0.8rem; border-radius: 8px; }
+      .db-table { font-size: 0.75rem; }
+      .db-table th, .db-table td { padding: 6px; }
+      .tip-box { padding: 12px; font-size: 0.8rem; }
+      .next-btn { padding: 16px; font-size: 1rem; margin-top: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-glow"></div>
+
+  <nav>
+    <a href="index.html" class="nav-logo">DEV. <span>동아리</span></a>
+  </nav>
+
+  <div class="container">
+    <header>
+      <div class="kicker">Chapter 8-2. 데이터베이스 마스터 클래스</div>
+      <h1>SQL 심화 (Advanced)</h1>
+      <p>단순한 쿼리를 넘어 대용량 데이터 처리와 성능 최적화, 그리고 복잡한 통계 분석을 위한 윈도우 함수와 트랜잭션의 세계로 안내합니다.</p>
+    </header>
+
+    <main>
+      <section>
+        <h2 class="section-title">1. 복잡함을 깨부수는 CTE (WITH 구문)</h2>
+        <p class="text-content">쿼리 안에 쿼리가 들어가는 서브쿼리(Subquery)가 중첩되면 코드가 스파게티처럼 변합니다. <strong>CTE(Common Table Expression)</strong>를 사용하면 가상의 임시 테이블을 위로 빼서 코드를 획기적으로 깔끔하게 만들 수 있습니다.</p>
+        
+        <div class="card">
+          <div class="demo-grid full">
+            <div class="code-box">
+<span class="cm">-- 'VIP_Users'라는 가상의 임시 테이블을 먼저 정의합니다.</span>
+<span class="kw">WITH</span> <span class="tbl">VIP_Users</span> <span class="kw">AS</span> (
+    <span class="kw">SELECT</span> <span class="tbl">user_id</span>, <span class="fn">SUM</span>(<span class="tbl">amount</span>) <span class="kw">AS</span> <span class="tbl">total_spent</span>
+    <span class="kw">FROM</span> <span class="tbl">orders</span>
+    <span class="kw">GROUP BY</span> <span class="tbl">user_id</span>
+    <span class="kw">HAVING</span> <span class="fn">SUM</span>(<span class="tbl">amount</span>) &gt; <span class="nm">1000000</span>
+)
+<span class="cm">-- 위에서 만든 가상 테이블을 진짜 테이블처럼 가져다 씁니다.</span>
+<span class="kw">SELECT</span> <span class="tbl">u.name</span>, <span class="tbl">v.total_spent</span>
+<span class="kw">FROM</span> <span class="tbl">users</span> <span class="tbl">u</span>
+<span class="kw">JOIN</span> <span class="tbl">VIP_Users</span> <span class="tbl">v</span> <span class="kw">ON</span> <span class="tbl">u.id</span> = <span class="tbl">v.user_id</span>;
+            </div>
+          </div>
+          <div class="tip-box">
+            <strong>💡 가독성과 재사용성의 끝판왕</strong>
+            CTE를 쓰면 로직이 '위에서 아래로' 흐르기 때문에 나중에 코드를 유지보수하는 동료(혹은 미래의 나)가 읽기 매우 편해집니다. 여러 개의 <code>WITH</code> 절을 콤마(,)로 연결해서 쓸 수도 있습니다.
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">2. 분석의 꽃: 윈도우 함수 (Window Function)</h2>
+        <p class="text-content">"부서별로 연봉 순위를 매겨줘", "이전 달 대비 매출 증감률을 구해줘" 같은 요구사항은 기존 <code>GROUP BY</code>로는 원본 데이터를 잃어버려서 처리하기 힘듭니다. <strong>원본 행(Row)을 유지하면서 집계와 순위를 계산</strong>하는 것이 윈도우 함수입니다.</p>
+
+        <div class="card">
+          <h3>RANK() 와 PARTITION BY</h3>
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="kw">SELECT</span> 
+    <span class="tbl">name</span>, 
+    <span class="tbl">department</span>, 
+    <span class="tbl">salary</span>,
+    <span class="cm">-- 부서(department)별로 파티션을 나누고,</span>
+    <span class="cm">-- 연봉(salary) 내림차순으로 순위(RANK)를 매겨라!</span>
+    <span class="fn">RANK</span>() <span class="kw">OVER</span> (
+        <span class="kw">PARTITION BY</span> <span class="tbl">department</span> 
+        <span class="kw">ORDER BY</span> <span class="tbl">salary</span> <span class="kw">DESC</span>
+    ) <span class="kw">AS</span> <span class="tbl">dept_rank</span>
+<span class="kw">FROM</span> <span class="tbl">employees</span>;
+            </div>
+            <div class="preview-box">
+              <div class="db-header">▶ Window Function Result</div>
+              <table class="db-table">
+                <tr><th>name</th><th>department</th><th>salary</th><th>dept_rank</th></tr>
+                <tr><td>이개발</td><td>개발팀</td><td>8000</td><td>1</td></tr>
+                <tr><td>김엔지</td><td>개발팀</td><td>7500</td><td>2</td></tr>
+                <tr><td>박디잔</td><td>디자인팀</td><td>7000</td><td>1</td></tr>
+                <tr><td>최아트</td><td>디자인팀</td><td>6500</td><td>2</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">3. 트랜잭션 (Transaction)과 락 (Lock)</h2>
+        <p class="text-content">계좌 이체를 할 때 '내 통장에서 돈이 빠져나가는 것'과 '상대방 통장에 돈이 들어가는 것'은 <strong>반드시 운명을 함께해야 합니다.</strong> 둘 중 하나라도 실패하면 전부 없던 일(Rollback)로 되돌리는 것이 트랜잭션입니다.</p>
+
+        <div class="card">
+          <h3>ACID 원칙과 비관적 락 (FOR UPDATE)</h3>
+          <p class="text-content">수강신청이나 티켓 예매처럼 여러 명이 동시에 같은 데이터를 수정하려고 할 때, 데이터가 꼬이는 것을 막기 위해 <strong>자물쇠(Lock)</strong>를 겁니다.</p>
+          <div class="demo-grid full">
+            <div class="code-box">
+<span class="cm">-- 트랜잭션의 시작 (이제부터 하는 작업은 한 묶음이다!)</span>
+<span class="kw">START TRANSACTION</span>;
+
+<span class="cm">-- FOR UPDATE: 내가 이 데이터를 업데이트 할 거니까, </span>
+<span class="cm">-- 내 트랜잭션이 끝날 때까지 다른 사람들은 이 데이터 읽지도, 건드리지도 마! (비관적 락)</span>
+<span class="kw">SELECT</span> <span class="tbl">balance</span> <span class="kw">FROM</span> <span class="tbl">accounts</span> <span class="kw">WHERE</span> <span class="tbl">id</span> = <span class="nm">1</span> <span class="kw">FOR UPDATE</span>;
+
+<span class="cm">-- 데이터 수정 로직 진행</span>
+<span class="kw">UPDATE</span> <span class="tbl">accounts</span> <span class="kw">SET</span> <span class="tbl">balance</span> = <span class="tbl">balance</span> - <span class="nm">50000</span> <span class="kw">WHERE</span> <span class="tbl">id</span> = <span class="nm">1</span>;
+<span class="kw">UPDATE</span> <span class="tbl">accounts</span> <span class="kw">SET</span> <span class="tbl">balance</span> = <span class="tbl">balance</span> + <span class="nm">50000</span> <span class="kw">WHERE</span> <span class="tbl">id</span> = <span class="nm">2</span>;
+
+<span class="cm">-- 모든 작업이 완벽하게 성공했으므로 DB에 영구 반영! </span>
+<span class="cm">-- (만약 중간에 에러가 났다면 ROLLBACK; 을 실행)</span>
+<span class="kw">COMMIT</span>;
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">4. 성능 튜닝: 인덱스(Index)와 EXPLAIN</h2>
+        <p class="text-content">수천만 건의 데이터가 있는 테이블에서 <code>WHERE name = '홍길동'</code>을 찾으면 DB는 1번부터 끝까지 다 뒤져봅니다(Full Table Scan). <strong>사전의 '찾아보기(색인)' 역할</strong>을 하는 인덱스를 만들면 검색 속도가 수백 배 빨라집니다.</p>
+
+        <div class="card">
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="cm">-- 1. 이메일 컬럼에 인덱스(색인) 생성</span>
+<span class="kw">CREATE INDEX</span> <span class="tbl">idx_user_email</span> <span class="kw">ON</span> <span class="tbl">users</span>(<span class="tbl">email</span>);
+
+<span class="cm">-- 2. EXPLAIN: DB가 이 쿼리를 어떻게 실행할지 계획표를 보여줌</span>
+<span class="kw">EXPLAIN SELECT</span> * <span class="kw">FROM</span> <span class="tbl">users</span> <span class="kw">WHERE</span> <span class="tbl">email</span> = <span class="st">'dev@club.com'</span>;
+            </div>
+            <div class="preview-box terminal-mode">
+              <div class="db-header">> MySQL EXPLAIN Output</div>
+              <table class="db-table" style="border-color: #333;">
+                <tr><th style="background:#111;color:#a7f3d0;border-color:#333;">type</th><th style="background:#111;color:#a7f3d0;border-color:#333;">key</th><th style="background:#111;color:#a7f3d0;border-color:#333;">rows</th></tr>
+                <tr><td style="border-color:#333;">ref</td><td style="border-color:#333; color: #facc15;">idx_user_email</td><td style="border-color:#333;">1</td></tr>
+              </table>
+              <div style="padding: 8px; font-size: 0.8rem; color: #a1a1aa;">
+                * type이 'ALL'이면 최악(전체 스캔). 'ref'나 'const'가 나오면 인덱스를 잘 탔다는 뜻입니다!
+              </div>
+            </div>
+          </div>
+          <div class="tip-box">
+            <strong>⚠️ 인덱스의 치명적인 단점</strong>
+            인덱스는 조회가 빨라지는 대신, <strong>데이터를 추가(INSERT)하거나 수정(UPDATE)할 때마다 색인 책도 같이 업데이트해야 하므로 쓰기 속도가 느려집니다.</strong> 따라서 검색이 자주 일어나는 컬럼에만 신중하게 걸어야 합니다.
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">5. 집합 연산자와 고급 JOIN</h2>
+        <p class="text-content">교집합, 합집합 같은 집합의 개념을 DB에 적용합니다. 특히 서로 다른 두 개의 쿼리 결과를 위아래로 이어 붙일 때 <code>UNION</code>을 사용합니다.</p>
+
+        <div class="card">
+          <div class="demo-grid full">
+            <div class="code-box">
+<span class="cm">-- 1. UNION ALL (합집합 - 중복 포함 위아래로 이어붙이기)</span>
+<span class="cm">-- (참고: 그냥 UNION을 쓰면 중복을 제거하느라 성능이 훨씬 느려집니다)</span>
+<span class="kw">SELECT</span> <span class="tbl">name</span>, <span class="st">'직원'</span> <span class="kw">AS</span> <span class="tbl">role</span> <span class="kw">FROM</span> <span class="tbl">employees</span>
+<span class="kw">UNION ALL</span>
+<span class="kw">SELECT</span> <span class="tbl">name</span>, <span class="st">'고객'</span> <span class="kw">AS</span> <span class="tbl">role</span> <span class="kw">FROM</span> <span class="tbl">customers</span>;
+
+<span class="cm">-- 2. LEFT OUTER JOIN (기준 테이블 살리기)</span>
+<span class="cm">-- INNER JOIN과 달리, 주문 내역이 없는(NULL) 유저도 결과에 일단 포함시킵니다.</span>
+<span class="kw">SELECT</span> <span class="tbl">u.name</span>, <span class="tbl">o.order_date</span>
+<span class="kw">FROM</span> <span class="tbl">users</span> <span class="tbl">u</span>
+<span class="kw">LEFT JOIN</span> <span class="tbl">orders</span> <span class="tbl">o</span> <span class="kw">ON</span> <span class="tbl">u.id</span> = <span class="tbl">o.user_id</span>;
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <a href="python_basic_class.html" class="next-btn">
+        데이터베이스 마스터! 🐍 다음 장 Python 코어 프로그래밍 배우러 가기 →
+      </a>
+
+    </main>
+  </div>
+</body>
+</html>
