@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C# 심화 완벽 가이드 - DEV. 동아리</title>
+  <style>
+    :root {
+      --bg-dark: #0a040a;
+      --bg-card: rgba(25, 10, 25, 0.6);
+      --text-main: #f8fafc;
+      --text-muted: #a1a1aa;
+      --accent: #d946ef; /* C# / VS Purple-Magenta */
+      --accent-soft: rgba(217, 70, 239, 0.15);
+      --line: rgba(255, 255, 255, 0.08);
+      --code-bg: #121214;
+      --preview-bg: #000000;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: "Pretendard Variable", "SUIT Variable", "Noto Sans KR", sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    .bg-glow {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; pointer-events: none;
+    }
+    .bg-glow::before {
+      content: ''; position: absolute; top: -20%; left: -10%; width: 60vw; height: 60vw;
+      max-width: 800px; max-height: 800px;
+      background: var(--accent); filter: blur(180px); opacity: 0.15; border-radius: 50%;
+    }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; height: 50px;
+      background: rgba(10, 4, 10, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line); z-index: 100;
+      display: flex; align-items: center; padding: 0 20px;
+    }
+    .nav-logo { font-weight: 800; font-size: 1.1rem; color: var(--text-main); text-decoration: none; }
+    .nav-logo span { color: var(--accent); }
+
+    .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+
+    header { padding: 100px 0 40px; text-align: center; }
+    .kicker {
+      display: inline-block; padding: 4px 12px; background: var(--accent-soft);
+      color: var(--accent); border: 1px solid rgba(217, 70, 239, 0.3); border-radius: 999px;
+      font-size: 0.85rem; font-weight: 700; margin-bottom: 16px; letter-spacing: 0.05em;
+    }
+    h1 { font-size: 3rem; font-weight: 900; line-height: 1.2; margin-bottom: 16px; word-break: keep-all; }
+    header p { font-size: 1.1rem; color: var(--text-muted); word-break: keep-all; max-width: 700px; margin: 0 auto; }
+
+    main { padding-bottom: 100px; }
+
+    section { margin-bottom: 60px; scroll-margin-top: 70px; }
+    
+    .section-title {
+      font-size: 1.7rem; font-weight: 800; margin-bottom: 16px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-title::before { content: ''; display: block; width: 5px; height: 24px; background: var(--accent); border-radius: 4px; }
+    
+    .text-content { font-size: 1.05rem; color: #d4d4d8; margin-bottom: 20px; word-break: keep-all; line-height: 1.6; }
+
+    .card {
+      background: var(--bg-card); border: 1px solid var(--line); border-radius: 16px;
+      padding: 24px; margin-bottom: 20px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    }
+    .card h3 { font-size: 1.2rem; margin-bottom: 10px; color: var(--accent); }
+    
+    .demo-grid { display: grid; gap: 20px; margin-top: 16px; grid-template-columns: 1fr 1fr; }
+    .demo-grid.full { grid-template-columns: 1fr; }
+
+    .code-box, .preview-box {
+      border-radius: 12px; padding: 20px; font-size: 0.95rem; overflow-x: auto;
+    }
+    .code-box {
+      background: var(--code-bg); border: 1px solid #27272a; font-family: "D2Coding", monospace;
+      color: #e4e4e7; line-height: 1.5; white-space: pre-wrap; word-break: break-all;
+    }
+    
+    /* C# Syntax Highlighting */
+    .kw { color: #ff7b72; } /* keyword (using, public, class, void, var, async, await, delegate, event) */
+    .cls { color: #f2cc60; } /* classes (Console, Task, GameObject, Action, List) */
+    .fn { color: #d2a8ff; } /* function (WriteLine, Where, Invoke) */
+    .st { color: #a5d6ff; } /* string */
+    .nm { color: #79c0ff; } /* number */
+    .cm { color: #71717a; } /* comment */
+    .prop { color: #38bdf8; } /* properties/LINQ clauses */
+
+    /* 터미널/콘솔 출력 스타일 */
+    .preview-box {
+      background: var(--preview-bg); color: #d946ef; border: 1px solid #333;
+      display: flex; flex-direction: column; font-family: "D2Coding", monospace;
+    }
+    .console-header { color: #666; font-size: 0.8rem; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 8px; }
+    .log-warn { color: #facc15; font-size: 0.85rem; }
+    .log-info { color: #cbd5e1; font-size: 0.85rem; }
+
+    .tip-box {
+      background: rgba(217, 70, 239, 0.08); border-left: 4px solid var(--accent);
+      padding: 16px; border-radius: 0 8px 8px 0; margin-top: 16px; font-size: 0.95rem; color: #cbd5e1;
+    }
+    .tip-box strong { color: var(--accent); display: block; margin-bottom: 6px; font-size: 1rem; }
+
+    .next-btn {
+      display: block; width: 100%; text-align: center; padding: 20px;
+      background: linear-gradient(to right, #c026d3, #a21caf); color: #fff;
+      text-decoration: none; font-size: 1.2rem; font-weight: 800; border-radius: 12px;
+      transition: transform 0.2s, box-shadow 0.2s; margin-top: 50px;
+    }
+    .next-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(217, 70, 239, 0.4); }
+
+    @media (max-width: 768px) {
+      header { padding: 80px 0 24px; }
+      h1 { font-size: 1.6rem; margin-bottom: 12px; }
+      header p { font-size: 0.85rem; }
+      section { margin-bottom: 40px; }
+      .section-title { font-size: 1.25rem; margin-bottom: 12px; }
+      .card { padding: 16px; margin-bottom: 16px; }
+      .demo-grid { grid-template-columns: 1fr; gap: 10px; }
+      .code-box, .preview-box { padding: 12px; font-size: 0.8rem; border-radius: 8px; }
+      .tip-box { padding: 12px; font-size: 0.8rem; }
+      .next-btn { padding: 16px; font-size: 1rem; margin-top: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-glow"></div>
+
+  <nav>
+    <a href="index.html" class="nav-logo">DEV. <span>동아리</span></a>
+  </nav>
+
+  <div class="container">
+    <header>
+      <div class="kicker">Chapter 11-2. 닷넷과 유니티의 마스터피스</div>
+      <h1>C# 심화 (Advanced)</h1>
+      <p>C#의 진짜 힘은 압도적인 생산성과 유연함에 있습니다. 데이터 질의의 마법인 LINQ부터, 옵저버 패턴의 정수인 이벤트, 그리고 게임 성능을 좌우하는 메모리 풀링까지 완벽하게 정복합니다.</p>
+    </header>
+
+    <main>
+      <section>
+        <h2 class="section-title">1. 데이터 질의의 마법: LINQ (Language Integrated Query)</h2>
+        <p class="text-content">수십 개의 리스트와 배열 속에서 특정 조건을 만족하는 데이터를 찾을 때, 복잡한 <code>for</code>문과 <code>if</code>문을 쓸 필요가 없습니다. <strong>SQL 쿼리를 작성하듯 C# 코드 한 줄</strong>로 데이터를 가공하는 강력한 기능입니다.</p>
+        
+        <div class="card">
+          <div class="demo-grid full">
+            <div class="code-box">
+<span class="kw">using</span> System;
+<span class="kw">using</span> System.Linq; <span class="cm">// LINQ 사용을 위한 네임스페이스</span>
+<span class="kw">using</span> System.Collections.Generic;
+
+<span class="kw">class</span> <span class="cls">Player</span> { <span class="kw">public string</span> Name; <span class="kw">public int</span> Level; }
+
+<span class="kw">class</span> <span class="cls">Program</span>
+{
+    <span class="kw">static void</span> <span class="fn">Main</span>()
+    {
+        <span class="cls">List</span>&lt;<span class="cls">Player</span>&gt; players = <span class="kw">new</span> <span class="cls">List</span>&lt;<span class="cls">Player</span>&gt;
+        {
+            <span class="kw">new</span> <span class="cls">Player</span> { Name = <span class="st">"전사"</span>, Level = <span class="nm">15</span> },
+            <span class="kw">new</span> <span class="cls">Player</span> { Name = <span class="st">"마법사"</span>, Level = <span class="nm">40</span> },
+            <span class="kw">new</span> <span class="cls">Player</span> { Name = <span class="st">"궁수"</span>, Level = <span class="nm">25</span> }
+        };
+
+        <span class="cm">// LINQ: 레벨이 20 이상인 플레이어를 찾아 레벨 내림차순으로 정렬 후 이름만 가져옴</span>
+        <span class="kw">var</span> highLevelNames = players
+            .<span class="fn">Where</span>(p =&gt; p.Level &gt;= <span class="nm">20</span>)
+            .<span class="fn">OrderByDescending</span>(p =&gt; p.Level)
+            .<span class="fn">Select</span>(p =&gt; p.Name)
+            .<span class="fn">ToList</span>();
+
+        <span class="kw">foreach</span> (<span class="kw">var</span> name <span class="kw">in</span> highLevelNames)
+        {
+            <span class="cls">Console</span>.<span class="fn">WriteLine</span>(name); <span class="cm">// "마법사", "궁수" 순으로 출력</span>
+        }
+    }
+}
+            </div>
+          </div>
+          <div class="tip-box">
+            <strong>💡 지연 실행 (Lazy Evaluation)</strong>
+            LINQ의 <code>Where</code>나 <code>Select</code>는 그 즉시 코드를 실행하지 않고 계획표만 짜둡니다. 최종적으로 <code>ToList()</code>나 <code>foreach</code>를 만났을 때 비로소 한 번에 연산을 수행하여 성능을 극대화합니다.
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">2. 델리게이트와 이벤트 (옵저버 패턴)</h2>
+        <p class="text-content">"보스가 죽으면 UI를 업데이트하고, 업적을 달성하고, 문을 열어라." 이 코드를 보스 스크립트 안에 다 적으면 코드가 스파게티가 됩니다. <strong>이벤트(Event)</strong>를 사용하면 보스는 "나 죽었어!"라고 방송(Invoke)만 하고, 다른 스크립트들이 알아서 반응하게 만들 수 있습니다.</p>
+
+        <div class="card">
+          <h3>Action을 활용한 Event 구현</h3>
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="kw">using</span> System;
+
+<span class="kw">class</span> <span class="cls">Boss</span>
+{
+    <span class="cm">// 매개변수와 반환값이 없는 함수들을 담을 수 있는 변수(이벤트)</span>
+    <span class="kw">public event</span> <span class="cls">Action</span> OnBossDied;
+
+    <span class="kw">public void</span> <span class="fn">Die</span>()
+    {
+        <span class="cls">Console</span>.<span class="fn">WriteLine</span>(<span class="st">"보스가 쓰러졌습니다!"</span>);
+        <span class="cm">// 이벤트에 등록된 모든 함수들을 한 번에 실행 (?. 는 Null 체크)</span>
+        OnBossDied?.<span class="fn">Invoke</span>(); 
+    }
+}
+
+<span class="kw">class</span> <span class="cls">Program</span>
+{
+    <span class="kw">static void</span> <span class="fn">Main</span>()
+    {
+        <span class="cls">Boss</span> dragon = <span class="kw">new</span> <span class="cls">Boss</span>();
+
+        <span class="cm">// 이벤트에 구독(구독 취소는 -=)</span>
+        dragon.OnBossDied += () =&gt; <span class="cls">Console</span>.<span class="fn">WriteLine</span>(<span class="st">"[UI] 승리 화면 표시"</span>);
+        dragon.OnBossDied += () =&gt; <span class="cls">Console</span>.<span class="fn">WriteLine</span>(<span class="st">"[업적] 드래곤 슬레이어 달성"</span>);
+
+        <span class="cm">// 보스 사망 시 등록된 모든 함수가 연쇄적으로 실행됨</span>
+        dragon.<span class="fn">Die</span>(); 
+    }
+}
+            </div>
+            <div class="preview-box">
+              <div class="console-header">> Terminal - dotnet run</div>
+              <div class="log-warn">보스가 쓰러졌습니다!</div>
+              <div class="log-info">[UI] 승리 화면 표시</div>
+              <div class="log-info">[업적] 드래곤 슬레이어 달성</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">3. 비동기 프로그래밍 (async / await)</h2>
+        <p class="text-content">서버에서 아이템 정보를 불러오거나 무거운 파일을 읽을 때, 일반 코드를 쓰면 그동안 게임 화면(UI)이 완전히 멈춰버립니다(프리징). <strong>비동기 처리</strong>를 사용하면 백그라운드에서 일을 처리하고 끝날 때까지 우아하게 기다릴 수 있습니다.</p>
+
+        <div class="card">
+          <div class="demo-grid full">
+            <div class="code-box">
+<span class="kw">using</span> System;
+<span class="kw">using</span> System.Threading.Tasks; <span class="cm">// Task를 위한 네임스페이스</span>
+
+<span class="kw">class</span> <span class="cls">Program</span>
+{
+    <span class="cm">// 비동기 함수는 반환 타입을 Task로 설정하고 async 키워드를 붙입니다.</span>
+    <span class="kw">static async</span> <span class="cls">Task</span> <span class="fn">LoadGameDataAsync</span>()
+    {
+        <span class="cls">Console</span>.<span class="fn">WriteLine</span>(<span class="st">"서버에서 데이터를 불러오는 중..."</span>);
+        
+        <span class="cm">// 3초 동안 대기 (이 동안 프로그램이 멈추지 않고 다른 일을 할 수 있음!)</span>
+        <span class="kw">await</span> <span class="cls">Task</span>.<span class="fn">Delay</span>(<span class="nm">3000</span>); 
+        
+        <span class="cls">Console</span>.<span class="fn">WriteLine</span>(<span class="st">"데이터 로드 완료!"</span>);
+    }
+
+    <span class="kw">static async</span> <span class="cls">Task</span> <span class="fn">Main</span>()
+    {
+        <span class="cm">// 비동기 함수 호출 시 await를 붙여 결과가 올 때까지 기다림</span>
+        <span class="kw">await</span> <span class="fn">LoadGameDataAsync</span>();
+    }
+}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">4. 확장 메서드 (Extension Methods)</h2>
+        <p class="text-content">우리가 수정할 수 없는 기존 라이브러리의 클래스(예: <code>string</code>이나 유니티의 <code>Transform</code>)에 <strong>마치 원래 있었던 메서드처럼 새로운 기능을 끼워 넣는 마법</strong>입니다.</p>
+
+        <div class="card">
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="kw">using</span> System;
+
+<span class="cm">// 확장 메서드는 반드시 'static class' 안에 선언해야 합니다.</span>
+<span class="kw">public static class</span> <span class="cls">StringExtensions</span>
+{
+    <span class="cm">// 첫 번째 매개변수 앞에 'this'를 붙이면, 해당 타입의 확장 메서드가 됩니다.</span>
+    <span class="kw">public static bool</span> <span class="fn">IsAwesome</span>(<span class="kw">this string</span> str)
+    {
+        <span class="kw">return</span> str.<span class="fn">Contains</span>(<span class="st">"최고"</span>);
+    }
+}
+
+<span class="kw">class</span> <span class="cls">Program</span>
+{
+    <span class="kw">static void</span> <span class="fn">Main</span>()
+    {
+        <span class="kw">string</span> myText = <span class="st">"C#은 정말 최고야!"</span>;
+        
+        <span class="cm">// 마치 원래 string에 포함된 기능처럼 사용할 수 있음!</span>
+        <span class="kw">bool</span> result = myText.<span class="fn">IsAwesome</span>();
+        
+        <span class="cls">Console</span>.<span class="fn">WriteLine</span>(result); <span class="cm">// True 출력</span>
+    }
+}
+            </div>
+            <div class="preview-box">
+              <div class="console-header">> Terminal - dotnet run</div>
+              <div class="log-info">True</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">5. (유니티 심화) 오브젝트 풀링 (Object Pooling)</h2>
+        <p class="text-content">게임에서 총알 100발을 쏠 때마다 메모리에 새롭게 만들고(Instantiate), 맞으면 삭제(Destroy)하면 <strong>치명적인 가비지 컬렉션(GC) 스파이크(프레임 드랍)</strong>가 발생합니다. <br>대신, <strong>총알을 미리 100개 만들어 웅덩이(Pool)에 담아두고 꺼내 썼다가, 다 쓰면 끄고(SetActive(false)) 다시 반납하는 기법</strong>이 오브젝트 풀링입니다.</p>
+
+        <div class="card">
+          <div class="demo-grid full">
+            <div class="code-box">
+<span class="kw">using</span> UnityEngine;
+<span class="kw">using</span> System.Collections.Generic;
+
+<span class="kw">public class</span> <span class="cls">BulletPool</span> : <span class="cls">MonoBehaviour</span>
+{
+    <span class="kw">public</span> <span class="cls">GameObject</span> bulletPrefab;
+    <span class="kw">private</span> <span class="cls">Queue</span>&lt;<span class="cls">GameObject</span>&gt; pool = <span class="kw">new</span> <span class="cls">Queue</span>&lt;<span class="cls">GameObject</span>&gt;();
+
+    <span class="kw">void</span> <span class="fn">Start</span>()
+    {
+        <span class="cm">// 게임 시작 시 미리 총알 50개를 만들어두고 숨겨둠</span>
+        <span class="kw">for</span> (<span class="kw">int</span> i = <span class="nm">0</span>; i &lt; <span class="nm">50</span>; i++)
+        {
+            <span class="cls">GameObject</span> obj = <span class="fn">Instantiate</span>(bulletPrefab);
+            obj.<span class="fn">SetActive</span>(<span class="kw">false</span>);
+            pool.<span class="fn">Enqueue</span>(obj); <span class="cm">// 풀(Queue)에 넣기</span>
+        }
+    }
+
+    <span class="cm">// 총알 쏘기 (새로 만들지 않고 풀에서 하나 꺼냄)</span>
+    <span class="kw">public</span> <span class="cls">GameObject</span> <span class="fn">GetBullet</span>()
+    {
+        <span class="kw">if</span> (pool.Count &gt; <span class="nm">0</span>)
+        {
+            <span class="cls">GameObject</span> obj = pool.<span class="fn">Dequeue</span>();
+            obj.<span class="fn">SetActive</span>(<span class="kw">true</span>);
+            <span class="kw">return</span> obj;
+        }
+        <span class="kw">return null</span>; <span class="cm">// 풀이 비었으면 못 쏨</span>
+    }
+
+    <span class="cm">// 총알이 어딘가 부딪혀서 없어질 때 (삭제하지 않고 다시 풀에 반납)</span>
+    <span class="kw">public void</span> <span class="fn">ReturnBullet</span>(<span class="cls">GameObject</span> obj)
+    {
+        obj.<span class="fn">SetActive</span>(<span class="kw">false</span>);
+        pool.<span class="fn">Enqueue</span>(obj);
+    }
+}
+            </div>
+          </div>
+          <div class="tip-box">
+            <strong>💡 메모리 최적화의 기본</strong>
+            유니티를 비롯한 거의 모든 게임 엔진에서 Instantiate와 Destroy는 가장 무거운 연산입니다. 탄막 슈팅, 파티클 이펙트, 적 몬스터 스폰 등 자주 생성되고 사라지는 모든 오브젝트에는 <strong>무조건 풀링 패턴</strong>을 적용해야 합니다.
+          </div>
+        </div>
+      </section>
+
+      <a href="index.html" class="next-btn">
+        🎉 마침내 모든 강좌의 끝에 도달하셨습니다! 메인 화면으로 귀환하기 →
+      </a>
+
+    </main>
+  </div>
+</body>
+</html>
