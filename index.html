@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>코딩 학습 허브</title>
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --bg-darker: #020617;
+      --card-bg: rgba(30, 41, 59, 0.5);
+      --card-hover: rgba(30, 41, 59, 0.8);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --line: rgba(255, 255, 255, 0.1);
+      
+      /* 언어별 브랜드 컬러 */
+      --color-python: #f59e0b; /* Yellow */
+      --color-html: #f97316;   /* Orange */
+      --color-css: #3b82f6;    /* Blue */
+      --color-js: #eab308;     /* Yellow */
+      --color-react: #06b6d4;  /* Cyan */
+      --color-java: #ef4444;   /* Red */
+      --color-c: #8b5cf6;      /* Purple */
+      --color-cpp: #2563eb;    /* Royal Blue */
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-darker);
+      color: var(--text-main);
+      font-family: "Pretendard Variable", "SUIT Variable", "Noto Sans KR", sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 동적인 배경 효과 */
+    .bg-glow {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      overflow: hidden;
+      z-index: -1;
+      pointer-events: none;
+    }
+    .bg-glow::before, .bg-glow::after {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.15;
+    }
+    .bg-glow::before {
+      background: var(--color-css);
+      top: -100px; left: -100px;
+    }
+    .bg-glow::after {
+      background: var(--color-python);
+      bottom: -100px; right: -100px;
+    }
+
+    /* 헤더 및 히어로 섹션 */
+    header {
+      text-align: center;
+      padding: 100px 20px 60px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 6px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      letter-spacing: 0.05em;
+      margin-bottom: 20px;
+    }
+    h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 900;
+      line-height: 1.2;
+      margin-bottom: 20px;
+      letter-spacing: -0.03em;
+    }
+    h1 span {
+      background: linear-gradient(to right, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .subtitle {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* 메인 콘텐츠 (그리드 레이아웃) */
+    main {
+      flex: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px 100px;
+      width: 100%;
+    }
+
+    .course-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 40px;
+    }
+
+    /* 카드 디자인 */
+    .course-card {
+      background: var(--card-bg);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 30px;
+      text-decoration: none;
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+    
+    .course-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: var(--theme-color);
+      opacity: 0.5;
+      transition: opacity 0.3s;
+    }
+
+    .course-card:hover {
+      transform: translateY(-8px);
+      background: var(--card-hover);
+      border-color: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+    .course-card:hover::before {
+      opacity: 1;
+    }
+
+    /* 카드 내부 요소 */
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .icon {
+      font-size: 2.5rem;
+    }
+    .type-badge {
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(0, 0, 0, 0.3);
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .type-badge.ppt {
+      background: rgba(245, 158, 11, 0.1);
+      color: var(--color-python);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+    .type-badge.scroll {
+      background: rgba(56, 189, 248, 0.1);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.2);
+    }
+
+    .course-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+    .course-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      flex-grow: 1;
+    }
+
+    .card-footer {
+      margin-top: 24px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--theme-color);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-footer::after {
+      content: '→';
+      transition: transform 0.2s;
+    }
+    .course-card:hover .card-footer::after {
+      transform: translateX(5px);
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      border-top: 1px solid var(--line);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      header { padding: 60px 20px 40px; }
+      .course-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-glow"></div>
+
+  <header>
+    <div class="badge">DEV. 동아리 온라인 학습관</div>
+    <h1>코딩의 시작,<br><span>원하는 스택을 선택하세요</span></h1>
+    <p class="subtitle">동아리 시간의 발표 자료부터 혼자서 꼼꼼히 읽어볼 수 있는 웹 강좌까지, 단계별로 정리되어 있습니다.</p>
+  </header>
+
+  <main>
+    <div class="course-grid">
+      
+      <a href="python_basic_class.html" class="course-card" style="--theme-color: var(--color-python);">
+        <div class="card-header">
+          <span class="icon">🐍</span>
+          <span class="type-badge ppt">PPT Mode</span>
+        </div>
+        <h2 class="course-title">Python 기초</h2>
+        <p class="course-desc">오프라인 동아리 시간에 함께 띄워놓고 볼 프레젠테이션 자료입니다. 변수부터 반복문까지 빠르게 훑어봅니다.</p>
+        <div class="card-footer">학습하기</div>
+      </a>
+
+      <a href="html_basic_class.html" class="course-card" style="--theme-color: var(--color-html);">
+        <div class="card-header">
+          <span class="icon">🏗️</span>
+          <span class="type-badge scroll">Scroll Mode</span>
+        </div>
+        <h2 class="course-title">HTML 기초</h2>
+        <p class="course-desc">웹의 뼈대를 세우는 마크업 언어. 태그의 개념부터 링크, 이미지 삽입까지 스크롤하며 차근차근 배워봅니다.</p>
+        <div class="card-footer">학습하기</div>
+      </a>
+
+      <a href="css_basic_class.html" class="course-card" style="--theme-color: var(--color-css);">
+        <div class="card-header">
+          <span class="icon">🎨</span>
+          <span class="type-badge scroll">Scroll Mode</span>
+        </div>
+        <h2 class="course-title">CSS 스타일링</h2>
+        <p class="course-desc">만들어진 뼈대에 옷을 입힐 차례입니다. 폰트, 색상, 그리고 화면 배치(Flexbox)의 원리를 다룹니다.</p>
+        <div class="card-footer">학습하기</div>
+      </a>
+
+      <a href="javascript_class.html" class="course-card" style="--theme-color: var(--color-js);">
+        <div class="card-header">
+          <span class="icon">⚡</span>
+          <span class="type-badge scroll">Scroll Mode</span>
+        </div>
+        <h2 class="course-title">JavaScript</h2>
+        <p class="course-desc">웹페이지에 생명을 불어넣는 동적 스크립트 언어. 클릭 이벤트, DOM 제어 등 브라우저와의 상호작용을 배웁니다.</p>
+        <div class="card-footer">학습하기</div>
+      </a>
+
+      <a href="react_class.html" class="course-card" style="--theme-color: var(--color-react);">
+        <div class="card-header">
+          <span class="icon">⚛️</span>
+          <span class="type-badge scroll">Scroll Mode</span>
+        </div>
+        <h2 class="course-title">React</h2>
+        <p class="course-desc">모던 프론트엔드의 핵심 라이브러리. 컴포넌트 단위로 재사용 가능한 UI를 만들고 상태(State)를 관리해 봅니다.</p>
+        <div class="card-footer">준비 중</div>
+      </a>
+
+      <a href="java_class.html" class="course-card" style="--theme-color: var(--color-java);">
+        <div class="card-header">
+          <span class="icon">☕</span>
+          <span class="type-badge scroll">Scroll Mode</span>
+        </div>
+        <h2 class="course-title">Java 기초</h2>
+        <p class="course-desc">강력하고 안정적인 백엔드 언어. 객체지향(OOP)의 기본 개념인 클래스, 상속, 다형성을 깊이 있게 이해합니다.</p>
+        <div class="card-footer">준비 중</div>
+      </a>
+
+      <a href="c_class.html" class="course-card" style="--theme-color: var(--color-c);">
+        <div class="card-header">
+          <span class="icon">⚙️</span>
+          <span class="type-badge scroll">Scroll Mode</span>
+        </div>
+        <h2 class="course-title">C 프로그래밍</h2>
+        <p class="course-desc">소프트웨어의 뿌리가 되는 언어. 메모리 구조와 포인터의 개념을 이해하며 컴퓨터의 작동 원리를 파악합니다.</p>
+        <div class="card-footer">준비 중</div>
+      </a>
+
+      <a href="cpp_class.html" class="course-card" style="--theme-color: var(--color-cpp);">
+        <div class="card-header">
+          <span class="icon">🚀</span>
+          <span class="type-badge scroll">Scroll Mode</span>
+        </div>
+        <h2 class="course-title">C++ 심화</h2>
+        <p class="course-desc">C언어의 속도에 객체지향의 강력함을 더한 언어. 게임 개발, 시스템 프로그래밍을 위한 필수 지식을 배웁니다.</p>
+        <div class="card-footer">준비 중</div>
+      </a>
+
+    </div>
+  </main>
+
+  <footer>
+    <p>ⓒ 2026 Developer Club. All rights reserved.</p>
+  </footer>
+</body>
+</html>
+
