@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS 스타일링 완벽 가이드 - DEV. 동아리</title>
+  <style>
+    :root {
+      --bg-dark: #050b14;
+      --bg-card: rgba(15, 23, 42, 0.6);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #3b82f6; /* CSS Blue */
+      --accent-soft: rgba(59, 130, 246, 0.15);
+      --line: rgba(255, 255, 255, 0.08);
+      --code-bg: #0d1117;
+      --preview-bg: #ffffff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: "Pretendard Variable", "SUIT Variable", "Noto Sans KR", sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    /* 동적 배경 효과 */
+    .bg-glow {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; pointer-events: none;
+    }
+    .bg-glow::before {
+      content: ''; position: absolute; top: -20%; right: 0; width: 60vw; height: 60vw;
+      max-width: 800px; max-height: 800px;
+      background: var(--accent); filter: blur(180px); opacity: 0.12; border-radius: 50%;
+    }
+
+    /* 상단 네비게이션바 */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; height: 50px;
+      background: rgba(5, 11, 20, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line); z-index: 100;
+      display: flex; align-items: center; padding: 0 20px;
+    }
+    .nav-logo { font-weight: 800; font-size: 1.1rem; color: var(--text-main); text-decoration: none; }
+    .nav-logo span { color: var(--accent); }
+
+    .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+
+    header {
+      padding: 100px 0 40px; text-align: center;
+    }
+    .kicker {
+      display: inline-block; padding: 4px 12px; background: var(--accent-soft);
+      color: var(--accent); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 999px;
+      font-size: 0.85rem; font-weight: 700; margin-bottom: 16px; letter-spacing: 0.05em;
+    }
+    h1 { font-size: 3rem; font-weight: 900; line-height: 1.2; margin-bottom: 16px; word-break: keep-all; }
+    header p { font-size: 1.1rem; color: var(--text-muted); word-break: keep-all; max-width: 700px; margin: 0 auto; }
+
+    main { padding-bottom: 100px; }
+
+    section { margin-bottom: 60px; scroll-margin-top: 70px; }
+    
+    .section-title {
+      font-size: 1.7rem; font-weight: 800; margin-bottom: 16px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-title::before { content: ''; display: block; width: 5px; height: 24px; background: var(--accent); border-radius: 4px; }
+    
+    .text-content { font-size: 1.05rem; color: #cbd5e1; margin-bottom: 20px; word-break: keep-all; line-height: 1.6; }
+
+    .card {
+      background: var(--bg-card); border: 1px solid var(--line); border-radius: 16px;
+      padding: 24px; margin-bottom: 20px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    }
+    .card h3 { font-size: 1.2rem; margin-bottom: 10px; color: var(--accent); }
+    
+    .demo-grid { display: grid; gap: 20px; margin-top: 16px; grid-template-columns: 1fr 1fr; }
+
+    .code-box, .preview-box {
+      border-radius: 12px; padding: 20px; font-size: 0.95rem; overflow-x: auto;
+    }
+    .code-box {
+      background: var(--code-bg); border: 1px solid #30363d; font-family: "D2Coding", monospace;
+      color: #e6edf3; line-height: 1.5; white-space: pre-wrap; word-break: break-all;
+    }
+    /* CSS Syntax Highlighting */
+    .sel { color: #d2a8ff; } .prop { color: #79c0ff; } .val { color: #a5d6ff; } .unit { color: #ff7b72; } .cm { color: #8b949e; }
+
+    .preview-box {
+      background: var(--preview-bg); color: #111; border: 1px solid #e4e4e7;
+      display: flex; flex-direction: column; justify-content: center; font-family: sans-serif; position: relative;
+    }
+
+    .tip-box {
+      background: rgba(59, 130, 246, 0.08); border-left: 4px solid var(--accent);
+      padding: 16px; border-radius: 0 8px 8px 0; margin-top: 16px; font-size: 0.95rem; color: #cbd5e1;
+    }
+    .tip-box strong { color: var(--accent); display: block; margin-bottom: 6px; font-size: 1rem; }
+
+    .next-btn {
+      display: block; width: 100%; text-align: center; padding: 20px;
+      background: linear-gradient(to right, #2563eb, #1d4ed8); color: #fff;
+      text-decoration: none; font-size: 1.2rem; font-weight: 800; border-radius: 12px;
+      transition: transform 0.2s, box-shadow 0.2s; margin-top: 50px;
+    }
+    .next-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(37, 99, 235, 0.4); }
+
+    /* =========================================
+       모바일 최적화 (768px 이하)
+       ========================================= */
+    @media (max-width: 768px) {
+      header { padding: 80px 0 24px; }
+      h1 { font-size: 1.6rem; margin-bottom: 12px; }
+      header p { font-size: 0.85rem; }
+      
+      section { margin-bottom: 40px; }
+      .section-title { font-size: 1.25rem; margin-bottom: 12px; }
+      .section-title::before { height: 18px; }
+      .text-content { font-size: 0.85rem; margin-bottom: 12px; }
+      
+      .card { padding: 16px; margin-bottom: 16px; }
+      .card h3 { font-size: 1rem; margin-bottom: 8px; }
+      
+      .demo-grid { grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
+      
+      .code-box, .preview-box { padding: 12px; font-size: 0.8rem; border-radius: 8px; min-height: 120px;}
+      
+      .tip-box { padding: 12px; font-size: 0.8rem; }
+      .tip-box strong { font-size: 0.85rem; margin-bottom: 4px; }
+
+      .next-btn { padding: 16px; font-size: 1rem; margin-top: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-glow"></div>
+
+  <nav>
+    <a href="index.html" class="nav-logo">DEV. <span>동아리</span></a>
+  </nav>
+
+  <div class="container">
+    <header>
+      <div class="kicker">Chapter 2. 웹에 옷 입히기</div>
+      <h1>CSS 스타일링 (Full Course)</h1>
+      <p>HTML로 세운 뼈대에 색을 칠하고, 간격을 맞추고, 예쁘게 배치하는 마법. CSS의 핵심 원리인 박스 모델과 Flexbox를 완벽히 이해해 봅시다.</p>
+    </header>
+
+    <main>
+      <section>
+        <h2 class="section-title">1. 선택자 (Selectors)</h2>
+        <p class="text-content">CSS의 기본 공식은 <strong><code>누구에게 { 어떤스타일을 : 줄것인가; }</code></strong> 입니다. 수많은 태그 중에서 내가 꾸미고 싶은 녀석만 콕 집어내는 방법이 바로 선택자입니다.</p>
+        
+        <div class="card">
+          <h3>태그, 클래스(Class), 아이디(ID)</h3>
+          <p class="text-content">클래스는 <code>.</code>(점)으로, 아이디는 <code>#</code>(샵)으로 선택합니다. 실무에서는 재사용이 가능한 <strong>클래스(Class)를 가장 많이 사용</strong>합니다.</p>
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="cm">/* 1. 태그 선택자 (모든 p 태그 변경) */</span>
+<span class="sel">p</span> {
+  <span class="prop">color</span>: <span class="val">gray</span>;
+}
+
+<span class="cm">/* 2. 클래스 선택자 (별명) - 가장 많이 씀 */</span>
+<span class="sel">.highlight</span> {
+  <span class="prop">color</span>: <span class="val">blue</span>;
+  <span class="prop">font-weight</span>: <span class="val">bold</span>;
+}
+
+<span class="cm">/* 3. 아이디 선택자 (문서 내 유일) */</span>
+<span class="sel">#title</span> {
+  <span class="prop">color</span>: <span class="val">red</span>;
+}
+            </div>
+            <div class="preview-box">
+              <h2 style="color: red; margin-bottom: 8px;">이것은 #title 입니다</h2>
+              <p style="color: gray; margin-bottom: 8px;">이것은 일반적인 p 태그입니다.</p>
+              <p style="color: blue; font-weight: bold;">이것은 .highlight 클래스입니다.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">2. 텍스트와 색상 다루기</h2>
+        <p class="text-content">글자의 크기, 굵기, 정렬, 그리고 글자색과 배경색을 지정하는 가장 기본적인 속성들입니다.</p>
+
+        <div class="card">
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="sel">.box</span> {
+  <span class="cm">/* 색상 (Hex 코드 방식) */</span>
+  <span class="prop">color</span>: <span class="val">#ffffff</span>; <span class="cm">/* 글자색: 흰색 */</span>
+  <span class="prop">background-color</span>: <span class="val">#3b82f6</span>; <span class="cm">/* 배경색: 파란색 */</span>
+  
+  <span class="cm">/* 폰트 스타일 */</span>
+  <span class="prop">font-size</span>: <span class="val">20</span><span class="unit">px</span>; <span class="cm">/* 글자 크기 */</span>
+  <span class="prop">font-weight</span>: <span class="val">bold</span>; <span class="cm">/* 글자 굵기 (normal, bold 등) */</span>
+  
+  <span class="cm">/* 정렬 및 기타 */</span>
+  <span class="prop">text-align</span>: <span class="val">center</span>; <span class="cm">/* 가운데 정렬 */</span>
+  <span class="prop">line-height</span>: <span class="val">1.5</span>; <span class="cm">/* 줄 간격 */</span>
+}
+            </div>
+            <div class="preview-box">
+              <div style="color: #ffffff; background-color: #3b82f6; font-size: 20px; font-weight: bold; text-align: center; line-height: 1.5; padding: 20px; border-radius: 8px;">
+                가운데 정렬된<br>파란색 박스
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">3. 박스 모델 (Box Model) ★중요</h2>
+        <p class="text-content">HTML의 모든 요소는 네모난 '박스'입니다. 안쪽 여백(Padding)과 바깥쪽 여백(Margin)을 확실히 구분해야 레이아웃이 깨지지 않습니다.</p>
+
+        <div class="card">
+          <h3>Padding, Border, Margin</h3>
+          <p class="text-content">내용물을 감싸는 <strong>안쪽 여백이 Padding</strong>, 테두리가 Border, 다른 요소들을 밀어내는 <strong>바깥 여백이 Margin</strong>입니다.</p>
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="sel">.my-box</span> {
+  <span class="prop">width</span>: <span class="val">100</span><span class="unit">%</span>;
+  
+  <span class="cm">/* 테두리: 굵기, 종류, 색상 */</span>
+  <span class="prop">border</span>: <span class="val">4</span><span class="unit">px</span> <span class="val">solid</span> <span class="val">#3b82f6</span>;
+  
+  <span class="cm">/* 테두리 안쪽 여백 (내용물이 숨쉬는 공간) */</span>
+  <span class="prop">padding</span>: <span class="val">20</span><span class="unit">px</span>;
+  
+  <span class="cm">/* 테두리 바깥쪽 여백 (남들과의 거리) */</span>
+  <span class="prop">margin-bottom</span>: <span class="val">15</span><span class="unit">px</span>;
+}
+            </div>
+            <div class="preview-box" style="background: #f1f5f9; padding: 20px;">
+              <div style="border: 2px dashed #94a3b8; padding: 10px; margin-bottom: 10px; text-align: center; font-size: 0.8rem; color: #64748b;">(이전 요소)</div>
+              
+              <div style="border: 4px solid #3b82f6; padding: 20px; background: #fff; text-align: center;">
+                <span style="color: #64748b; font-size: 0.8rem; display:block; margin-bottom:8px;">Padding 20px (안쪽 여백)</span>
+                <strong style="background: #e2e8f0; padding: 4px 8px;">Content (내용물)</strong>
+              </div>
+              
+              <div style="text-align: center; font-size: 0.8rem; color: #ef4444; margin: 5px 0;">↑ Margin 15px (바깥 여백) ↓</div>
+              
+              <div style="border: 2px dashed #94a3b8; padding: 10px; text-align: center; font-size: 0.8rem; color: #64748b;">(다음 요소)</div>
+            </div>
+          </div>
+          <div class="tip-box">
+            <strong>💡 margin: 0 auto; 란?</strong>
+            요소의 가로 너비(width)가 정해져 있을 때, <code>margin: 0 auto;</code>를 주면 좌우 마진을 똑같이 나누어 가져 <strong>요소가 화면 정가운데로 정렬</strong>됩니다.
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">4. 배치의 마법 : Flexbox</h2>
+        <p class="text-content">현대 웹 디자인에서 절대 빠질 수 없는 레이아웃 기술입니다. 요소들을 가로로 나란히 세우거나 화면 정중앙에 배치할 때 매우 강력합니다.</p>
+
+        <div class="card">
+          <h3>부모에게 명령하면 자식이 움직입니다</h3>
+          <p class="text-content">감싸고 있는 부모 상자에 <code>display: flex;</code>를 주면, 자식 요소들이 기본적으로 가로(왼쪽에서 오른쪽)로 정렬됩니다.</p>
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="sel">.container</span> {
+  <span class="cm">/* 플렉스박스 선언! */</span>
+  <span class="prop">display</span>: <span class="val">flex</span>;
+  
+  <span class="cm">/* 가로축 정렬 방법 */</span>
+  <span class="cm">/* space-between: 양끝으로 벌리기 */</span>
+  <span class="cm">/* center: 가운데 모으기 */</span>
+  <span class="prop">justify-content</span>: <span class="val">space-between</span>;
+  
+  <span class="cm">/* 세로축 정렬 방법 */</span>
+  <span class="prop">align-items</span>: <span class="val">center</span>;
+  
+  <span class="cm">/* 자식들 사이의 간격 */</span>
+  <span class="prop">gap</span>: <span class="val">10</span><span class="unit">px</span>;
+}
+            </div>
+            <div class="preview-box">
+              <div style="margin-bottom: 5px; font-size: 0.85rem; color: #666;">적용 전 (Block 특성: 세로로 쌓임)</div>
+              <div style="background: #e2e8f0; padding: 10px; margin-bottom: 15px;">
+                <div style="background: #3b82f6; color: white; padding: 8px; margin-bottom: 5px;">A</div>
+                <div style="background: #f59e0b; color: white; padding: 8px;">B</div>
+              </div>
+
+              <div style="margin-bottom: 5px; font-size: 0.85rem; color: #666;">적용 후 (Flex + space-between)</div>
+              <div style="background: #e2e8f0; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
+                <div style="background: #3b82f6; color: white; padding: 8px;">A (왼쪽)</div>
+                <div style="background: #f59e0b; color: white; padding: 8px;">B (오른쪽)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">5. 위치 지정 : Position</h2>
+        <p class="text-content">요소를 정상적인 흐름에서 벗어나게 하여, 원하는 좌표에 강제로 띄우거나 고정시킬 때 사용합니다. (예: 둥둥 떠다니는 헤더, 화면 우측 하단의 위로가기 버튼)</p>
+
+        <div class="card">
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="sel">.parent</span> {
+  <span class="cm">/* 자식의 기준점이 됨 (필수) */</span>
+  <span class="prop">position</span>: <span class="val">relative</span>;
+}
+
+<span class="sel">.child</span> {
+  <span class="cm">/* 부모를 기준으로 공중에 뜸 */</span>
+  <span class="prop">position</span>: <span class="val">absolute</span>;
+  <span class="prop">top</span>: <span class="val">10</span><span class="unit">px</span>;    <span class="cm">/* 위에서 10px */</span>
+  <span class="prop">right</span>: <span class="val">10</span><span class="unit">px</span>;  <span class="cm">/* 오른쪽에서 10px */</span>
+}
+
+<span class="sel">.fixed-btn</span> {
+  <span class="cm">/* 화면(브라우저)을 기준으로 고정됨 */</span>
+  <span class="prop">position</span>: <span class="val">fixed</span>;
+  <span class="prop">bottom</span>: <span class="val">20</span><span class="unit">px</span>;
+}
+            </div>
+            <div class="preview-box" style="height: 200px; padding: 0;">
+              <div style="position: relative; width: 100%; height: 100%; background: #f8fafc; border: 2px dashed #cbd5e1; display:flex; align-items:center; justify-content:center; color:#64748b;">
+                .parent (relative)
+                
+                <div style="position: absolute; top: 10px; right: 10px; background: #ef4444; color: white; padding: 8px; font-size: 0.8rem; border-radius: 4px;">
+                  .child (absolute)
+                </div>
+                
+                <div style="position: absolute; bottom: 10px; right: 10px; background: #10b981; color: white; padding: 8px; font-size: 0.8rem; border-radius: 50%;">
+                  버튼
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">6. 반응형 웹 (Media Query)</h2>
+        <p class="text-content">PC와 모바일 화면 크기에 따라 디자인을 다르게 보여주는 기술입니다. 현재 여러분이 보고 계신 이 페이지도 미디어 쿼리로 만들어졌습니다.</p>
+
+        <div class="card">
+          <div class="code-box">
+<span class="cm">/* 기본 스타일 (PC 기준) */</span>
+<span class="sel">.box</span> {
+  <span class="prop">width</span>: <span class="val">500</span><span class="unit">px</span>;
+  <span class="prop">font-size</span>: <span class="val">20</span><span class="unit">px</span>;
+}
+
+<span class="cm">/* 가로 크기가 768px 이하(모바일)일 때만 작동하는 코드 */</span>
+<span class="sel">@media</span> (<span class="prop">max-width</span>: <span class="val">768px</span>) {
+  <span class="sel">.box</span> {
+    <span class="prop">width</span>: <span class="val">100</span><span class="unit">%</span>;  <span class="cm">/* 화면에 꽉 차게 */</span>
+    <span class="prop">font-size</span>: <span class="val">14</span><span class="unit">px</span>; <span class="cm">/* 글씨는 작게 */</span>
+  }
+}
+          </div>
+          <div class="tip-box">
+            <strong>💡 개발자 도구 (F12)</strong>
+            브라우저에서 F12를 눌러 개발자 도구를 켜고 모바일 기기 아이콘을 클릭해 보세요. 화면 크기를 줄였다 늘였다 하면서 반응형이 어떻게 동작하는지 실시간으로 확인할 수 있습니다.
+          </div>
+        </div>
+      </section>
+
+      <a href="javascript_class.html" class="next-btn">
+        디자인까지 완성했다면? ⚡ 다음 장 JavaScript 배우러 가기 →
+      </a>
+
+    </main>
+  </div>
+</body>
+</html>
