@@ -114,9 +114,6 @@
       section { margin-bottom: 40px; }
       .section-title { font-size: 1.25rem; margin-bottom: 12px; }
       .card { padding: 16px; margin-bottom: 16px; }
-      .demo-grid { grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
-      .tip-box { padding: 12px; font-size: 0.8rem; }
-      .next-btn { padding: 16px; font-size: 1rem; margin-top: 30px; }
     }
   </style>
 </head>
@@ -131,90 +128,124 @@
     <header>
       <div class="kicker">Chapter 1. 개발자의 무기 고르기</div>
       <h1>IDE (통합 개발 환경) 완벽 가이드</h1>
-      <p>코드를 작성하고, 에러를 찾고, 실행까지 한 번에 해결해 주는 마법의 공구함! 수많은 에디터와 IDE 중 나에게 딱 맞는 무기를 찾아봅시다.</p>
+      <p>단종된 옛날 도구들은 전부 뺐습니다! 현재 실무에서 가장 많이 쓰이는 트렌디한 에디터와 IDE, 그리고 나에게 딱 맞는 무기를 찾아봅시다.</p>
     </header>
 
     <main>
       <section>
-        <h2 class="section-title">0. IDE가 뭔가요? (메모장 vs IDE)</h2>
-        <p class="text-content">코드는 사실 윈도우 메모장에 적어도 실행할 수 있습니다. 하지만 오타가 나도 안 알려주고, 실행하려면 까다로운 명령어를 직접 쳐야 합니다. <strong>IDE(Integrated Development Environment)</strong>는 코드 자동완성, 오타 감지, 원클릭 실행, Git 연동 등을 모두 제공하는 '풀옵션 작업대'입니다.</p>
-      </section>
-
-      <section>
-        <h2 class="section-title">1. VS Code (Visual Studio Code)</h2>
-        <p class="text-content">현재 전 세계에서 가장 많이 쓰이는 압도적 1위의 코드 에디터입니다. 마이크로소프트에서 만들었으며, 가볍고 빠릅니다.</p>
+        <h2 class="section-title">👑 1대장 & 새로운 도전자</h2>
+        <p class="text-content">어떤 언어를 배우든 가장 먼저 설치하게 될 범용 에디터들입니다.</p>
         
         <div class="card" style="border-top: 4px solid #007acc;">
           <h3><span style="color: #007acc;">🟦</span> VS Code (Visual Studio Code)</h3>
-          <div class="demo-grid full">
-            <ul class="feature-list">
-              <li><span class="badge">추천 분야</span>웹 프론트엔드(HTML/CSS/JS/React), Python, Node.js</li>
-              <li><span class="badge">장점</span>프로그램 자체가 매우 가볍고, <strong>무료</strong>입니다.</li>
-              <li><span class="badge">특징</span>'확장 프로그램(Extensions)' 생태계가 미쳤습니다. 테마부터 자동완성까지 원하는 기능을 레고 조립하듯 무한히 추가할 수 있습니다.</li>
-            </ul>
-          </div>
-          <div class="tip-box" style="border-color: #007acc; background: rgba(0, 122, 204, 0.08);">
-            <strong style="color: #007acc;">💡 헷갈림 주의! Visual Studio와 다릅니다!</strong>
-            이름이 비슷해서 뉴비들이 가장 많이 헷갈립니다. VS Code는 '가벼운 텍스트 에디터' 베이스이고, 밑에 설명할 Visual Studio는 '초대형 통합 개발 환경'입니다.
-          </div>
+          <ul class="feature-list">
+            <li><span class="badge">추천 분야</span>웹 프론트엔드(HTML/JS/React), Python, Node.js</li>
+            <li><span class="badge">특징</span>현재 전 세계 개발자 점유율 압도적 1위입니다. 가볍고 빠르며, 확장 프로그램(Extensions) 생태계가 미쳐서 원하는 기능을 무한히 붙일 수 있습니다. (무료)</li>
+          </ul>
+        </div>
+
+        <div class="card" style="border-top: 4px solid #ffffff;">
+          <h3><span style="color: #ffffff;">⬜</span> Cursor (커서) ★요즘 대세</h3>
+          <ul class="feature-list">
+            <li><span class="badge">추천 분야</span>전 분야 (VS Code 대체재)</li>
+            <li><span class="badge">특징</span>VS Code를 똑같이 복사한 뒤, 그 안에 <strong>강력한 AI(ChatGPT 등)를 심어놓은 에디터</strong>입니다. "여기에 로그인 버튼 만들어줘"라고 치면 코드를 알아서 짜줍니다. 현재 씬에서 가장 뜨거운 도구입니다.</li>
+          </ul>
         </div>
       </section>
 
       <section>
-        <h2 class="section-title">2. IntelliJ IDEA (인텔리제이)</h2>
-        <p class="text-content">Java 및 Spring Boot 백엔드 개발자들의 로망이자 필수품입니다. 체코의 JetBrains라는 회사에서 만들었습니다.</p>
+        <h2 class="section-title">💎 JetBrains 제국 (프로들의 도구)</h2>
+        <p class="text-content">코드를 진짜로 '이해'하고 분석해주는 무거운 전문가용 도구들입니다. 대학교 이메일이 있다면 모두 무료로 쓸 수 있습니다.</p>
 
         <div class="card" style="border-top: 4px solid #fe315d;">
-          <h3><span style="color: #fe315d;">🟥</span> IntelliJ IDEA</h3>
-          <div class="demo-grid full">
-            <ul class="feature-list">
-              <li><span class="badge">추천 분야</span>Java, Spring Boot, Kotlin 백엔드 개발</li>
-              <li><span class="badge">장점</span>코드를 진짜 '이해'하고 추천해 주는 <strong>경이로운 자동완성(스마트 인텔리센스)</strong>과 강력한 코드 리팩토링 기능을 제공합니다.</li>
-              <li><span class="badge">단점</span>프로 버전(Ultimate)은 유료이며 꽤 비쌉니다. (단, 대학교 이메일이 있다면 <strong>학생 무료 라이선스</strong>를 받을 수 있습니다!)</li>
-            </ul>
-          </div>
+          <h3><span style="color: #fe315d;">🟥</span> IntelliJ IDEA & PyCharm</h3>
+          <ul class="feature-list">
+            <li><span class="badge">IntelliJ (Java/Spring)</span>한국 백엔드 개발자들의 숨쉬는 공기와도 같습니다. 미친듯한 자동완성과 리팩토링 능력을 보여줍니다.</li>
+            <li><span class="badge">PyCharm (Python)</span>파이썬 개발에 특화되어 있으며, 가상환경(venv) 세팅을 알아서 다 해줍니다.</li>
+            <li><span class="badge">기타 형제들</span>웹 개발용 <strong>WebStorm</strong>, C/C++용 <strong>CLion</strong>, C#용 <strong>Rider</strong> 등 언어별로 전용 에디터가 따로 존재합니다.</li>
+          </ul>
+        </div>
+
+        <div class="card" style="border-top: 4px solid #3DDC84;">
+          <h3><span style="color: #3DDC84;">🟩</span> Android Studio (안드로이드 스튜디오)</h3>
+          <ul class="feature-list">
+            <li><span class="badge">추천 분야</span>안드로이드 앱 개발 (Kotlin, Java)</li>
+            <li><span class="badge">특징</span>구글이 JetBrains의 IntelliJ를 기반으로 만든 <strong>안드로이드 공식 개발 도구</strong>입니다. 스마트폰 화면을 띄워주는 에뮬레이터가 내장되어 있습니다.</li>
+          </ul>
         </div>
       </section>
 
       <section>
-        <h2 class="section-title">3. Visual Studio (비주얼 스튜디오)</h2>
-        <p class="text-content">마이크로소프트의 근본이자, C언어 계열 개발자들의 영원한 파트너입니다.</p>
+        <h2 class="section-title">🍎 대기업 전용 특수 무기</h2>
+        <p class="text-content">특정 생태계를 벗어나지 않는 거대한 플랫폼 전용 도구들입니다.</p>
+
+        <div class="card" style="border-top: 4px solid #147efb;">
+          <h3><span style="color: #147efb;">🟦</span> Xcode (엑스코드)</h3>
+          <ul class="feature-list">
+            <li><span class="badge">추천 분야</span>iOS(아이폰), Mac, Apple Watch 앱 개발</li>
+            <li><span class="badge">특징</span>애플 기기용 앱을 만들려면 <strong>선택권이 없습니다. 무조건 이거 써야 합니다.</strong> (맥북 필수)</li>
+          </ul>
+        </div>
 
         <div class="card" style="border-top: 4px solid #5c2d91;">
-          <h3><span style="color: #c084fc;">🟪</span> Visual Studio</h3>
-          <div class="demo-grid full">
-            <ul class="feature-list">
-              <li><span class="badge">추천 분야</span>C, C++, C#, Unity(게임 개발), Windows 프로그램 개발</li>
-              <li><span class="badge">장점</span>C/C++ 디버깅(버그 잡기)에 있어서는 전 세계 원탑입니다. 설치만 하면 다른 세팅 없이 바로 코딩을 시작할 수 있습니다.</li>
-              <li><span class="badge">단점</span>프로그램이 <strong>엄청나게 무겁습니다.</strong> 설치 용량만 기가바이트(GB) 단위를 훌쩍 넘어가며, 가벼운 작업용으로는 과한 면이 있습니다. (무료 버전인 Community 에디션을 다운받으세요)</li>
-            </ul>
-          </div>
+          <h3><span style="color: #c084fc;">🟪</span> Visual Studio (비주얼 스튜디오)</h3>
+          <ul class="feature-list">
+            <li><span class="badge">추천 분야</span>C, C++, C#, Unity(게임 개발), Windows 프로그램 개발</li>
+            <li><span class="badge">특징</span>디버깅(버그 잡기)의 신입니다. 프로그램이 매우 무겁지만(GB 단위), C언어를 배운다면 이만한 도구가 없습니다. (VS Code와 아예 다른 프로그램이니 헷갈리지 마세요!)</li>
+          </ul>
         </div>
       </section>
 
       <section>
-        <h2 class="section-title">4. Eclipse (이클립스)</h2>
-        <p class="text-content">역사와 전통을 자랑하는 Java 전용 IDE입니다. 한국 IT 환경에서는 여전히 무시할 수 없는 점유율을 가집니다.</p>
+        <h2 class="section-title">☁️ 무설치 웹 & 클라우드 에디터</h2>
+        <p class="text-content">프로그램 설치 없이, 브라우저만 켜면 바로 코딩할 수 있는 마법의 공간입니다. 아이패드나 크롬북에서도 개발이 가능합니다.</p>
+
+        <div class="card" style="border-top: 4px solid #f9ab00;">
+          <h3><span style="color: #f9ab00;">🟧</span> Google Colab (콜랩)</h3>
+          <ul class="feature-list">
+            <li><span class="badge">추천 분야</span>파이썬, 데이터 분석, 인공지능(AI) 모델 학습</li>
+            <li><span class="badge">특징</span>설치가 지옥 같은 파이썬 AI 환경을 구글이 다 세팅해 뒀습니다. 게다가 구글의 비싼 GPU 컴퓨터를 무료로 빌려 쓸 수 있습니다!</li>
+          </ul>
+        </div>
+
+        <div class="card" style="border-top: 4px solid #f26207;">
+          <h3><span style="color: #f26207;">🔥</span> Replit / CodePen / Gitpod</h3>
+          <ul class="feature-list">
+            <li><span class="badge">Replit (리플릿)</span>클라우드에 내 컴퓨터가 하나 생기는 느낌입니다. 파이썬, 노드 등 거의 모든 언어를 웹에서 5초 만에 실행할 수 있습니다.</li>
+            <li><span class="badge">CodePen (코드펜)</span>HTML/CSS/JS 프론트엔드 연습장입니다. 화면이 어떻게 변하는지 실시간으로 보여줍니다.</li>
+            <li><span class="badge">GitHub Codespaces</span>깃허브 저장소를 클릭 한 번에 웹버전 VS Code로 열어줍니다.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">⚙️ 하드웨어 & 레거시(전통) 도구</h2>
+
+        <div class="card" style="border-top: 4px solid #00979d;">
+          <h3><span style="color: #00979d;">🟦</span> Arduino IDE (아두이노)</h3>
+          <ul class="feature-list">
+            <li><span class="badge">추천 분야</span>IoT, 임베디드, 아두이노 보드 제어</li>
+            <li><span class="badge">특징</span>C/C++ 기반으로 센서나 모터를 제어하는 기계 코딩의 입문용 도구입니다.</li>
+          </ul>
+        </div>
 
         <div class="card" style="border-top: 4px solid #f59e0b;">
-          <h3><span style="color: #f59e0b;">🟧</span> Eclipse</h3>
-          <div class="demo-grid full">
-            <ul class="feature-list">
-              <li><span class="badge">추천 분야</span>Java, 한국 SI 기업 및 공공기관 프로젝트 (전자정부표준프레임워크)</li>
-              <li><span class="badge">장점</span>완전한 <strong>오픈소스(무료)</strong>이며, 과거 수많은 기업의 표준 개발 툴로 자리 잡았습니다.</li>
-              <li><span class="badge">단점</span>디자인이 투박하고, 초기 환경 세팅이 복잡하며 무겁습니다. 최근에는 점차 IntelliJ로 넘어가는 추세입니다.</li>
-            </ul>
-          </div>
+          <h3><span style="color: #f59e0b;">🟧</span> Eclipse (이클립스)</h3>
+          <ul class="feature-list">
+            <li><span class="badge">추천 분야</span>과거 Java 프로젝트, 한국 전자정부프레임워크(SI 기업)</li>
+            <li><span class="badge">특징</span>과거 자바의 제왕이었습니다. 무겁고 투박하여 요즘은 거의 다 IntelliJ로 넘어갔지만, 공공기관이나 오래된 회사에서는 여전히 사용됩니다.</li>
+          </ul>
         </div>
       </section>
 
       <section>
-        <h2 class="section-title">🎯 결론: 그래서 뭐 깔아야 해요?</h2>
+        <h2 class="section-title">🎯 한 줄 요약: 그래서 뭐 깔아요?</h2>
         <div class="card">
           <ul style="margin-left: 20px; color: #d4d4d8; font-size: 1.1rem; line-height: 2;">
-            <li>🌐 <strong>웹(HTML/JS/React)이나 파이썬</strong>을 배운다 👉 <strong>VS Code</strong></li>
-            <li>☕ <strong>Java나 Spring 백엔드</strong>를 배운다 👉 <strong>IntelliJ</strong> (학생 무료 필수!)</li>
-            <li>🎮 <strong>C/C++ 이나 유니티(C#) 게임</strong>을 만든다 👉 <strong>Visual Studio</strong></li>
+            <li>🤖 "코딩은 처음인데 대세를 따르고 싶다" 👉 <strong>VS Code</strong> 또는 <strong>Cursor</strong></li>
+            <li>☕ "자바(Spring) 백엔드 개발자가 될 거다" 👉 <strong>IntelliJ</strong></li>
+            <li>📱 "아이폰 앱 만들 거다" 👉 <strong>Xcode</strong></li>
+            <li>🧠 "파이썬으로 인공지능 배울 거다" 👉 <strong>Google Colab</strong></li>
           </ul>
         </div>
       </section>
