@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JavaScript 기초 완벽 가이드 - DEV. 동아리</title>
+  <style>
+    :root {
+      --bg-dark: #0a0a05;
+      --bg-card: rgba(25, 25, 14, 0.6);
+      --text-main: #f8fafc;
+      --text-muted: #a1a1aa;
+      --accent: #eab308; /* JS Yellow */
+      --accent-soft: rgba(234, 179, 8, 0.15);
+      --line: rgba(255, 255, 255, 0.08);
+      --code-bg: #121214;
+      --preview-bg: #ffffff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: "Pretendard Variable", "SUIT Variable", "Noto Sans KR", sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    .bg-glow {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; pointer-events: none;
+    }
+    .bg-glow::before {
+      content: ''; position: absolute; top: -20%; left: 0; width: 60vw; height: 60vw;
+      max-width: 800px; max-height: 800px;
+      background: var(--accent); filter: blur(180px); opacity: 0.12; border-radius: 50%;
+    }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; height: 50px;
+      background: rgba(10, 10, 5, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line); z-index: 100;
+      display: flex; align-items: center; padding: 0 20px;
+    }
+    .nav-logo { font-weight: 800; font-size: 1.1rem; color: var(--text-main); text-decoration: none; }
+    .nav-logo span { color: var(--accent); }
+
+    .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+
+    header {
+      padding: 100px 0 40px; text-align: center;
+    }
+    .kicker {
+      display: inline-block; padding: 4px 12px; background: var(--accent-soft);
+      color: var(--accent); border: 1px solid rgba(234, 179, 8, 0.3); border-radius: 999px;
+      font-size: 0.85rem; font-weight: 700; margin-bottom: 16px; letter-spacing: 0.05em;
+    }
+    h1 { font-size: 3rem; font-weight: 900; line-height: 1.2; margin-bottom: 16px; word-break: keep-all; }
+    header p { font-size: 1.1rem; color: var(--text-muted); word-break: keep-all; max-width: 700px; margin: 0 auto; }
+
+    main { padding-bottom: 100px; }
+
+    section { margin-bottom: 60px; scroll-margin-top: 70px; }
+    
+    .section-title {
+      font-size: 1.7rem; font-weight: 800; margin-bottom: 16px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-title::before { content: ''; display: block; width: 5px; height: 24px; background: var(--accent); border-radius: 4px; }
+    
+    .text-content { font-size: 1.05rem; color: #d4d4d8; margin-bottom: 20px; word-break: keep-all; line-height: 1.6; }
+
+    .card {
+      background: var(--bg-card); border: 1px solid var(--line); border-radius: 16px;
+      padding: 24px; margin-bottom: 20px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    }
+    .card h3 { font-size: 1.2rem; margin-bottom: 10px; color: var(--accent); }
+    
+    .demo-grid { display: grid; gap: 20px; margin-top: 16px; grid-template-columns: 1fr 1fr; }
+
+    .code-box, .preview-box {
+      border-radius: 12px; padding: 20px; font-size: 0.95rem; overflow-x: auto;
+    }
+    .code-box {
+      background: var(--code-bg); border: 1px solid #27272a; font-family: "D2Coding", monospace;
+      color: #e4e4e7; line-height: 1.5; white-space: pre-wrap; word-break: break-all;
+    }
+    /* JS Syntax Highlighting */
+    .kw { color: #ff7b72; } /* keyword (let, const, function) */
+    .fn { color: #d2a8ff; } /* function/method */
+    .st { color: #a5d6ff; } /* string */
+    .nm { color: #79c0ff; } /* number */
+    .cm { color: #71717a; } /* comment */
+
+    .preview-box {
+      background: var(--preview-bg); color: #111; border: 1px solid #e4e4e7;
+      display: flex; flex-direction: column; justify-content: center; font-family: sans-serif;
+    }
+    
+    .interactive-btn {
+      background-color: #3b82f6; color: white; border: none; padding: 10px 16px; 
+      border-radius: 8px; font-size: 1rem; cursor: pointer; transition: 0.2s;
+    }
+    .interactive-btn:hover { background-color: #2563eb; }
+    .interactive-input {
+      padding: 8px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; margin-bottom: 10px;
+    }
+
+    .tip-box {
+      background: rgba(234, 179, 8, 0.08); border-left: 4px solid var(--accent);
+      padding: 16px; border-radius: 0 8px 8px 0; margin-top: 16px; font-size: 0.95rem; color: #cbd5e1;
+    }
+    .tip-box strong { color: var(--accent); display: block; margin-bottom: 6px; font-size: 1rem; }
+
+    .next-btn {
+      display: block; width: 100%; text-align: center; padding: 20px;
+      background: linear-gradient(to right, #ca8a04, #a16207); color: #fff;
+      text-decoration: none; font-size: 1.2rem; font-weight: 800; border-radius: 12px;
+      transition: transform 0.2s, box-shadow 0.2s; margin-top: 50px;
+    }
+    .next-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(202, 138, 4, 0.4); }
+
+    /* =========================================
+       모바일 최적화 (768px 이하)
+       ========================================= */
+    @media (max-width: 768px) {
+      header { padding: 80px 0 24px; }
+      h1 { font-size: 1.6rem; margin-bottom: 12px; }
+      header p { font-size: 0.85rem; }
+      
+      section { margin-bottom: 40px; }
+      .section-title { font-size: 1.25rem; margin-bottom: 12px; }
+      .section-title::before { height: 18px; }
+      .text-content { font-size: 0.85rem; margin-bottom: 12px; }
+      
+      .card { padding: 16px; margin-bottom: 16px; }
+      .card h3 { font-size: 1rem; margin-bottom: 8px; }
+      
+      .demo-grid { grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
+      
+      .code-box, .preview-box { padding: 12px; font-size: 0.8rem; border-radius: 8px; }
+      
+      .tip-box { padding: 12px; font-size: 0.8rem; }
+      .tip-box strong { font-size: 0.85rem; margin-bottom: 4px; }
+
+      .next-btn { padding: 16px; font-size: 1rem; margin-top: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-glow"></div>
+
+  <nav>
+    <a href="index.html" class="nav-logo">DEV. <span>동아리</span></a>
+  </nav>
+
+  <div class="container">
+    <header>
+      <div class="kicker">Chapter 3. 웹에 생명 불어넣기</div>
+      <h1>JavaScript 기초 (Full Course)</h1>
+      <p>단순한 문서를 넘어 '프로그램'으로 진화하는 시간입니다. 변수, 함수 같은 프로그래밍 기초부터 HTML을 직접 조작하는 DOM 제어까지 한 번에 알아봅시다.</p>
+    </header>
+
+    <main>
+      <section>
+        <h2 class="section-title">1. 변수 (Variables)</h2>
+        <p class="text-content">데이터를 담아두는 상자입니다. 과거에는 <code>var</code>를 썼지만, 요즘은 <strong><code>let</code>(변하는 값)</strong>과 <strong><code>const</code>(변하지 않는 값)</strong>만 사용합니다.</p>
+        
+        <div class="card">
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="cm">// 1. let: 나중에 값을 바꿀 수 있음</span>
+<span class="kw">let</span> age = <span class="nm">20</span>;
+age = <span class="nm">21</span>; <span class="cm">// 에러 없음</span>
+
+<span class="cm">// 2. const: 한 번 넣으면 바꿀 수 없음 (상수)</span>
+<span class="kw">const</span> name = <span class="st">"홍길동"</span>;
+<span class="cm">// name = "김코딩"; // ❌ 에러 발생!</span>
+
+<span class="cm">// 콘솔창에 출력해보기</span>
+console.<span class="fn">log</span>(name + <span class="st">"은 "</span> + age + <span class="st">"살"</span>);
+            </div>
+            <div class="preview-box" style="background: #1e1e1e; color: #fff; font-family: monospace;">
+              <span style="color: #888; font-size: 0.8rem;">> Console Output</span>
+              <div>홍길동은 21살</div>
+            </div>
+          </div>
+          <div class="tip-box">
+            <strong>💡 실무 꿀팁</strong>
+            일단 무조건 <code>const</code>로 선언하세요. 나중에 코드를 짜다가 "아, 이 값은 변경되어야 하네?" 싶을 때만 <code>let</code>으로 바꾸는 것이 버그를 줄이는 지름길입니다.
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">2. 함수 (Functions)</h2>
+        <p class="text-content">자주 쓰는 코드 묶음을 캡슐에 담아놓고 자판기 버튼 누르듯 필요할 때마다 꺼내 쓰는 기능입니다.</p>
+
+        <div class="card">
+          <h3>기본 함수와 화살표 함수</h3>
+          <p class="text-content">함수는 <strong>재료(매개변수)</strong>를 받아서 <strong>결과(반환값)</strong>를 내놓습니다. 최근에는 화살표 함수(Arrow Function)를 더 많이 씁니다.</p>
+          <div class="code-box">
+<span class="cm">// 1. 기본 함수 선언 방식</span>
+<span class="kw">function</span> <span class="fn">add</span>(a, b) {
+  <span class="kw">return</span> a + b;
+}
+
+<span class="cm">// 2. 화살표 함수 방식 (최신 문법)</span>
+<span class="kw">const</span> <span class="fn">multiply</span> = (a, b) <span class="kw">=&gt;</span> {
+  <span class="kw">return</span> a * b;
+};
+
+<span class="cm">// 함수 사용(호출)하기</span>
+<span class="kw">let</span> result1 = <span class="fn">add</span>(<span class="nm">5</span>, <span class="nm">3</span>);       <span class="cm">// 결과: 8</span>
+<span class="kw">let</span> result2 = <span class="fn">multiply</span>(<span class="nm">4</span>, <span class="nm">2</span>);  <span class="cm">// 결과: 8</span>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">3. DOM 제어 (HTML 조작하기) ★중요</h2>
+        <p class="text-content">자바스크립트가 웹에서 하는 가장 중요한 역할입니다. <strong>D</strong>ocument <strong>O</strong>bject <strong>M</strong>odel의 약자로, JS를 통해 HTML 태그들을 선택하고 내용을 바꾸거나 스타일을 입힐 수 있습니다.</p>
+
+        <div class="card">
+          <h3>요소 선택하고 텍스트 바꾸기</h3>
+          <p class="text-content"><code>document.querySelector('선택자')</code>를 사용하면 CSS에서 하던 방식 그대로 HTML 요소를 콕 집어올 수 있습니다.</p>
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="cm">&lt;!-- HTML --&gt;</span>
+&lt;h1 id="title"&gt;원래 제목&lt;/h1&gt;
+
+<span class="cm">/* JS */</span>
+<span class="cm">// 1. HTML 요소 가져오기</span>
+<span class="kw">const</span> titleElement = document.<span class="fn">querySelector</span>(<span class="st">'#title'</span>);
+
+<span class="cm">// 2. 안쪽 텍스트 바꾸기</span>
+titleElement.innerText = <span class="st">"JS가 바꾼 제목!"</span>;
+
+<span class="cm">// 3. CSS 스타일 바꾸기</span>
+titleElement.style.color = <span class="st">"blue"</span>;
+            </div>
+            <div class="preview-box">
+              <div style="font-size: 0.85rem; color: #666; margin-bottom: 10px;">적용 전: <del><h1>원래 제목</h1></del></div>
+              <div style="font-size: 0.85rem; color: #666;">JS 실행 후:</div>
+              <h1 style="color: blue;">JS가 바꾼 제목!</h1>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">4. 이벤트 (Events)</h2>
+        <p class="text-content">사용자가 버튼을 '클릭'하거나, 키보드를 '입력'하는 등의 모든 행동을 '이벤트'라고 합니다. 이 이벤트가 발생했을 때 특정 함수가 실행되게 만들 수 있습니다.</p>
+
+        <div class="card">
+          <h3>addEventListener</h3>
+          <p class="text-content">"이 버튼이 클릭되는지 귀를 기울여라(Listen)!"라는 뜻입니다. 인터랙티브한 웹은 모두 이 원리로 돌아갑니다.</p>
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="cm">&lt;!-- HTML --&gt;</span>
+&lt;button id="myBtn"&gt;여기를 눌러보세요&lt;/button&gt;
+&lt;p id="msg"&gt;&lt;/p&gt;
+
+<span class="cm">/* JS */</span>
+<span class="kw">const</span> btn = document.<span class="fn">querySelector</span>(<span class="st">'#myBtn'</span>);
+<span class="kw">const</span> msg = document.<span class="fn">querySelector</span>(<span class="st">'#msg'</span>);
+
+<span class="cm">// 버튼에 'click' 이벤트 달아주기</span>
+btn.<span class="fn">addEventListener</span>(<span class="st">'click'</span>, () <span class="kw">=&gt;</span> {
+  msg.innerText = <span class="st">"버튼이 클릭되었습니다! 🎉"</span>;
+  btn.style.backgroundColor = <span class="st">"green"</span>;
+});
+            </div>
+            <div class="preview-box">
+              <button id="demoBtn1" class="interactive-btn">여기를 눌러보세요</button>
+              <p id="demoMsg1" style="margin-top: 15px; font-weight: bold;"></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">5. 실전 종합: 로그인 흉내내기</h2>
+        <p class="text-content">입력창(Input)에서 값을 읽어와서 조건문(if)으로 검사하고, 결과를 화면(DOM)에 띄워보는 종합 예제입니다.</p>
+
+        <div class="card">
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="kw">const</span> input = document.<span class="fn">querySelector</span>(<span class="st">'#userId'</span>);
+<span class="kw">const</span> loginBtn = document.<span class="fn">querySelector</span>(<span class="st">'#loginBtn'</span>);
+<span class="kw">const</span> result = document.<span class="fn">querySelector</span>(<span class="st">'#result'</span>);
+
+loginBtn.<span class="fn">addEventListener</span>(<span class="st">'click'</span>, () <span class="kw">=&gt;</span> {
+  <span class="cm">// input 태그에 적힌 글자는 .value 로 가져옵니다</span>
+  <span class="kw">let</span> idValue = input.value;
+  
+  <span class="kw">if</span> (idValue === <span class="st">"admin"</span>) {
+    result.innerText = <span class="st">"관리자님 환영합니다."</span>;
+    result.style.color = <span class="st">"blue"</span>;
+  } <span class="kw">else</span> <span class="kw">if</span> (idValue === <span class="st">""</span>) {
+    result.innerText = <span class="st">"아이디를 입력해주세요."</span>;
+    result.style.color = <span class="st">"red"</span>;
+  } <span class="kw">else</span> {
+    result.innerText = idValue + <span class="st">"님 로그인 성공!"</span>;
+    result.style.color = <span class="st">"green"</span>;
+  }
+});
+            </div>
+            <div class="preview-box" style="background: #f8fafc;">
+              <input type="text" id="demoInput" class="interactive-input" placeholder="아이디 (admin 입력해보기)">
+              <button id="demoLoginBtn" class="interactive-btn" style="background: #0f172a;">로그인</button>
+              <p id="demoResult" style="margin-top: 15px; font-weight: bold; min-height: 24px;"></p>
+            </div>
+          </div>
+          
+          <div class="tip-box">
+            <strong>⚠️ 많이 하는 실수</strong>
+            일반적인 태그의 글씨는 <code>.innerText</code>로 바꾸고 가져오지만, <code>&lt;input&gt;</code> 태그 안에 사용자가 타이핑한 값은 무조건 <strong><code>.value</code></strong>로 가져와야 합니다!
+          </div>
+        </div>
+      </section>
+
+      <a href="react_class.html" class="next-btn">
+        JavaScript 기초를 뗐다면? ⚛️ 다음 장 React 배우러 가기 →
+      </a>
+
+    </main>
+  </div>
+
+  <script>
+    // 문서 내 인터랙티브 데모 작동용 JS
+    
+    // 데모 1: 버튼 클릭 이벤트
+    const demoBtn1 = document.querySelector('#demoBtn1');
+    const demoMsg1 = document.querySelector('#demoMsg1');
+    
+    if(demoBtn1) {
+      demoBtn1.addEventListener('click', () => {
+        demoMsg1.innerText = "버튼이 클릭되었습니다! 🎉";
+        demoBtn1.style.backgroundColor = "green";
+      });
+    }
+
+    // 데모 2: 로그인 흉내내기
+    const demoInput = document.querySelector('#demoInput');
+    const demoLoginBtn = document.querySelector('#demoLoginBtn');
+    const demoResult = document.querySelector('#demoResult');
+
+    if(demoLoginBtn) {
+      demoLoginBtn.addEventListener('click', () => {
+        let idValue = demoInput.value.trim();
+        
+        if (idValue === "admin") {
+          demoResult.innerText = "관리자님 환영합니다.";
+          demoResult.style.color = "blue";
+        } else if (idValue === "") {
+          demoResult.innerText = "아이디를 입력해주세요.";
+          demoResult.style.color = "red";
+        } else {
+          demoResult.innerText = idValue + "님 로그인 성공!";
+          demoResult.style.color = "green";
+        }
+      });
+    }
+  </script>
+</body>
+</html>
