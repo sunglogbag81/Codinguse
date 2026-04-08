@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python 심화 완벽 가이드 - DEV. 동아리</title>
+  <style>
+    :root {
+      --bg-dark: #0a0804;
+      --bg-card: rgba(25, 20, 10, 0.6);
+      --text-main: #f8fafc;
+      --text-muted: #a1a1aa;
+      --accent: #f59e0b; /* Python Yellow */
+      --accent-soft: rgba(245, 158, 11, 0.15);
+      --line: rgba(255, 255, 255, 0.08);
+      --code-bg: #121214;
+      --preview-bg: #000000;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: "Pretendard Variable", "SUIT Variable", "Noto Sans KR", sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    .bg-glow {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; pointer-events: none;
+    }
+    .bg-glow::before {
+      content: ''; position: absolute; top: -20%; left: -10%; width: 60vw; height: 60vw;
+      max-width: 800px; max-height: 800px;
+      background: var(--accent); filter: blur(180px); opacity: 0.12; border-radius: 50%;
+    }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; height: 50px;
+      background: rgba(10, 8, 4, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line); z-index: 100;
+      display: flex; align-items: center; padding: 0 20px;
+    }
+    .nav-logo { font-weight: 800; font-size: 1.1rem; color: var(--text-main); text-decoration: none; }
+    .nav-logo span { color: var(--accent); }
+
+    .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+
+    header { padding: 100px 0 40px; text-align: center; }
+    .kicker {
+      display: inline-block; padding: 4px 12px; background: var(--accent-soft);
+      color: var(--accent); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 999px;
+      font-size: 0.85rem; font-weight: 700; margin-bottom: 16px; letter-spacing: 0.05em;
+    }
+    h1 { font-size: 3rem; font-weight: 900; line-height: 1.2; margin-bottom: 16px; word-break: keep-all; }
+    header p { font-size: 1.1rem; color: var(--text-muted); word-break: keep-all; max-width: 700px; margin: 0 auto; }
+
+    main { padding-bottom: 100px; }
+
+    section { margin-bottom: 60px; scroll-margin-top: 70px; }
+    
+    .section-title {
+      font-size: 1.7rem; font-weight: 800; margin-bottom: 16px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-title::before { content: ''; display: block; width: 5px; height: 24px; background: var(--accent); border-radius: 4px; }
+    
+    .text-content { font-size: 1.05rem; color: #d4d4d8; margin-bottom: 20px; word-break: keep-all; line-height: 1.6; }
+
+    .card {
+      background: var(--bg-card); border: 1px solid var(--line); border-radius: 16px;
+      padding: 24px; margin-bottom: 20px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    }
+    .card h3 { font-size: 1.2rem; margin-bottom: 10px; color: var(--accent); }
+    
+    .demo-grid { display: grid; gap: 20px; margin-top: 16px; grid-template-columns: 1fr 1fr; }
+    .demo-grid.full { grid-template-columns: 1fr; }
+
+    .code-box, .preview-box {
+      border-radius: 12px; padding: 20px; font-size: 0.95rem; overflow-x: auto;
+    }
+    .code-box {
+      background: var(--code-bg); border: 1px solid #27272a; font-family: "D2Coding", monospace;
+      color: #e4e4e7; line-height: 1.5; white-space: pre-wrap; word-break: break-all;
+    }
+    /* Python Syntax Highlighting */
+    .kw { color: #ff7b72; } /* keyword (def, class, yield, return, import, with, as) */
+    .fn { color: #d2a8ff; } /* function (print, next, open) */
+    .st { color: #a5d6ff; } /* string */
+    .nm { color: #79c0ff; } /* number */
+    .cm { color: #71717a; } /* comment */
+    .an { color: #facc15; font-weight: bold; } /* decorators (@) */
+    .dunder { color: #38bdf8; } /* __init__ etc */
+
+    /* 터미널 출력 (백엔드/스크립트 스타일) */
+    .preview-box {
+      background: var(--preview-bg); color: #fcd34d; border: 1px solid #333;
+      display: flex; flex-direction: column; font-family: "D2Coding", monospace;
+    }
+    .console-header { color: #666; font-size: 0.8rem; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 8px; }
+    .py-prompt { color: #888; margin-right: 8px; }
+
+    .tip-box {
+      background: rgba(245, 158, 11, 0.08); border-left: 4px solid var(--accent);
+      padding: 16px; border-radius: 0 8px 8px 0; margin-top: 16px; font-size: 0.95rem; color: #cbd5e1;
+    }
+    .tip-box strong { color: var(--accent); display: block; margin-bottom: 6px; font-size: 1rem; }
+
+    .next-btn {
+      display: block; width: 100%; text-align: center; padding: 20px;
+      background: linear-gradient(to right, #d97706, #b45309); color: #fff;
+      text-decoration: none; font-size: 1.2rem; font-weight: 800; border-radius: 12px;
+      transition: transform 0.2s, box-shadow 0.2s; margin-top: 50px;
+    }
+    .next-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(245, 158, 11, 0.4); }
+
+    @media (max-width: 768px) {
+      header { padding: 80px 0 24px; }
+      h1 { font-size: 1.6rem; margin-bottom: 12px; }
+      header p { font-size: 0.85rem; }
+      section { margin-bottom: 40px; }
+      .section-title { font-size: 1.25rem; margin-bottom: 12px; }
+      .card { padding: 16px; margin-bottom: 16px; }
+      .demo-grid { grid-template-columns: 1fr; gap: 10px; }
+      .code-box, .preview-box { padding: 12px; font-size: 0.8rem; border-radius: 8px; }
+      .tip-box { padding: 12px; font-size: 0.8rem; }
+      .next-btn { padding: 16px; font-size: 1rem; margin-top: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-glow"></div>
+
+  <nav>
+    <a href="index.html" class="nav-logo">DEV. <span>동아리</span></a>
+  </nav>
+
+  <div class="container">
+    <header>
+      <div class="kicker">Chapter 6-2. 파이써니스타로 가는 길</div>
+      <h1>Python 심화 (Advanced)</h1>
+      <p>더 이상 C나 Java처럼 코딩하지 마세요. 가장 우아하고 '파이썬다운(Pythonic)' 코드를 작성하기 위해 제너레이터, 데코레이터, 그리고 매직 메서드의 비밀을 파헤칩니다.</p>
+    </header>
+
+    <main>
+      <section>
+        <h2 class="section-title">1. 컴프리헨션 (Comprehension)</h2>
+        <p class="text-content">파이썬의 상징과도 같은 문법입니다. 빈 리스트를 만들고 <code>for</code>문을 돌며 <code>append()</code>를 하는 지루한 과정을 <strong>단 한 줄의 직관적인 코드</strong>로 압축합니다.</p>
+        
+        <div class="card">
+          <h3>List & Dictionary Comprehension</h3>
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="cm"># ❌ 하수들의 방식 (C/Java 스타일)</span>
+evens = []
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">10</span>):
+    <span class="kw">if</span> i % <span class="nm">2</span> == <span class="nm">0</span>:
+        evens.<span class="fn">append</span>(i)
+
+<span class="cm"># 🟢 고수들의 방식 (List Comprehension)</span>
+<span class="cm"># "0~9 중 짝수(if)만 모아서 리스트로 만들어라"</span>
+evens_py = [i <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">10</span>) <span class="kw">if</span> i % <span class="nm">2</span> == <span class="nm">0</span>]
+
+<span class="cm"># 🟢 Dictionary Comprehension</span>
+names = [<span class="st">'Alice'</span>, <span class="st">'Bob'</span>, <span class="st">'Charlie'</span>]
+<span class="cm"># {이름: 이름길이} 형태의 딕셔너리를 한 줄로!</span>
+name_lengths = {name: <span class="fn">len</span>(name) <span class="kw">for</span> name <span class="kw">in</span> names}
+
+<span class="fn">print</span>(evens_py)
+<span class="fn">print</span>(name_lengths)
+            </div>
+            <div class="preview-box">
+              <div class="console-header">> Terminal - python main.py</div>
+              <div>[0, 2, 4, 6, 8]</div>
+              <div>{'Alice': 5, 'Bob': 3, 'Charlie': 7}</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">2. 제너레이터 (Generator)와 yield ★중요</h2>
+        <p class="text-content">100억 개의 숫자를 리스트에 담으면 메모리(RAM)가 폭발합니다. 하지만 제너레이터는 <strong>"데이터를 한 번에 다 만들지 않고, 필요할 때마다 하나씩(yield) 뱉어내는"</strong> 마법의 공장입니다.</p>
+
+        <div class="card">
+          <div class="demo-grid full">
+            <div class="code-box">
+<span class="kw">import</span> sys
+
+<span class="cm"># 일반 리스트 (한 번에 다 만들어서 메모리를 엄청나게 차지함)</span>
+big_list = [i <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">10000000</span>)]
+
+<span class="cm"># 제너레이터 표현식 (괄호만 ()로 바꾸면 됨. 공식만 저장하므로 깃털처럼 가벼움)</span>
+big_gen = (i <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">10000000</span>))
+
+<span class="fn">print</span>(<span class="st">f"리스트 메모리: </span>{sys.<span class="fn">getsizeof</span>(big_list)}<span class="st"> bytes"</span>)
+<span class="fn">print</span>(<span class="st">f"제너레이터 메모리: </span>{sys.<span class="fn">getsizeof</span>(big_gen)}<span class="st"> bytes"</span>)
+
+<span class="cm"># 제너레이터 함수 (yield 사용)</span>
+<span class="kw">def</span> <span class="fn">infinite_numbers</span>():
+    num = <span class="nm">0</span>
+    <span class="kw">while True</span>:
+        <span class="kw">yield</span> num  <span class="cm"># 값을 뱉어내고 여기서 '일시 정지' 함</span>
+        num += <span class="nm">1</span>
+
+gen = <span class="fn">infinite_numbers</span>()
+<span class="fn">print</span>(<span class="fn">next</span>(gen)) <span class="cm"># 0</span>
+<span class="fn">print</span>(<span class="fn">next</span>(gen)) <span class="cm"># 1</span>
+            </div>
+          </div>
+          <div class="tip-box">
+            <strong>💡 yield의 작동 원리</strong>
+            일반 함수의 `return`은 값을 반환하고 함수를 완전히 끝내버리지만, `yield`는 값을 던져주고 <strong>함수의 실행 상태를 그대로 멈춰둔(pause) 채로 대기</strong>합니다. `next()`를 부르면 멈춘 곳부터 다시 시작합니다.
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">3. 데코레이터 (Decorator)</h2>
+        <p class="text-content">자바의 AOP와 완벽히 똑같은 기능입니다. 기존 함수의 코드를 전혀 수정하지 않고, <strong>함수 앞뒤에 새로운 기능(실행 시간 측정, 로그인 확인 등)을 포장지처럼 씌워주는 기술</strong>입니다.</p>
+
+        <div class="card">
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="kw">import</span> time
+
+<span class="cm"># 데코레이터 함수 만들기 (함수를 인자로 받음)</span>
+<span class="kw">def</span> <span class="fn">timer_decorator</span>(func):
+    <span class="kw">def</span> <span class="fn">wrapper</span>(*args, **kwargs):
+        start = time.<span class="fn">time</span>()
+        result = <span class="fn">func</span>(*args, **kwargs) <span class="cm"># 원본 함수 실행</span>
+        end = time.<span class="fn">time</span>()
+        <span class="fn">print</span>(<span class="st">f"[Timer] </span>{func.<span class="dunder">__name__</span>}<span class="st"> 실행 시간: </span>{end - start:.4f}<span class="st">초"</span>)
+        <span class="kw">return</span> result
+    <span class="kw">return</span> wrapper
+
+<span class="cm"># @를 붙이면 자동으로 함수가 포장됩니다!</span>
+<span class="an">@timer_decorator</span>
+<span class="kw">def</span> <span class="fn">heavy_task</span>():
+    time.<span class="fn">sleep</span>(<span class="nm">1</span>)
+    <span class="fn">print</span>(<span class="st">"무거운 작업 완료!"</span>)
+
+<span class="fn">heavy_task</span>()
+            </div>
+            <div class="preview-box">
+              <div class="console-header">> Terminal - python main.py</div>
+              <div>무거운 작업 완료!</div>
+              <div style="color: #a7f3d0;">[Timer] heavy_task 실행 시간: 1.0012초</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">4. 매직 메서드 (Dunder Methods)</h2>
+        <p class="text-content">파이썬의 모든 클래스 내부에는 더블 언더스코어(<code>__</code>)로 감싸진 숨겨진 메서드들이 있습니다. 이를 조작하면 <strong>내가 만든 객체를 파이썬 기본 자료형처럼 덧셈(+)하거나 출력(print)</strong>할 수 있습니다.</p>
+
+        <div class="card">
+          <div class="demo-grid">
+            <div class="code-box">
+<span class="kw">class</span> <span class="fn">Vector</span>:
+    <span class="kw">def</span> <span class="dunder">__init__</span>(<span class="kw">self</span>, x, y):
+        <span class="kw">self</span>.x = x
+        <span class="kw">self</span>.y = y
+
+    <span class="cm"># print() 함수를 썼을 때 어떻게 보여질지 정의</span>
+    <span class="kw">def</span> <span class="dunder">__str__</span>(<span class="kw">self</span>):
+        <span class="kw">return</span> <span class="st">f"Vector(</span>{<span class="kw">self</span>.x}<span class="st">, </span>{<span class="kw">self</span>.y}<span class="st">)"</span>
+
+    <span class="cm"># 더하기(+) 기호를 썼을 때의 동작 정의</span>
+    <span class="kw">def</span> <span class="dunder">__add__</span>(<span class="kw">self</span>, other):
+        <span class="kw">return</span> <span class="fn">Vector</span>(<span class="kw">self</span>.x + other.x, <span class="kw">self</span>.y + other.y)
+
+v1 = <span class="fn">Vector</span>(<span class="nm">2</span>, <span class="nm">4</span>)
+v2 = <span class="fn">Vector</span>(<span class="nm">3</span>, <span class="nm">-1</span>)
+
+<span class="cm"># 파이썬 기본 숫자처럼 더하기(+)가 가능해짐!</span>
+v3 = v1 + v2  
+<span class="fn">print</span>(v3)
+            </div>
+            <div class="preview-box">
+              <div class="console-header">> Terminal - python main.py</div>
+              <div>Vector(5, 3)</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">5. 컨텍스트 매니저 (with 구문)</h2>
+        <p class="text-content">파일을 열거나 DB에 연결했을 때, 에러가 나더라도 <strong>"무조건 안전하게 닫아주는(close)"</strong> 역할을 자동으로 수행하는 파이썬만의 우아한 문법입니다.</p>
+
+        <div class="card">
+          <div class="demo-grid full">
+            <div class="code-box">
+<span class="cm"># ❌ 하수들의 방식 (에러가 나면 파일이 영영 잠겨버릴 수 있음)</span>
+f = <span class="fn">open</span>(<span class="st">'data.txt'</span>, <span class="st">'w'</span>)
+<span class="kw">try</span>:
+    f.<span class="fn">write</span>(<span class="st">"Hello"</span>)
+<span class="kw">finally</span>:
+    f.<span class="fn">close</span>() <span class="cm"># 무조건 닫아주기 위해 복잡하게 짬</span>
+
+<span class="cm"># 🟢 고수들의 방식 (with 구문)</span>
+<span class="cm"># with 블록을 빠져나가는 순간(에러가 나든 안 나든) 자동으로 close() 됨</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">'data.txt'</span>, <span class="st">'w'</span>) <span class="kw">as</span> f:
+    f.<span class="fn">write</span>(<span class="st">"Hello Pythonic World!"</span>)
+            </div>
+          </div>
+          <div class="tip-box">
+            <strong>💡 원리가 뭔가요?</strong>
+            앞서 배운 매직 메서드 중 <code>__enter__</code>와 <code>__exit__</code>가 구현되어 있는 객체만이 <code>with</code> 구문과 함께 쓰일 수 있습니다. (대표적으로 File 객체나 DB Connection 객체)
+          </div>
+        </div>
+      </section>
+
+      <a href="c_advanced.html" class="next-btn">
+        파이썬의 심연을 보셨군요! 💻 다음 장 하드코어 C언어 메모리 심화 가기 →
+      </a>
+
+    </main>
+  </div>
+</body>
+</html>
