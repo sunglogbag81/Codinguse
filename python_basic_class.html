@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>바이브 코딩 실전 (Pro Version)</title>
+  <title>파이썬 기초 + 바이브 코딩 통합 발표</title>
   <style>
     :root {
       --bg: #03080e;
@@ -269,13 +269,13 @@
           <div class="hero">
             <div>
               <div class="hero-eyebrow">Practical Vibe Coding</div>
-              <h1 class="hero-title">바이브 코딩<br><strong>실전</strong></h1>
-              <p class="hero-subtitle">ChatGPT로 문제 완벽 해결하기</p>
-              <p class="hero-message">설명보다 흐름. 오늘은 하나의 프로그램을 실제로 만들고, 막히고, 다시 고치는 과정을 여과 없이 보여드립니다.</p>
+              <h1 class="hero-title">파이썬 기초 +<br><strong>바이브 코딩</strong></h1>
+              <p class="hero-subtitle">기초 문법부터 AI 활용까지 한 번에</p>
+              <p class="hero-message">앞부분에서는 파이썬 기초 문법을 빠르게 잡고, 뒷부분에서는 AI로 실제 문제를 만들고 고치는 흐름까지 연결해서 봅니다.</p>
               <div class="hero-tags">
-                <span class="pill">⚡️ 문제 해결 시뮬레이션</span>
-                <span class="pill">⚖️ 프롬프트 비교</span>
-                <span class="pill">🚀 바로 써먹는 방식</span>
+                <span class="pill">파이썬 기초 정리</span>
+                <span class="pill">문제 해결 시뮬레이션</span>
+                <span class="pill">바로 써먹는 방식</span>
               </div>
             </div>
             <div class="hero-visual" aria-hidden="true">
@@ -291,6 +291,214 @@
                 </div>
               </div>
               <div class="ring"></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="slide">
+        <div class="frame">
+          <div class="kicker">Part 1</div>
+          <h2 class="slide-title">파이썬 기초는 이 네 가지를 먼저 잡으면 된다</h2>
+          <div class="grid-4">
+            <div class="card">
+              <span class="mini-title good">Step 1</span>
+              <h3>변수 / 자료형</h3>
+              <p>데이터를 담는 방식과 글자, 숫자의 차이를 먼저 이해합니다.</p>
+            </div>
+            <div class="card">
+              <span class="mini-title tip">Step 2</span>
+              <h3>연산자</h3>
+              <p>계산과 비교를 통해 프로그램이 판단할 재료를 만듭니다.</p>
+            </div>
+            <div class="card">
+              <span class="mini-title good">Step 3</span>
+              <h3>조건문 / 반복문</h3>
+              <p>상황에 따라 나누고, 필요한 만큼 반복하는 구조를 배웁니다.</p>
+            </div>
+            <div class="card">
+              <span class="mini-title tip">Step 4</span>
+              <h3>직접 실습</h3>
+              <p>CodeUp과 백준으로 눈으로 본 내용을 손으로 익혀야 실력이 남습니다.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="slide">
+        <div class="frame">
+          <div class="kicker">파이썬 기초 1</div>
+          <h2 class="slide-title">변수와 자료형: 값을 담는 상자부터 이해한다</h2>
+          <div class="grid-2">
+            <div class="summary-panel">
+              <span class="mini-title good">핵심 요약</span>
+              <h3>이것만 기억하면 시작할 수 있다</h3>
+              <div class="bullet-list">
+                <div class="bullet"><span>•</span><span><strong>변수</strong>: 데이터를 담아 두는 이름표다</span></div>
+                <div class="bullet"><span>•</span><span><strong>문자열(str)</strong>: 글자 데이터, 보통 <code>""</code>를 쓴다</span></div>
+                <div class="bullet"><span>•</span><span><strong>정수(int)</strong>: 계산 가능한 숫자 데이터다</span></div>
+              </div>
+            </div>
+            <div class="code-card">
+              <span class="mini-title tip">코드 스니펫</span>
+              <h3>할당과 출력</h3>
+              <div class="code-block">name = "김코딩"
+age = 16
+
+print(name, age)</div>
+              <div class="result-box">
+                <div class="result-item good-point"><strong>기억:</strong> <code>=</code>는 수학의 같다가 아니라 오른쪽 값을 왼쪽 변수에 넣는 뜻입니다.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="slide">
+        <div class="frame">
+          <div class="kicker">파이썬 기초 2</div>
+          <h2 class="slide-title">연산자와 조건문: 계산하고, 비교하고, 판단한다</h2>
+          <div class="grid-2">
+            <div class="card">
+              <span class="mini-title good">연산자</span>
+              <h3>계산과 비교의 재료</h3>
+              <div class="code-block">a = 10
+b = 3
+
+print(a + b)
+print(a % b)
+print(a > b)
+print(a == b)</div>
+            </div>
+            <div class="card">
+              <span class="mini-title tip">조건문</span>
+              <h3>위에서 아래로 경우를 나눈다</h3>
+              <div class="code-block">score = 85
+
+if score >= 90:
+    print("A등급")
+elif score >= 80:
+    print("B등급")
+else:
+    print("C등급")</div>
+            </div>
+          </div>
+          <div class="flow-footer"><span class="pill">비교 결과 True / False가 조건문의 재료가 됩니다</span></div>
+        </div>
+      </article>
+
+      <article class="slide">
+        <div class="frame">
+          <div class="kicker">파이썬 기초 3</div>
+          <h2 class="slide-title">반복문은 같은 작업을 복붙하지 않게 해 준다</h2>
+          <div class="grid-2">
+            <div class="card">
+              <span class="mini-title good">기본 구조</span>
+              <h3>for + range</h3>
+              <div class="code-block">for i in range(3):
+    print(i, "번째 반복입니다")</div>
+              <p style="margin-top: 16px;">컴퓨터는 보통 0부터 세기 때문에 <code>range(3)</code>은 0, 1, 2 세 번 반복합니다.</p>
+            </div>
+            <div class="card">
+              <span class="mini-title tip">범위 지정</span>
+              <h3>1부터 5까지 출력</h3>
+              <div class="code-block">for i in range(1, 6):
+    print(i)</div>
+              <div class="bullet-list">
+                <div class="bullet"><span>•</span><span>시작 값은 포함합니다</span></div>
+                <div class="bullet"><span>•</span><span>끝 값은 포함하지 않습니다</span></div>
+                <div class="bullet"><span>•</span><span>그래서 결과는 1, 2, 3, 4, 5 입니다</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="slide">
+        <div class="frame">
+          <div class="kicker">파이썬 기초 4</div>
+          <h2 class="slide-title">실전에서는 조건문과 반복문을 같이 읽는 경우가 많다</h2>
+          <div class="grid-2">
+            <div class="code-card">
+              <span class="mini-title good">예시 코드</span>
+              <h3>1부터 10까지 중 짝수만 찾기</h3>
+              <div class="code-block">for i in range(1, 11):
+    if i % 2 == 0:
+        print(i, "은(는) 짝수!")</div>
+            </div>
+            <div class="summary-panel">
+              <span class="mini-title tip">읽는 순서</span>
+              <h3>바깥에서 안쪽으로 읽는다</h3>
+              <div class="bullet-list">
+                <div class="bullet"><span>1</span><span>먼저 <strong>for문</strong>으로 몇 번 도는지 본다</span></div>
+                <div class="bullet"><span>2</span><span>그 다음 <strong>if문</strong>으로 어떤 경우만 통과하는지 본다</span></div>
+                <div class="bullet"><span>3</span><span>조건이 참일 때만 안쪽 코드가 실행된다</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="slide">
+        <div class="frame">
+          <div class="kicker">파이썬 기초 5</div>
+          <h2 class="slide-title">자주 헷갈리는 포인트만 잡아도 초반 실수가 크게 줄어든다</h2>
+          <div class="grid-4">
+            <div class="card"><h3>if</h3><p>경우를 나눠야 할 때는 조건문부터 떠올리면 됩니다.</p></div>
+            <div class="card"><h3>for</h3><p>같은 걸 여러 번 해야 한다면 반복문일 가능성이 큽니다.</p></div>
+            <div class="card"><h3>들여쓰기</h3><p>파이썬은 띄어쓰기로 실행 범위를 구분하므로 매우 중요합니다.</p></div>
+            <div class="card"><h3>= vs ==</h3><p><code>=</code>은 대입, <code>==</code>은 비교입니다.</p></div>
+          </div>
+          <div class="flow-footer"><span class="pill">눈으로 읽고 끝내면 내 코드가 아닙니다. 직접 타이핑해야 실력이 남습니다</span></div>
+        </div>
+      </article>
+
+      <article class="slide">
+        <div class="frame">
+          <div class="kicker">실습 연결</div>
+          <h2 class="slide-title">기초 문법은 문제 풀이와 함께 갈 때 훨씬 빨리 익는다</h2>
+          <div class="compare-grid">
+            <div class="compare-card good">
+              <span class="mini-title good">CodeUp</span>
+              <h3>문법 체력 키우기</h3>
+              <div class="bullet-list">
+                <div class="bullet"><span>✓</span><span>조건문 기초: 1151 ~ 1165번</span></div>
+                <div class="bullet"><span>✓</span><span>반복문 기초: 1251 ~ 1261번</span></div>
+                <div class="bullet"><span>✓</span><span>배운 문법을 바로 손으로 확인하기 좋다</span></div>
+              </div>
+            </div>
+            <div class="compare-card bad">
+              <span class="mini-title bad">백준</span>
+              <h3>조금 익숙해지면 사고력 훈련</h3>
+              <div class="bullet-list">
+                <div class="bullet"><span>•</span><span>입력과 출력 형식을 스스로 해석해야 한다</span></div>
+                <div class="bullet"><span>•</span><span>처음에는 브론즈, 실버 기초 문제부터 가볍게 시작한다</span></div>
+                <div class="bullet"><span>•</span><span>문법을 넘어서 문제 해결력 자체를 키워 준다</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="slide">
+        <div class="frame">
+          <div class="kicker">Part 2</div>
+          <h2 class="slide-title">이제 문법을 바탕으로, AI를 써서 실제 문제를 해결해 본다</h2>
+          <div class="grid-3">
+            <div class="card">
+              <span class="mini-title good">왜 연결하나</span>
+              <h3>문법만 아는 상태를 넘기기 위해</h3>
+              <p>기초 문법을 안다는 것과 실제로 뭔가를 만드는 것은 다릅니다. AI는 그 간격을 줄여 줍니다.</p>
+            </div>
+            <div class="card">
+              <span class="mini-title tip">핵심 방식</span>
+              <h3>작게 묻고, 실행하고, 다시 고친다</h3>
+              <p>한 번에 완벽을 기대하지 않고, 짧은 반복으로 결과물을 개선해 가는 흐름이 중요합니다.</p>
+            </div>
+            <div class="card">
+              <span class="mini-title good">이제부터</span>
+              <h3>실전 파트 시작</h3>
+              <p>문제 설정, 프롬프트, 실행, 오류 수정, 도구 선택까지 이어서 보겠습니다.</p>
             </div>
           </div>
         </div>
@@ -322,27 +530,27 @@
 
       <article class="slide">
         <div class="frame">
-          <div class="kicker">파트 1</div>
-          <h2 class="slide-title">문제 상황: 할 일 관리 프로그램을 만들어 보자</h2>
-          <p class="lead">너무 거창하게 가지 않습니다. 초보자 수준에서 가장 필요한 핵심 기능 3개만 정하고 시작합니다.</p>
+          <div class="kicker">문제 설정</div>
+          <h2 class="slide-title">바이브 코딩은 무엇을 만들지 정하는 순간부터 이미 시작된다</h2>
+          <p class="lead">처음부터 큰 주제를 잡으면 프롬프트도 흐려지고 결과도 산만해집니다. 문제 설정 단계에서는 "지금 당장 만들 수 있는 가장 작은 문제"로 줄이는 것이 가장 중요합니다.</p>
           <div class="grid-2">
             <div class="summary-panel">
-              <span class="mini-title tip">목표</span>
-              <h3>오늘 만들 최소 버전 (MVP)</h3>
-              <div class="summary-list">
-                <div class="summary-item"><span>1</span><span><strong>할 일 추가</strong> 기능이 있어야 함</span></div>
-                <div class="summary-item"><span>2</span><span><strong>목록 보기</strong> 기능이 있어야 함</span></div>
-                <div class="summary-item"><span>3</span><span><strong>완료 처리</strong> 기능이 있어야 함</span></div>
+              <span class="mini-title tip">좋은 문제 설정</span>
+              <h3>처음 문제는 보통 이런 조건이 좋다</h3>
+              <div class="bullet-list">
+                <div class="bullet"><span>1</span><span>설명 한두 문장으로 말할 수 있을 만큼 작다</span></div>
+                <div class="bullet"><span>2</span><span>핵심 기능이 2~3개 정도로 제한되어 있다</span></div>
+                <div class="bullet"><span>3</span><span>실행했을 때 결과를 바로 확인할 수 있다</span></div>
+                <div class="bullet"><span>4</span><span>막히면 다음 수정 요청으로 이어 가기 쉽다</span></div>
               </div>
             </div>
             <div class="result-card">
-              <span class="mini-title good">조건</span>
-              <h3>처음부터 이렇게 제한한다</h3>
+              <span class="mini-title good">나쁜 시작 vs 좋은 시작</span>
+              <h3>처음부터 이렇게 차이가 난다</h3>
               <div class="result-box">
-                <div class="result-item good-point">언어: <strong>파이썬(Python)</strong>으로 만들기</div>
-                <div class="result-item good-point">난이도: <strong>초보자</strong> 수준으로 작성하기</div>
-                <div class="result-item good-point">스타일: <strong>함수</strong>로 나누고 <strong>주석</strong> 달기</div>
-                <div class="result-item good-point">범위: 너무 많은 부가 기능은 넣지 않기</div>
+                <div class="result-item bad-point"><strong>나쁜 시작:</strong> 게임 하나 만들어줘 / 사이트 하나 만들어줘</div>
+                <div class="result-item good-point"><strong>좋은 시작:</strong> 파이썬으로 할 일 추가, 목록 보기, 완료 처리만 되는 작은 프로그램 만들어줘</div>
+                <div class="result-item good-point"><strong>핵심:</strong> 처음 문제를 작게 잡아야 이후 수정도 쉬워진다</div>
               </div>
             </div>
           </div>
@@ -730,7 +938,7 @@ CRUD(추가/읽기/수정/삭제) 중 '추가, 읽기'만 우선 구현해.
     <button id="prevBtn" type="button" aria-label="이전 슬라이드">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
     </button>
-    <div class="counter" id="counter">1 / 12</div>
+    <div class="counter" id="counter">1 / 24</div>
     <button id="nextBtn" type="button" aria-label="다음 슬라이드">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
     </button>
